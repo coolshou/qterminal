@@ -6,23 +6,41 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>563</width>
+    <height>397</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Simple Terminal</string>
+   <string>QTTerminal</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="../qtterminal.qrc">
+    <normaloff>:/images/terminal.png</normaloff>:/images/terminal.png</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QVBoxLayout" name="verticalLayout"/>
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QMdiArea" name="mdiArea">
+      <property name="viewMode">
+       <enum>QMdiArea::TabbedView</enum>
+      </property>
+      <property name="tabsClosable">
+       <bool>true</bool>
+      </property>
+      <property name="tabsMovable">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+   </layout>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>400</width>
-     <height>19</height>
+     <width>563</width>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuCalls">
@@ -32,7 +50,6 @@
     <addaction name="actionConnect"/>
     <addaction name="actionDisconnect"/>
     <addaction name="separator"/>
-    <addaction name="actionQuit"/>
    </widget>
    <widget class="QMenu" name="menuTools">
     <property name="title">
@@ -48,8 +65,29 @@
     <addaction name="actionAbout"/>
     <addaction name="actionAboutQt"/>
    </widget>
+   <widget class="QMenu" name="menuEdit">
+    <property name="title">
+     <string>Edit</string>
+    </property>
+   </widget>
+   <widget class="QMenu" name="menuWindows">
+    <property name="title">
+     <string>Windows</string>
+    </property>
+   </widget>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionNew"/>
+    <addaction name="separator"/>
+    <addaction name="actionQuit"/>
+   </widget>
+   <addaction name="menuFile"/>
    <addaction name="menuCalls"/>
+   <addaction name="menuEdit"/>
    <addaction name="menuTools"/>
+   <addaction name="menuWindows"/>
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
@@ -83,7 +121,7 @@
   </action>
   <action name="actionConnect">
    <property name="icon">
-    <iconset resource="terminal.qrc">
+    <iconset resource="../qtterminal.qrc">
      <normaloff>:/images/connect.png</normaloff>:/images/connect.png</iconset>
    </property>
    <property name="text">
@@ -98,7 +136,7 @@
   </action>
   <action name="actionDisconnect">
    <property name="icon">
-    <iconset resource="terminal.qrc">
+    <iconset resource="../qtterminal.qrc">
      <normaloff>:/images/disconnect.png</normaloff>:/images/disconnect.png</iconset>
    </property>
    <property name="text">
@@ -113,7 +151,7 @@
   </action>
   <action name="actionConfigure">
    <property name="icon">
-    <iconset resource="terminal.qrc">
+    <iconset resource="../qtterminal.qrc">
      <normaloff>:/images/settings.png</normaloff>:/images/settings.png</iconset>
    </property>
    <property name="text">
@@ -128,7 +166,7 @@
   </action>
   <action name="actionClear">
    <property name="icon">
-    <iconset resource="terminal.qrc">
+    <iconset resource="../qtterminal.qrc">
      <normaloff>:/images/clear.png</normaloff>:/images/clear.png</iconset>
    </property>
    <property name="text">
@@ -141,9 +179,14 @@
     <string>Alt+L</string>
    </property>
   </action>
+  <action name="actionNew">
+   <property name="text">
+    <string>New</string>
+   </property>
+  </action>
   <action name="actionQuit">
    <property name="icon">
-    <iconset resource="terminal.qrc">
+    <iconset resource="../qtterminal.qrc">
      <normaloff>:/images/application-exit.png</normaloff>:/images/application-exit.png</iconset>
    </property>
    <property name="text">
@@ -156,7 +199,7 @@
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>
-  <include location="terminal.qrc"/>
+  <include location="../qtterminal.qrc"/>
  </resources>
  <connections/>
 </ui>
