@@ -38,8 +38,11 @@
 #include <QtCore/QtGlobal>
 
 #include <QMainWindow>
-
+#include <QMdiSubWindow>
 #include <QtSerialPort/QSerialPort>
+#include <QSettings>
+
+#include "termsession.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -60,23 +63,33 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+public slots:
+    void updateStatus(QString sMsg);
+    void updateActionBtnStatus(bool bStatus);
+
 private slots:
     void openSerialPort();
     void closeSerialPort();
     void about();
-    void writeData(const QByteArray &data);
-    void readData();
+    //void writeData(const QByteArray &data);
+    //void readData();
 
-    void handleError(QSerialPort::SerialPortError error);
+    //void handleError(QSerialPort::SerialPortError error);
+    //actions
+    void on_action_Pop_Out_triggered();
+    //
+    void add_session();
 
 private:
     void initActionsConnections();
 
+
 private:
     Ui::MainWindow *ui;
+    QSettings *settings;
     Console *console;
-    SettingsDialog *settings;
-    QSerialPort *serial;
+    SettingsDialog *settingDlg;
+    //QSerialPort *serial;
 };
 
 #endif // MAINWINDOW_H

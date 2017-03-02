@@ -21,14 +21,17 @@
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
      <widget class="QMdiArea" name="mdiArea">
+      <property name="frameShadow">
+       <enum>QFrame::Sunken</enum>
+      </property>
       <property name="viewMode">
-       <enum>QMdiArea::TabbedView</enum>
+       <enum>QMdiArea::SubWindowView</enum>
       </property>
       <property name="tabsClosable">
-       <bool>true</bool>
+       <bool>false</bool>
       </property>
       <property name="tabsMovable">
-       <bool>true</bool>
+       <bool>false</bool>
       </property>
      </widget>
     </item>
@@ -74,6 +77,8 @@
     <property name="title">
      <string>Windows</string>
     </property>
+    <addaction name="actionCascade"/>
+    <addaction name="actionTile"/>
    </widget>
    <widget class="QMenu" name="menuFile">
     <property name="title">
@@ -102,7 +107,11 @@
    <addaction name="actionConfigure"/>
    <addaction name="actionClear"/>
   </widget>
-  <widget class="QStatusBar" name="statusBar"/>
+  <widget class="QStatusBar" name="statusBar">
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
+  </widget>
   <action name="actionAbout">
    <property name="text">
     <string>&amp;About</string>
@@ -194,6 +203,16 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+Q</string>
+   </property>
+  </action>
+  <action name="actionCascade">
+   <property name="text">
+    <string>cascade</string>
+   </property>
+  </action>
+  <action name="actionTile">
+   <property name="text">
+    <string>tile</string>
    </property>
   </action>
  </widget>

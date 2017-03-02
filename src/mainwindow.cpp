@@ -40,48 +40,61 @@
 #include <QMessageBox>
 #include <QtSerialPort/QSerialPort>
 
+#include "const.h"
+
 //! [0]
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-//! [0]
     ui->setupUi(this);
-    console = new Console;
-    console->setEnabled(false);
-    setCentralWidget(console);
-//! [1]
-    serial = new QSerialPort(this);
-//! [1]
-    settings = new SettingsDialog;
+    //TODO: setting
+    settings = new QSettings();
 
+    termsession *termSession = new termsession(this, "term1" );
+    //TODO: delete termSession;
+    connect(termSession, SIGNAL(sig_updateStatus(QString)), this, SLOT(updateStatus(QString)));
+    connect(termSession, SIGNAL(sig_updateActionBtnStatus(bool)), this, SLOT(updateActionBtnStatus(bool)));
+    console = termSession->console;
+
+    QMdiSubWindow *subwin1;
+    subwin1 = ui->mdiArea->addSubWindow(console);
+    settingDlg = new SettingsDialog;
+    subwin1->widget()->setWindowTitle(settingDlg->settings().name);
+
+//    serial = new QSerialPort(this);
+    /*
     ui->actionConnect->setEnabled(true);
     ui->actionDisconnect->setEnabled(false);
-    ui->actionQuit->setEnabled(true);
     ui->actionConfigure->setEnabled(true);
-
+    */
+    this->updateActionBtnStatus(true);
+    ui->actionQuit->setEnabled(true);
     initActionsConnections();
-
+/*
     connect(serial, SIGNAL(error(QSerialPort::SerialPortError)), this,
             SLOT(handleError(QSerialPort::SerialPortError)));
-
-//! [2]
     connect(serial, SIGNAL(readyRead()), this, SLOT(readData()));
-//! [2]
+
     connect(console, SIGNAL(getData(QByteArray)), this, SLOT(writeData(QByteArray)));
-//! [3]
+*/
 }
-//! [3]
+
 
 MainWindow::~MainWindow()
 {
-    delete settings;
+    delete settingDlg;
     delete ui;
+    delete settings;
+
 }
 
-//! [4]
+
 void MainWindow::openSerialPort()
 {
+    //TODO: open serial base on witch tab
+
+    /*
     SettingsDialog::Settings p = settings->settings();
     serial->setPortName(p.name);
     serial->setBaudRate(p.baudRate);
@@ -103,12 +116,15 @@ void MainWindow::openSerialPort()
 
         ui->statusBar->showMessage(tr("Open error"));
     }
+    */
 }
-//! [4]
 
-//! [5]
+
 void MainWindow::closeSerialPort()
 {
+    //TODO: close serial base on witch tab
+
+    /*
     if (serial->isOpen())
         serial->close();
     console->setEnabled(false);
@@ -116,17 +132,16 @@ void MainWindow::closeSerialPort()
     ui->actionDisconnect->setEnabled(false);
     ui->actionConfigure->setEnabled(true);
     ui->statusBar->showMessage(tr("Disconnected"));
+    */
 }
-//! [5]
 
 void MainWindow::about()
 {
-    QMessageBox::about(this, tr("About Simple Terminal"),
-                       tr("The <b>Simple Terminal</b> example demonstrates how to "
-                          "use the Qt Serial Port module in modern GUI applications "
-                          "using Qt, with a menu bar, toolbars, and a status bar."));
+    QMessageBox::about(this, tr("About QTTerminal"),
+                       tr("The <b>QTTerminal</b> to use the Qt Serial Port module"));
 }
 
+/*
 //! [6]
 void MainWindow::writeData(const QByteArray &data)
 {
@@ -141,24 +156,68 @@ void MainWindow::readData()
     console->putData(data);
 }
 //! [7]
-
+*/
 //! [8]
+/*
 void MainWindow::handleError(QSerialPort::SerialPortError error)
 {
     if (error == QSerialPort::ResourceError) {
         QMessageBox::critical(this, tr("Critical Error"), serial->errorString());
-        closeSerialPort();
+        //closeSerialPort();
     }
 }
 //! [8]
-
+*/
 void MainWindow::initActionsConnections()
 {
-    connect(ui->actionConnect, SIGNAL(triggered()), this, SLOT(openSerialPort()));
-    connect(ui->actionDisconnect, SIGNAL(triggered()), this, SLOT(closeSerialPort()));
+    //file
+    //TODO: new
     connect(ui->actionQuit, SIGNAL(triggered()), this, SLOT(close()));
-    connect(ui->actionConfigure, SIGNAL(triggered()), settings, SLOT(show()));
+    //cell
+    //    connect(ui->actionConnect, SIGNAL(triggered()), this, SLOT(openSerialPort()));
+    //    connect(ui->actionDisconnect, SIGNAL(triggered()), this, SLOT(closeSerialPort()));
+    //edit
+
+    //config
+    connect(ui->actionConfigure, SIGNAL(triggered()), settingDlg, SLOT(show()));
     connect(ui->actionClear, SIGNAL(triggered()), console, SLOT(clear()));
+    //window
+    connect(ui->actionCascade, SIGNAL(triggered()), ui->mdiArea, SLOT(cascadeSubWindows()));
+    connect(ui->actionTile, SIGNAL(triggered()), ui->mdiArea, SLOT(tileSubWindows()));
+    //About
     connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(about()));
     connect(ui->actionAboutQt, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
+}
+
+//TODO: this is what I did from the main window to pop out a window.
+void MainWindow::on_action_Pop_Out_triggered()
+{
+    if (ui->mdiArea->activeSubWindow()){
+        QMdiSubWindow *sub = ui->mdiArea->activeSubWindow();
+        QWidget *wid = sub->widget();
+        wid->hide();
+        sub->deleteLater();
+        ui->mdiArea->removeSubWindow(wid);
+        wid->show();
+    }
+}
+
+void MainWindow::add_session()
+{
+    //TODO: add a session (console) for mdi SubWindow
+    //show console config dialog
+    //setup new console for new SubWindow
+    //
+}
+
+void  MainWindow::updateStatus(QString sMsg)
+{
+    ui->statusBar->showMessage(sMsg);
+}
+
+void MainWindow::updateActionBtnStatus(bool bStatus)
+{
+    ui->actionConnect->setEnabled(bStatus);
+    ui->actionDisconnect->setEnabled(!bStatus);
+    ui->actionConfigure->setEnabled(bStatus);
 }
