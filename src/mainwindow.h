@@ -76,9 +76,10 @@ private slots:
 
     //void handleError(QSerialPort::SerialPortError error);
     //actions
-    void on_action_Pop_Out_triggered();
+    //void on_action_Pop_Out_triggered();
     //
     void add_session();
+    void edit_session();
 
 private:
     void initActionsConnections();
@@ -90,6 +91,7 @@ private:
     Console *console;
     SettingsDialog *settingDlg;
     //QSerialPort *serial;
+    termsession *termSession;
 };
 
 #endif // MAINWINDOW_H

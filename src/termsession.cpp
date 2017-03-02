@@ -22,7 +22,7 @@ termsession::termsession(QWidget *parent, QString name) : QWidget(parent)
 }
 termsession::~termsession()
 {
-    delete console;
+    //delete console;
     delete serial;
 }
 /*

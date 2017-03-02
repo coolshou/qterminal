@@ -41,6 +41,7 @@
 #include <QtSerialPort/QSerialPort>
 
 #include "const.h"
+#include <QDebug>
 
 //! [0]
 MainWindow::MainWindow(QWidget *parent) :
@@ -51,16 +52,6 @@ MainWindow::MainWindow(QWidget *parent) :
     //TODO: setting
     settings = new QSettings();
 
-    termsession *termSession = new termsession(this, "term1" );
-    //TODO: delete termSession;
-    connect(termSession, SIGNAL(sig_updateStatus(QString)), this, SLOT(updateStatus(QString)));
-    connect(termSession, SIGNAL(sig_updateActionBtnStatus(bool)), this, SLOT(updateActionBtnStatus(bool)));
-    console = termSession->console;
-
-    QMdiSubWindow *subwin1;
-    subwin1 = ui->mdiArea->addSubWindow(console);
-    settingDlg = new SettingsDialog;
-    subwin1->widget()->setWindowTitle(settingDlg->settings().name);
 
 //    serial = new QSerialPort(this);
     /*
@@ -71,19 +62,15 @@ MainWindow::MainWindow(QWidget *parent) :
     this->updateActionBtnStatus(true);
     ui->actionQuit->setEnabled(true);
     initActionsConnections();
-/*
-    connect(serial, SIGNAL(error(QSerialPort::SerialPortError)), this,
-            SLOT(handleError(QSerialPort::SerialPortError)));
-    connect(serial, SIGNAL(readyRead()), this, SLOT(readData()));
 
-    connect(console, SIGNAL(getData(QByteArray)), this, SLOT(writeData(QByteArray)));
-*/
 }
 
 
 MainWindow::~MainWindow()
 {
+    /*
     delete settingDlg;
+    */
     delete ui;
     delete settings;
 
@@ -93,7 +80,7 @@ MainWindow::~MainWindow()
 void MainWindow::openSerialPort()
 {
     //TODO: open serial base on witch tab
-
+    qDebug() <<"TODO: open serial base on witch tab";
     /*
     SettingsDialog::Settings p = settings->settings();
     serial->setPortName(p.name);
@@ -123,7 +110,7 @@ void MainWindow::openSerialPort()
 void MainWindow::closeSerialPort()
 {
     //TODO: close serial base on witch tab
-
+    qDebug() <<"TODO: close serial base on witch tab";
     /*
     if (serial->isOpen())
         serial->close();
@@ -141,46 +128,21 @@ void MainWindow::about()
                        tr("The <b>QTTerminal</b> to use the Qt Serial Port module"));
 }
 
-/*
-//! [6]
-void MainWindow::writeData(const QByteArray &data)
-{
-    serial->write(data);
-}
-//! [6]
 
-//! [7]
-void MainWindow::readData()
-{
-    QByteArray data = serial->readAll();
-    console->putData(data);
-}
-//! [7]
-*/
-//! [8]
-/*
-void MainWindow::handleError(QSerialPort::SerialPortError error)
-{
-    if (error == QSerialPort::ResourceError) {
-        QMessageBox::critical(this, tr("Critical Error"), serial->errorString());
-        //closeSerialPort();
-    }
-}
-//! [8]
-*/
 void MainWindow::initActionsConnections()
 {
     //file
     //TODO: new
+    connect(ui->actionNew, SIGNAL(triggered()), this, SLOT(add_session()));
     connect(ui->actionQuit, SIGNAL(triggered()), this, SLOT(close()));
     //cell
-    //    connect(ui->actionConnect, SIGNAL(triggered()), this, SLOT(openSerialPort()));
-    //    connect(ui->actionDisconnect, SIGNAL(triggered()), this, SLOT(closeSerialPort()));
+    connect(ui->actionConnect, SIGNAL(triggered()), this, SLOT(openSerialPort()));
+    connect(ui->actionDisconnect, SIGNAL(triggered()), this, SLOT(closeSerialPort()));
     //edit
 
     //config
-    connect(ui->actionConfigure, SIGNAL(triggered()), settingDlg, SLOT(show()));
-    connect(ui->actionClear, SIGNAL(triggered()), console, SLOT(clear()));
+    //connect(ui->actionConfigure, SIGNAL(triggered()), settingDlg, SLOT(show()));
+    //connect(ui->actionClear, SIGNAL(triggered()), console, SLOT(clear()));
     //window
     connect(ui->actionCascade, SIGNAL(triggered()), ui->mdiArea, SLOT(cascadeSubWindows()));
     connect(ui->actionTile, SIGNAL(triggered()), ui->mdiArea, SLOT(tileSubWindows()));
@@ -190,6 +152,7 @@ void MainWindow::initActionsConnections()
 }
 
 //TODO: this is what I did from the main window to pop out a window.
+/*
 void MainWindow::on_action_Pop_Out_triggered()
 {
     if (ui->mdiArea->activeSubWindow()){
@@ -201,13 +164,39 @@ void MainWindow::on_action_Pop_Out_triggered()
         wid->show();
     }
 }
-
+*/
 void MainWindow::add_session()
 {
     //TODO: add a session (console) for mdi SubWindow
     //show console config dialog
     //setup new console for new SubWindow
     //
+    qDebug() << "TODO: add_session";
+    //termsession *termSession = new termsession(this, "term1" );
+    termSession = new termsession(this, "term1" );
+    //TODO: term setting?
+    //TODO: delete termSession;
+    connect(termSession, SIGNAL(sig_updateStatus(QString)), this, SLOT(updateStatus(QString)));
+    connect(termSession, SIGNAL(sig_updateActionBtnStatus(bool)), this, SLOT(updateActionBtnStatus(bool)));
+    //console = termSession->console;
+
+    QMdiSubWindow *subwin1;
+    subwin1 = ui->mdiArea->addSubWindow(termSession->console);
+    //subwin1->setAttribute(Qt::WA_DeleteOnClose);
+    //TODO: setting
+    //settingDlg = new SettingsDialog;
+    //subwin1->widget()->setWindowTitle(settingDlg->settings().name);
+}
+
+void MainWindow::edit_session()
+{
+    //TODO: edit session
+    QMdiSubWindow *sw = ui->mdiArea->activeSubWindow();
+    if (sw != 0 ) {
+        //
+        qDebug() << "edit_session";
+    }
+
 }
 
 void  MainWindow::updateStatus(QString sMsg)
