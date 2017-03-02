@@ -11,11 +11,11 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>QTTerminal</string>
+   <string>qtvt</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="../qtterminal.qrc">
-    <normaloff>:/images/terminal.png</normaloff>:/images/terminal.png</iconset>
+   <iconset resource="../qtvt.qrc">
+    <normaloff>:/images/qtvt.png</normaloff>:/images/qtvt.png</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout">
@@ -121,7 +121,7 @@
   </action>
   <action name="actionConnect">
    <property name="icon">
-    <iconset resource="../qtterminal.qrc">
+    <iconset resource="../qtvt.qrc">
      <normaloff>:/images/connect.png</normaloff>:/images/connect.png</iconset>
    </property>
    <property name="text">
@@ -136,7 +136,7 @@
   </action>
   <action name="actionDisconnect">
    <property name="icon">
-    <iconset resource="../qtterminal.qrc">
+    <iconset resource="../qtvt.qrc">
      <normaloff>:/images/disconnect.png</normaloff>:/images/disconnect.png</iconset>
    </property>
    <property name="text">
@@ -151,7 +151,7 @@
   </action>
   <action name="actionConfigure">
    <property name="icon">
-    <iconset resource="../qtterminal.qrc">
+    <iconset resource="../qtvt.qrc">
      <normaloff>:/images/settings.png</normaloff>:/images/settings.png</iconset>
    </property>
    <property name="text">
@@ -166,7 +166,7 @@
   </action>
   <action name="actionClear">
    <property name="icon">
-    <iconset resource="../qtterminal.qrc">
+    <iconset resource="../qtvt.qrc">
      <normaloff>:/images/clear.png</normaloff>:/images/clear.png</iconset>
    </property>
    <property name="text">
@@ -186,7 +186,7 @@
   </action>
   <action name="actionQuit">
    <property name="icon">
-    <iconset resource="../qtterminal.qrc">
+    <iconset resource="../qtvt.qrc">
      <normaloff>:/images/application-exit.png</normaloff>:/images/application-exit.png</iconset>
    </property>
    <property name="text">
@@ -199,7 +199,7 @@
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>
-  <include location="../qtterminal.qrc"/>
+  <include location="../qtvt.qrc"/>
  </resources>
  <connections/>
 </ui>

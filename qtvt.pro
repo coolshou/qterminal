@@ -6,23 +6,25 @@ greaterThan(QT_MAJOR_VERSION, 4) {
 
 CFLAG+=-fPIC
 
-TARGET = qtterminal
+TARGET = qtvt
 TEMPLATE = app
 
 SOURCES += \
     src/console.cpp \
     src/main.cpp \
     src/mainwindow.cpp \
-    src/settingsdialog.cpp
+    src/settingsdialog.cpp \
+    src/termsession.cpp
 
 HEADERS += \
     src/console.h \
     src/mainwindow.h \
-    src/settingsdialog.h
+    src/settingsdialog.h \
+    src/termsession.h
 
 FORMS += \
     src/mainwindow.ui \
     src/settingsdialog.ui
 
 RESOURCES += \
-    qtterminal.qrc
+    qtvt.qrc

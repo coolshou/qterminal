@@ -5,6 +5,6 @@
         <file>images/application-exit.png</file>
         <file>images/settings.png</file>
         <file>images/clear.png</file>
-        <file>images/terminal.png</file>
+        <file>images/qtvt.png</file>
     </qresource>
 </RCC>
