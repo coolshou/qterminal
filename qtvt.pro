@@ -28,3 +28,6 @@ FORMS += \
 
 RESOURCES += \
     qtvt.qrc
+
+DISTFILES += \
+    README.md

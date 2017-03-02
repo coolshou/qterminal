@@ -1,2 +1,2 @@
-# qtterminal
-qt base terminal emulator for serial communications
+# qtvt
+qt base virtual terminal emulator for serial communications
