@@ -20,7 +20,8 @@ HEADERS += \
     src/console.h \
     src/mainwindow.h \
     src/settingsdialog.h \
-    src/termsession.h
+    src/termsession.h \
+    src/const.h
 
 FORMS += \
     src/mainwindow.ui \
