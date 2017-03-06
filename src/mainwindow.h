@@ -41,6 +41,7 @@
 #include <QMdiSubWindow>
 #include <QtSerialPort/QSerialPort>
 #include <QSettings>
+#include <QCloseEvent>
 
 #include "termsession.h"
 
@@ -62,6 +63,7 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+    void closeEvent(QCloseEvent *event);
 
 public slots:
     void updateStatus(QString sMsg);
@@ -80,6 +82,8 @@ private slots:
     //
     void add_session();
     void edit_session();
+    void savePosSetting();
+    void readPosSetting();
 
 private:
     void initActionsConnections();

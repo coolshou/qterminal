@@ -51,7 +51,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     //TODO: setting
     settings = new QSettings();
-
+    readPosSetting();
 
 //    serial = new QSerialPort(this);
     /*
@@ -75,7 +75,39 @@ MainWindow::~MainWindow()
     delete settings;
 
 }
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    //TODO: ask quit?
+    savePosSetting();
+}
 
+void MainWindow::savePosSetting()
+{
+    settings->beginGroup("mainwindow");
+    //settings->setValue("Geometry", saveGeometry());
+    settings->setValue("pos", pos());
+    if(!isMaximized())
+        settings->setValue("size", size());
+    settings->setValue("maximized", isMaximized());
+    settings->setValue("State", saveState());
+
+    settings->endGroup();
+}
+void MainWindow::readPosSetting()
+{
+    settings->beginGroup("mainwindow");
+    //restoreGeometry(settings->value("Geometry").toByteArray());
+    if(settings->contains("pos"))
+        move(settings->value("pos").toPoint());
+    if(settings->contains("size"))
+        resize(settings->value("size").toSize());
+
+    if(settings->value("maximized").toBool())
+        setWindowState(windowState() | Qt::WindowMaximized);
+    // create docks, toolbars, etc…
+    restoreState(settings->value("State").toByteArray());
+    settings->endGroup();
+}
 
 void MainWindow::openSerialPort()
 {
