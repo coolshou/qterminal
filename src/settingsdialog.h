@@ -56,6 +56,7 @@ class SettingsDialog : public QDialog
 
 public:
     struct Settings {
+        //serial setting
         QString name;
         qint32 baudRate;
         QString stringBaudRate;
@@ -68,6 +69,8 @@ public:
         QSerialPort::FlowControl flowControl;
         QString stringFlowControl;
         bool localEchoEnabled;
+        //TODO: console setting
+
     };
 
     explicit SettingsDialog(QWidget *parent = 0);

@@ -12,7 +12,7 @@ class termsession : public QWidget
 {
     Q_OBJECT
 public:
-    explicit termsession(QWidget *parent = 0, QString name = "term");
+    explicit termsession(QWidget *parent = 0, QString name = "term", QSettings *settings = NULL);
     ~termsession();
     //
     Console *console;
@@ -36,8 +36,8 @@ private slots:
 
 
 private:
-    QString mName;
-    QSettings mSetting;
+    QString mGroupName;
+    QSettings *mSetting;
     //MainWindow *mParent;
     //TODO: log
     bool bLogging;

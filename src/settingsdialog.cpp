@@ -202,4 +202,5 @@ void SettingsDialog::updateSettings()
     currentSettings.stringFlowControl = ui->flowControlBox->currentText();
 
     currentSettings.localEchoEnabled = ui->localEchoCheckBox->isChecked();
+    //TODO: console font
 }

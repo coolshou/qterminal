@@ -68,6 +68,7 @@ public:
 public slots:
     void updateStatus(QString sMsg);
     void updateActionBtnStatus(bool bStatus);
+    int get_session_num();
 
 private slots:
     void openSerialPort();
@@ -92,10 +93,11 @@ private:
 private:
     Ui::MainWindow *ui;
     QSettings *settings;
-    Console *console;
+    //Console *console;
     SettingsDialog *settingDlg;
     //QSerialPort *serial;
-    termsession *termSession;
+    //termsession *termSession;
+    QList<termsession *> sessionlist;
 };
 
 #endif // MAINWINDOW_H

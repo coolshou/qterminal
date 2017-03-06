@@ -52,7 +52,7 @@ MainWindow::MainWindow(QWidget *parent) :
     //TODO: setting
     settings = new QSettings();
     readPosSetting();
-
+    settingDlg = new SettingsDialog();
 //    serial = new QSerialPort(this);
     /*
     ui->actionConnect->setEnabled(true);
@@ -63,6 +63,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->actionQuit->setEnabled(true);
     initActionsConnections();
 
+    get_session_num();
 }
 
 
@@ -113,6 +114,13 @@ void MainWindow::openSerialPort()
 {
     //TODO: open serial base on witch tab
     qDebug() <<"TODO: open serial base on witch tab";
+    QMdiSubWindow *a = ui->mdiArea->currentSubWindow();
+    if ((a == 0)||(a == NULL)) {
+        qDebug() << "not found subwindow";
+        return;
+    }
+    qDebug() << "found subwindow: " << a->widget()->windowTitle();
+
     /*
     SettingsDialog::Settings p = settings->settings();
     serial->setPortName(p.name);
@@ -197,24 +205,46 @@ void MainWindow::on_action_Pop_Out_triggered()
     }
 }
 */
+int MainWindow::get_session_num()
+{
+    //Get current session number
+    int i;
+    i= ui->mdiArea->subWindowList().count();
+    qDebug() << "current session number: " << i;
+    return i;
+}
 void MainWindow::add_session()
 {
+    qDebug() << "TODO: add_session";
     //TODO: add a session (console) for mdi SubWindow
     //show console config dialog
+    settingDlg->show();
+    QString sName = settingDlg->settings().name;
+    settings->beginGroup(sName);
+    //settings->setValue("name", settingDlg->settings().name);
+    settings->setValue("baudRate", settingDlg->settings().baudRate);
+    settings->setValue("dataBits", settingDlg->settings().dataBits);
+    settings->setValue("parity", settingDlg->settings().parity);
+    settings->setValue("stopBits", settingDlg->settings().stopBits);
+    settings->setValue("flowControl", settingDlg->settings().flowControl);
+    settings->setValue("localEchoEnabled", settingDlg->settings().localEchoEnabled);
+    //TODO: other console setting
+    settings->endGroup();
+    //TODO: check if serial is alweady exist?
     //setup new console for new SubWindow
-    //
-    qDebug() << "TODO: add_session";
-    //termsession *termSession = new termsession(this, "term1" );
-    termSession = new termsession(this, "term1" );
-    //TODO: term setting?
+    termsession *termSession = new termsession(this, sName, settings);
+    sessionlist.append(termSession);
     //TODO: delete termSession;
     connect(termSession, SIGNAL(sig_updateStatus(QString)), this, SLOT(updateStatus(QString)));
     connect(termSession, SIGNAL(sig_updateActionBtnStatus(bool)), this, SLOT(updateActionBtnStatus(bool)));
     //console = termSession->console;
 
-    QMdiSubWindow *subwin1;
-    subwin1 = ui->mdiArea->addSubWindow(termSession->console);
-    //subwin1->setAttribute(Qt::WA_DeleteOnClose);
+    QMdiSubWindow *subwin1 = new QMdiSubWindow;
+    subwin1->setWidget(termSession->console);
+    subwin1->setAttribute(Qt::WA_DeleteOnClose);
+    subwin1->widget()->setWindowTitle(sName);
+    ui->mdiArea->addSubWindow(subwin1);
+    subwin1->show();
     //TODO: setting
     //settingDlg = new SettingsDialog;
     //subwin1->widget()->setWindowTitle(settingDlg->settings().name);

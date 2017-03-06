@@ -3,10 +3,10 @@
 #include <QMessageBox>
 #include "const.h"
 
-termsession::termsession(QWidget *parent, QString name) : QWidget(parent)
+termsession::termsession(QWidget *parent, QString name, QSettings *settings) : QWidget(parent)
 {
-    mName = name;
-    QSettings mSetting ;//= QSettings;
+    mGroupName = name;
+    mSetting = settings;
     //mParent = parent;
     console = new Console;
     console->setEnabled(false);
@@ -39,32 +39,32 @@ void termsession::openSerialPort()
 {
     //TODO
 
-    mSetting.beginGroup(mName);
+    mSetting->beginGroup(mGroupName);
     //SettingsDialog::Settings p = settings->settings();
-    serial->setPortName(mSetting.value("name").toString());
-    serial->setBaudRate(mSetting.value("baudRate").toInt());
-    serial->setDataBits(mSetting.value("dataBits").value<QSerialPort::DataBits>());
-    serial->setParity(mSetting.value("parity").value<QSerialPort::Parity>());
-    serial->setStopBits(mSetting.value("stopBits").value<QSerialPort::StopBits>());
-    serial->setFlowControl(mSetting.value("flowControl").value<QSerialPort::FlowControl>());
+    serial->setPortName(mSetting->value("name").toString());
+    serial->setBaudRate(mSetting->value("baudRate").toInt());
+    serial->setDataBits(mSetting->value("dataBits").value<QSerialPort::DataBits>());
+    serial->setParity(mSetting->value("parity").value<QSerialPort::Parity>());
+    serial->setStopBits(mSetting->value("stopBits").value<QSerialPort::StopBits>());
+    serial->setFlowControl(mSetting->value("flowControl").value<QSerialPort::FlowControl>());
     if (serial->open(QIODevice::ReadWrite)) {
             console->setEnabled(true);
-            console->setLocalEchoEnabled(mSetting.value("localEchoEnabled").toBool());
+            console->setLocalEchoEnabled(mSetting->value("localEchoEnabled").toBool());
 
             emit sig_updateActionBtnStatus(false);
             //TODO:
             emit sig_updateStatus(tr("Connected to %1 : %2, %3, %4, %5, %6")
-                                  .arg(mSetting.value("name").toString())
-                                  .arg(mSetting.value("baudRate").toString())
-                                  .arg(mSetting.value("dataBits").toString())
-                                  .arg(mSetting.value("parity").toString())
-                                  .arg(mSetting.value("stopBits").toString())
-                                  .arg(mSetting.value("flowControl").toString()));
+                                  .arg(mSetting->value("name").toString())
+                                  .arg(mSetting->value("baudRate").toString())
+                                  .arg(mSetting->value("dataBits").toString())
+                                  .arg(mSetting->value("parity").toString())
+                                  .arg(mSetting->value("stopBits").toString())
+                                  .arg(mSetting->value("flowControl").toString()));
     } else {
         QMessageBox::critical(this, tr("Error"), serial->errorString());
         emit sig_updateStatus(tr("Open error"));
     }
-    mSetting.endGroup();
+    mSetting->endGroup();
 }
 
 void termsession::closeSerialPort()
