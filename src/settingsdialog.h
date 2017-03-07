@@ -37,6 +37,7 @@
 
 #include <QDialog>
 #include <QtSerialPort/QSerialPort>
+#include <QCloseEvent>
 
 QT_USE_NAMESPACE
 
@@ -78,9 +79,13 @@ public:
 
     Settings settings() const;
 
+protected:
+    //void closeEvent(QCloseEvent event);
+
 private slots:
     void showPortInfo(int idx);
     void apply();
+    void cancel();
     void checkCustomBaudRatePolicy(int idx);
     void checkCustomDevicePathPolicy(int idx);
 

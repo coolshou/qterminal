@@ -22,6 +22,13 @@
   <property name="windowTitle">
    <string>Settings</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="../qtvt.qrc">
+    <normaloff>:/images/settings.png</normaloff>:/images/settings.png</iconset>
+  </property>
+  <property name="modal">
+   <bool>true</bool>
+  </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
     <widget class="QTabWidget" name="tabWidget">
@@ -215,10 +222,19 @@
        </property>
       </widget>
      </item>
+     <item>
+      <widget class="QPushButton" name="pb_Cancel">
+       <property name="text">
+        <string>Cancel</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../qtvt.qrc"/>
+ </resources>
  <connections/>
 </ui>

@@ -63,6 +63,8 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+
+protected:
     void closeEvent(QCloseEvent *event);
 
 public slots:
@@ -85,10 +87,12 @@ private slots:
     void edit_session();
     void savePosSetting();
     void readPosSetting();
+    void acceptSettingDlg(int result);
+    termsession* get_termsession(QString sName);
 
 private:
     void initActionsConnections();
-
+    bool session_exist(QString sName);
 
 private:
     Ui::MainWindow *ui;

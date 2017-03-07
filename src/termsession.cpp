@@ -1,10 +1,13 @@
 #include "termsession.h"
 #include "settingsdialog.h"
 #include <QMessageBox>
+#include <QIcon>
+
 #include "const.h"
 
 termsession::termsession(QWidget *parent, QString name, QSettings *settings) : QWidget(parent)
 {
+    //this->setWindowIcon(QIcon(":/images/qtvt.png")); not work?
     mGroupName = name;
     mSetting = settings;
     //mParent = parent;
@@ -94,4 +97,8 @@ void termsession::handleError(QSerialPort::SerialPortError error)
     }
 }
 
+QString termsession::get_name()
+{
+    return mGroupName;
+}
 

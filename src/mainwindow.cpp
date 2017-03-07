@@ -39,6 +39,7 @@
 
 #include <QMessageBox>
 #include <QtSerialPort/QSerialPort>
+#include <QDialog>
 
 #include "const.h"
 #include <QDebug>
@@ -49,10 +50,11 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    //TODO: setting
+    //setting
     settings = new QSettings();
     readPosSetting();
     settingDlg = new SettingsDialog();
+    connect(settingDlg, SIGNAL(finished(int)), this, SLOT(acceptSettingDlg(int)));
 //    serial = new QSerialPort(this);
     /*
     ui->actionConnect->setEnabled(true);
@@ -80,6 +82,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 {
     //TODO: ask quit?
     savePosSetting();
+    event->accept();
 }
 
 void MainWindow::savePosSetting()
@@ -110,6 +113,47 @@ void MainWindow::readPosSetting()
     settings->endGroup();
 }
 
+void MainWindow::acceptSettingDlg(int result)
+{
+    //qDebug() << "acceptSettingDlg: " << result;
+    if (result == QDialog::Accepted) {
+        qDebug() << "Accepted";
+        QString sName = settingDlg->settings().name;
+        if (session_exist(sName)){
+            qDebug() << "TODO: session_exist: " << sName;
+            return;
+        }
+        settings->beginGroup(sName);
+        //settings->setValue("name", settingDlg->settings().name);
+        settings->setValue("baudRate", settingDlg->settings().baudRate);
+        settings->setValue("dataBits", settingDlg->settings().dataBits);
+        settings->setValue("parity", settingDlg->settings().parity);
+        settings->setValue("stopBits", settingDlg->settings().stopBits);
+        settings->setValue("flowControl", settingDlg->settings().flowControl);
+        settings->setValue("localEchoEnabled", settingDlg->settings().localEchoEnabled);
+        //TODO: other console setting
+        settings->endGroup();
+        //TODO: check if serial is alweady exist?
+        //setup new console for new SubWindow
+        termsession *termSession = new termsession(this, sName, settings);
+        sessionlist.append(termSession);
+        //TODO: delete termSession;
+        connect(termSession, SIGNAL(sig_updateStatus(QString)), this, SLOT(updateStatus(QString)));
+        connect(termSession, SIGNAL(sig_updateActionBtnStatus(bool)), this, SLOT(updateActionBtnStatus(bool)));
+        //console = termSession->console;
+
+        QMdiSubWindow *subwin1 = new QMdiSubWindow;
+        subwin1->setWidget(termSession->console);
+        subwin1->setWindowIcon(QIcon(":/images/qtvt.png"));
+        subwin1->setAttribute(Qt::WA_DeleteOnClose);
+        subwin1->widget()->setWindowTitle(sName);
+        ui->mdiArea->addSubWindow(subwin1);
+        subwin1->show();
+    //TODO: setting
+    //settingDlg = new SettingsDialog;
+    //subwin1->widget()->setWindowTitle(settingDlg->settings().name);
+    }
+}
 void MainWindow::openSerialPort()
 {
     //TODO: open serial base on witch tab
@@ -205,6 +249,35 @@ void MainWindow::on_action_Pop_Out_triggered()
     }
 }
 */
+bool MainWindow::session_exist(QString sName)
+{
+    QString tmp;
+    //found if session name alweady exist
+    foreach( termsession *item, sessionlist )
+    {
+        tmp = item->get_name();
+        qDebug() << "name:" << tmp;
+        if (QString::compare(sName, tmp, Qt::CaseInsensitive) == 0  ) {
+            return true;
+        }
+    }
+    return false;
+}
+//TODO:
+termsession* MainWindow::get_termsession(QString sName)
+{
+    QString tmp;
+    //found if session name alweady exist
+    foreach( termsession *item, sessionlist )
+    {
+        tmp = item->get_name();
+        qDebug() << "get_termsession name:" << tmp;
+        if (QString::compare(sName, tmp, Qt::CaseInsensitive) == 0  ) {
+            return item;
+        }
+    }
+    return NULL;
+}
 int MainWindow::get_session_num()
 {
     //Get current session number
@@ -215,39 +288,11 @@ int MainWindow::get_session_num()
 }
 void MainWindow::add_session()
 {
-    qDebug() << "TODO: add_session";
     //TODO: add a session (console) for mdi SubWindow
     //show console config dialog
-    settingDlg->show();
-    QString sName = settingDlg->settings().name;
-    settings->beginGroup(sName);
-    //settings->setValue("name", settingDlg->settings().name);
-    settings->setValue("baudRate", settingDlg->settings().baudRate);
-    settings->setValue("dataBits", settingDlg->settings().dataBits);
-    settings->setValue("parity", settingDlg->settings().parity);
-    settings->setValue("stopBits", settingDlg->settings().stopBits);
-    settings->setValue("flowControl", settingDlg->settings().flowControl);
-    settings->setValue("localEchoEnabled", settingDlg->settings().localEchoEnabled);
-    //TODO: other console setting
-    settings->endGroup();
-    //TODO: check if serial is alweady exist?
-    //setup new console for new SubWindow
-    termsession *termSession = new termsession(this, sName, settings);
-    sessionlist.append(termSession);
-    //TODO: delete termSession;
-    connect(termSession, SIGNAL(sig_updateStatus(QString)), this, SLOT(updateStatus(QString)));
-    connect(termSession, SIGNAL(sig_updateActionBtnStatus(bool)), this, SLOT(updateActionBtnStatus(bool)));
-    //console = termSession->console;
-
-    QMdiSubWindow *subwin1 = new QMdiSubWindow;
-    subwin1->setWidget(termSession->console);
-    subwin1->setAttribute(Qt::WA_DeleteOnClose);
-    subwin1->widget()->setWindowTitle(sName);
-    ui->mdiArea->addSubWindow(subwin1);
-    subwin1->show();
-    //TODO: setting
-    //settingDlg = new SettingsDialog;
-    //subwin1->widget()->setWindowTitle(settingDlg->settings().name);
+    //settingDlg->show();
+    settingDlg->exec(); //show as modal
+    qDebug() << "add_session";
 }
 
 void MainWindow::edit_session()

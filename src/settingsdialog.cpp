@@ -39,6 +39,8 @@
 #include <QIntValidator>
 #include <QLineEdit>
 
+#include <QDebug>
+
 QT_USE_NAMESPACE
 
 static const char blankString[] = QT_TRANSLATE_NOOP("SettingsDialog", "N/A");
@@ -55,6 +57,8 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
 
     connect(ui->applyButton, SIGNAL(clicked()),
             this, SLOT(apply()));
+    connect(ui->pb_Cancel, SIGNAL(clicked()),
+            this, SLOT(cancel()));
     connect(ui->serialPortInfoListBox, SIGNAL(currentIndexChanged(int)),
             this, SLOT(showPortInfo(int)));
     connect(ui->baudRateBox, SIGNAL(currentIndexChanged(int)),
@@ -94,8 +98,15 @@ void SettingsDialog::showPortInfo(int idx)
 
 void SettingsDialog::apply()
 {
+    qDebug() <<"SettingsDialog::apply";
     updateSettings();
-    hide();
+    //hide();
+    close();
+    accept();
+}
+void SettingsDialog::cancel()
+{
+    close();
 }
 
 void SettingsDialog::checkCustomBaudRatePolicy(int idx)
@@ -204,3 +215,14 @@ void SettingsDialog::updateSettings()
     currentSettings.localEchoEnabled = ui->localEchoCheckBox->isChecked();
     //TODO: console font
 }
+/*
+void SettingsDialog::closeEvent(QCloseEvent event)
+{
+    qDebug() << "closeevent:" ;//<< event.;
+//        writeSettings();
+//        event.accept();
+//    } else {
+//        event.ignore();
+//    }
+}
+*/

@@ -20,6 +20,7 @@ public:
 
     //QSerialPort get_serial();
     //Console get_console();
+    QString get_name();
 
 signals:
     void sig_updateStatus(QString sMsg);
