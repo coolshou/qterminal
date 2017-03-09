@@ -7,6 +7,7 @@
 #include <QSettings>
 #include "console.h"
 
+#include <QDebug>
 
 class termsession : public QWidget
 {
@@ -34,7 +35,7 @@ private slots:
     void readData();
     void writeData(const QByteArray &data);
     void handleError(QSerialPort::SerialPortError error);
-
+    void slot_baudRateChanged(qint32 baudRate,QSerialPort::Directions directions);
 
 private:
     QString mGroupName;

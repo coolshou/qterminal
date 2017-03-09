@@ -7,21 +7,19 @@
 
 termsession::termsession(QWidget *parent, QString name, QSettings *settings) : QWidget(parent)
 {
-    //this->setWindowIcon(QIcon(":/images/qtvt.png")); not work?
     mGroupName = name;
     mSetting = settings;
-    //mParent = parent;
     console = new Console;
     console->setEnabled(false);
     console->showMaximized();
-
-    serial = new QSerialPort(this);
-
-    connect(serial, SIGNAL(error(QSerialPort::SerialPortError)), this,
-            SLOT(handleError(QSerialPort::SerialPortError)));
-    connect(serial, SIGNAL(readyRead()), this, SLOT(readData()));
     connect(console, SIGNAL(getData(QByteArray)), this, SLOT(writeData(QByteArray)));
 
+    serial = new QSerialPort(this);
+    connect(serial, SIGNAL(error(QSerialPort::SerialPortError)),
+            this, SLOT(handleError(QSerialPort::SerialPortError)));
+    connect(serial, SIGNAL(readyRead()), this, SLOT(readData()));
+    connect(serial, SIGNAL(baudRateChanged(qint32,QSerialPort::Directions)),
+            this, SLOT(slot_baudRateChanged(qint32,QSerialPort::Directions)));
 }
 termsession::~termsession()
 {
@@ -40,11 +38,10 @@ Console termsession::get_console()
 */
 void termsession::openSerialPort()
 {
-    //TODO
-
     mSetting->beginGroup(mGroupName);
-    //SettingsDialog::Settings p = settings->settings();
+    //qDebug() << "PortName: " << mSetting->value("name").toString();
     serial->setPortName(mSetting->value("name").toString());
+    //serial->setBaudRate(mSetting->value("baudRate").value<QSerialPort::BaudRate>());
     serial->setBaudRate(mSetting->value("baudRate").toInt());
     serial->setDataBits(mSetting->value("dataBits").value<QSerialPort::DataBits>());
     serial->setParity(mSetting->value("parity").value<QSerialPort::Parity>());
@@ -102,3 +99,10 @@ QString termsession::get_name()
     return mGroupName;
 }
 
+void termsession::slot_baudRateChanged(qint32 baudRate,QSerialPort::Directions directions)
+{
+    if (serial->isOpen()) {
+        closeSerialPort();
+        openSerialPort();
+    }
+}

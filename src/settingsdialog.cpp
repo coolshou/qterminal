@@ -57,7 +57,7 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
 
     connect(ui->applyButton, SIGNAL(clicked()),
             this, SLOT(apply()));
-    connect(ui->pb_Cancel, SIGNAL(clicked()),
+    connect(ui->cancelButton, SIGNAL(clicked()),
             this, SLOT(cancel()));
     connect(ui->serialPortInfoListBox, SIGNAL(currentIndexChanged(int)),
             this, SLOT(showPortInfo(int)));
@@ -69,7 +69,7 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
     fillPortsParameters();
     fillPortsInfo();
 
-    updateSettings();
+    //updateSettings();
 }
 
 SettingsDialog::~SettingsDialog()
@@ -77,7 +77,7 @@ SettingsDialog::~SettingsDialog()
     delete ui;
 }
 
-SettingsDialog::Settings SettingsDialog::settings() const
+SettingsDialog::Settings SettingsDialog::get_settings() const
 {
     return currentSettings;
 }
@@ -98,7 +98,6 @@ void SettingsDialog::showPortInfo(int idx)
 
 void SettingsDialog::apply()
 {
-    qDebug() <<"SettingsDialog::apply";
     updateSettings();
     //hide();
     close();
@@ -130,9 +129,11 @@ void SettingsDialog::checkCustomDevicePathPolicy(int idx)
 
 void SettingsDialog::fillPortsParameters()
 {
+    //TODO: all supported baudrate
     ui->baudRateBox->addItem(QStringLiteral("9600"), QSerialPort::Baud9600);
     ui->baudRateBox->addItem(QStringLiteral("19200"), QSerialPort::Baud19200);
     ui->baudRateBox->addItem(QStringLiteral("38400"), QSerialPort::Baud38400);
+    ui->baudRateBox->addItem(QStringLiteral("57600"), QSerialPort::Baud57600);
     ui->baudRateBox->addItem(QStringLiteral("115200"), QSerialPort::Baud115200);
     ui->baudRateBox->addItem(tr("Custom"));
 
@@ -161,6 +162,7 @@ void SettingsDialog::fillPortsParameters()
 
 void SettingsDialog::fillPortsInfo()
 {
+    //TODO: when a serial is opened, don't show it here? how?
     ui->serialPortInfoListBox->clear();
     QString description;
     QString manufacturer;
@@ -213,8 +215,22 @@ void SettingsDialog::updateSettings()
     currentSettings.stringFlowControl = ui->flowControlBox->currentText();
 
     currentSettings.localEchoEnabled = ui->localEchoCheckBox->isChecked();
-    //TODO: console font
+    //TODO: console setting
 }
+void SettingsDialog::setSettings(QString gname, QSettings *settings)
+{
+    settings->beginGroup(gname);
+    ui->serialPortInfoListBox->setCurrentText(settings->value("name").toString());
+    ui->baudRateBox->setCurrentText(settings->value("baudRate").toString());
+    ui->dataBitsBox->setCurrentText(settings->value("dataBits").toString());
+    ui->parityBox->setCurrentText(settings->value("parity").toString());
+    ui->stopBitsBox->setCurrentText(settings->value("stopBits").toString());
+    ui->flowControlBox->setCurrentText(settings->value("flowControl").toString());
+    ui->localEchoCheckBox->setChecked(settings->value("localEchoEnabled").toBool());
+    //TODO: console setting
+    settings->endGroup();
+}
+
 /*
 void SettingsDialog::closeEvent(QCloseEvent event)
 {

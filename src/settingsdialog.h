@@ -38,6 +38,7 @@
 #include <QDialog>
 #include <QtSerialPort/QSerialPort>
 #include <QCloseEvent>
+#include <QSettings>
 
 QT_USE_NAMESPACE
 
@@ -77,7 +78,8 @@ public:
     explicit SettingsDialog(QWidget *parent = 0);
     ~SettingsDialog();
 
-    Settings settings() const;
+    Settings get_settings() const;
+    void setSettings(QString gname, QSettings *settings);
 
 protected:
     //void closeEvent(QCloseEvent event);

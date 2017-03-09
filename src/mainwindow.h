@@ -70,12 +70,17 @@ protected:
 public slots:
     void updateStatus(QString sMsg);
     void updateActionBtnStatus(bool bStatus);
+    void updateActionEditSessionBtnStatus(bool bStatus);
     int get_session_num();
 
 private slots:
     void openSerialPort();
     void closeSerialPort();
     void about();
+    void savePosSetting();
+    void readPosSetting();
+    void acceptSettingDlg(int result);
+
     //void writeData(const QByteArray &data);
     //void readData();
 
@@ -85,14 +90,18 @@ private slots:
     //
     void add_session();
     void edit_session();
-    void savePosSetting();
-    void readPosSetting();
-    void acceptSettingDlg(int result);
+    void close_session();
+    QMdiSubWindow* get_currentSubWindow();
     termsession* get_termsession(QString sName);
+    bool del_termsession(termsession* item);
+    bool del_termsessionByName(QString sName);
+    void subWindowChanged(QMdiSubWindow* window);
+
 
 private:
     void initActionsConnections();
     bool session_exist(QString sName);
+    void updateMenuSession(bool state);
 
 private:
     Ui::MainWindow *ui;

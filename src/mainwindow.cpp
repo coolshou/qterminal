@@ -55,13 +55,10 @@ MainWindow::MainWindow(QWidget *parent) :
     readPosSetting();
     settingDlg = new SettingsDialog();
     connect(settingDlg, SIGNAL(finished(int)), this, SLOT(acceptSettingDlg(int)));
-//    serial = new QSerialPort(this);
-    /*
-    ui->actionConnect->setEnabled(true);
-    ui->actionDisconnect->setEnabled(false);
-    ui->actionConfigure->setEnabled(true);
-    */
-    this->updateActionBtnStatus(true);
+
+    connect(ui->mdiArea, SIGNAL(subWindowActivated(QMdiSubWindow*)), this, SLOT(subWindowChanged(QMdiSubWindow*)));
+
+    //this->updateActionBtnStatus(true);
     ui->actionQuit->setEnabled(true);
     initActionsConnections();
 
@@ -118,19 +115,19 @@ void MainWindow::acceptSettingDlg(int result)
     //qDebug() << "acceptSettingDlg: " << result;
     if (result == QDialog::Accepted) {
         qDebug() << "Accepted";
-        QString sName = settingDlg->settings().name;
+        QString sName = settingDlg->get_settings().name;
         if (session_exist(sName)){
-            qDebug() << "TODO: session_exist: " << sName;
+            qDebug() << "TODO:acceptSettingDlg session_exist: " << sName;
             return;
         }
         settings->beginGroup(sName);
-        //settings->setValue("name", settingDlg->settings().name);
-        settings->setValue("baudRate", settingDlg->settings().baudRate);
-        settings->setValue("dataBits", settingDlg->settings().dataBits);
-        settings->setValue("parity", settingDlg->settings().parity);
-        settings->setValue("stopBits", settingDlg->settings().stopBits);
-        settings->setValue("flowControl", settingDlg->settings().flowControl);
-        settings->setValue("localEchoEnabled", settingDlg->settings().localEchoEnabled);
+        settings->setValue("name", sName);
+        settings->setValue("baudRate", settingDlg->get_settings().baudRate);
+        settings->setValue("dataBits", settingDlg->get_settings().dataBits);
+        settings->setValue("parity", settingDlg->get_settings().parity);
+        settings->setValue("stopBits", settingDlg->get_settings().stopBits);
+        settings->setValue("flowControl", settingDlg->get_settings().flowControl);
+        settings->setValue("localEchoEnabled", settingDlg->get_settings().localEchoEnabled);
         //TODO: other console setting
         settings->endGroup();
         //TODO: check if serial is alweady exist?
@@ -145,88 +142,74 @@ void MainWindow::acceptSettingDlg(int result)
         QMdiSubWindow *subwin1 = new QMdiSubWindow;
         subwin1->setWidget(termSession->console);
         subwin1->setWindowIcon(QIcon(":/images/qtvt.png"));
-        subwin1->setAttribute(Qt::WA_DeleteOnClose);
-        subwin1->widget()->setWindowTitle(sName);
+        subwin1->setAttribute(Qt::WA_DeleteOnClose, false);
+        subwin1->resize(QSize(ui->mdiArea->width(),ui->mdiArea->height()));
+        subwin1->setWindowTitle(sName);
         ui->mdiArea->addSubWindow(subwin1);
+        //ui->mdiArea->setOption(QMdiArea::DontMaximizeSubWindowOnActivation);//what this do for?
         subwin1->show();
-    //TODO: setting
-    //settingDlg = new SettingsDialog;
-    //subwin1->widget()->setWindowTitle(settingDlg->settings().name);
+        ui->mdiArea->setActiveSubWindow(subwin1);
     }
 }
+//open serial base on witch tab
 void MainWindow::openSerialPort()
 {
-    //TODO: open serial base on witch tab
-    qDebug() <<"TODO: open serial base on witch tab";
-    QMdiSubWindow *a = ui->mdiArea->currentSubWindow();
-    if ((a == 0)||(a == NULL)) {
-        qDebug() << "not found subwindow";
+    //qDebug() <<"open serial base on witch tab";
+    //QMdiSubWindow *sw = ui->mdiArea->currentSubWindow();
+    QMdiSubWindow *sw = get_currentSubWindow();
+    if ((sw == 0)||(sw == NULL)) {
+        qDebug() << "openSerialPort not found subwindow";
         return;
     }
-    qDebug() << "found subwindow: " << a->widget()->windowTitle();
-
-    /*
-    SettingsDialog::Settings p = settings->settings();
-    serial->setPortName(p.name);
-    serial->setBaudRate(p.baudRate);
-    serial->setDataBits(p.dataBits);
-    serial->setParity(p.parity);
-    serial->setStopBits(p.stopBits);
-    serial->setFlowControl(p.flowControl);
-    if (serial->open(QIODevice::ReadWrite)) {
-            console->setEnabled(true);
-            console->setLocalEchoEnabled(p.localEchoEnabled);
-            ui->actionConnect->setEnabled(false);
-            ui->actionDisconnect->setEnabled(true);
-            ui->actionConfigure->setEnabled(false);
-            ui->statusBar->showMessage(tr("Connected to %1 : %2, %3, %4, %5, %6")
-                                       .arg(p.name).arg(p.stringBaudRate).arg(p.stringDataBits)
-                                       .arg(p.stringParity).arg(p.stringStopBits).arg(p.stringFlowControl));
-    } else {
-        QMessageBox::critical(this, tr("Error"), serial->errorString());
-
-        ui->statusBar->showMessage(tr("Open error"));
-    }
-    */
+    qDebug() << "openSerialPort:" << sw->windowTitle();
+    termsession *item = get_termsession(sw->windowTitle());
+    item->openSerialPort();
+    updateActionEditSessionBtnStatus(false);
 }
 
-
+//close serial base on witch tab
 void MainWindow::closeSerialPort()
 {
-    //TODO: close serial base on witch tab
-    qDebug() <<"TODO: close serial base on witch tab";
-    /*
-    if (serial->isOpen())
-        serial->close();
-    console->setEnabled(false);
-    ui->actionConnect->setEnabled(true);
-    ui->actionDisconnect->setEnabled(false);
-    ui->actionConfigure->setEnabled(true);
-    ui->statusBar->showMessage(tr("Disconnected"));
-    */
+    //qDebug() <<"close serial base on witch tab";
+    //QMdiSubWindow *sw = ui->mdiArea->currentSubWindow();
+    QMdiSubWindow *sw = get_currentSubWindow();
+    if ((sw == 0)||(sw == NULL)) {
+        qDebug() << "closeSerialPort not found subwindow";
+        return;
+    }
+
+    termsession *item = get_termsession(sw->windowTitle());
+    if (item->serial->isOpen()) {
+        item->closeSerialPort();
+        updateActionEditSessionBtnStatus(true);
+    }
 }
 
 void MainWindow::about()
 {
-    QMessageBox::about(this, tr("About QTTerminal"),
-                       tr("The <b>QTTerminal</b> to use the Qt Serial Port module"));
+    QMessageBox::about(this, QString("About %s").arg(MYAPP),
+                       QString("The <b>%s</b> to use the Qt Serial Port module").arg(MYAPP));
 }
 
 
 void MainWindow::initActionsConnections()
 {
-    //file
-    //TODO: new
-    connect(ui->actionNew, SIGNAL(triggered()), this, SLOT(add_session()));
+    //file - session
+    connect(ui->actionNew_session, SIGNAL(triggered()), this, SLOT(add_session()));
+    connect(ui->actionEdit_session, SIGNAL(triggered()), this, SLOT(edit_session()));
+    connect(ui->actionClose_session, SIGNAL(triggered()), this, SLOT(close_session()));
     connect(ui->actionQuit, SIGNAL(triggered()), this, SLOT(close()));
     //cell
     connect(ui->actionConnect, SIGNAL(triggered()), this, SLOT(openSerialPort()));
     connect(ui->actionDisconnect, SIGNAL(triggered()), this, SLOT(closeSerialPort()));
     //edit
+    // copy
+    // paste
+    //connect(ui->actionClear, SIGNAL(triggered()), console, SLOT(clear()));
 
     //config
     //connect(ui->actionConfigure, SIGNAL(triggered()), settingDlg, SLOT(show()));
-    //connect(ui->actionClear, SIGNAL(triggered()), console, SLOT(clear()));
+
     //window
     connect(ui->actionCascade, SIGNAL(triggered()), ui->mdiArea, SLOT(cascadeSubWindows()));
     connect(ui->actionTile, SIGNAL(triggered()), ui->mdiArea, SLOT(tileSubWindows()));
@@ -263,7 +246,12 @@ bool MainWindow::session_exist(QString sName)
     }
     return false;
 }
-//TODO:
+QMdiSubWindow* MainWindow::get_currentSubWindow()
+{
+    return ui->mdiArea->currentSubWindow();
+}
+
+//TODO:get_termsession
 termsession* MainWindow::get_termsession(QString sName)
 {
     QString tmp;
@@ -271,39 +259,61 @@ termsession* MainWindow::get_termsession(QString sName)
     foreach( termsession *item, sessionlist )
     {
         tmp = item->get_name();
-        qDebug() << "get_termsession name:" << tmp;
+        //qDebug() << "get_termsession name:" << tmp;
         if (QString::compare(sName, tmp, Qt::CaseInsensitive) == 0  ) {
             return item;
         }
     }
     return NULL;
 }
+bool MainWindow::del_termsessionByName(QString sName)
+{
+    return del_termsession(get_termsession(sName));
+}
+
+bool MainWindow::del_termsession(termsession* item)
+{
+    return sessionlist.removeOne(item);
+}
+
 int MainWindow::get_session_num()
 {
     //Get current session number
     int i;
     i= ui->mdiArea->subWindowList().count();
-    qDebug() << "current session number: " << i;
     return i;
 }
+
+//add a session (console) for mdi SubWindow
 void MainWindow::add_session()
 {
-    //TODO: add a session (console) for mdi SubWindow
     //show console config dialog
-    //settingDlg->show();
     settingDlg->exec(); //show as modal
-    qDebug() << "add_session";
 }
-
+//edit session
 void MainWindow::edit_session()
 {
-    //TODO: edit session
-    QMdiSubWindow *sw = ui->mdiArea->activeSubWindow();
-    if (sw != 0 ) {
-        //
-        qDebug() << "edit_session";
+    //QMdiSubWindow *sw = ui->mdiArea->activeSubWindow();
+    QMdiSubWindow *sw = get_currentSubWindow();
+    if ((sw != 0)||(sw != NULL)) {
+        //qDebug() << "edit_session: " << sw->windowTitle();
+        settingDlg->setSettings(sw->windowTitle(),settings);
+        add_session();
     }
-
+}
+//close session
+void MainWindow::close_session()
+{
+    //QMdiSubWindow *sw = ui->mdiArea->activeSubWindow();
+    QMdiSubWindow *sw = get_currentSubWindow();
+    if ((sw != 0)||(sw != NULL)) {
+        //qDebug() << "close_session: " << sw->windowTitle();
+        termsession *item = get_termsession(sw->windowTitle());
+        item->closeSerialPort();
+        item->close();
+        del_termsession(item);
+        ui->mdiArea->removeSubWindow(sw);
+    }
 }
 
 void  MainWindow::updateStatus(QString sMsg)
@@ -316,4 +326,37 @@ void MainWindow::updateActionBtnStatus(bool bStatus)
     ui->actionConnect->setEnabled(bStatus);
     ui->actionDisconnect->setEnabled(!bStatus);
     ui->actionConfigure->setEnabled(bStatus);
+    //updateActionConfigureBtnStatus(bStatus);
+}
+void MainWindow::updateActionEditSessionBtnStatus(bool bStatus)
+{
+    //current is connect
+    ui->actionEdit_session->setEnabled(bStatus);
+}
+
+void MainWindow::subWindowChanged(QMdiSubWindow* window)
+{
+    //When no SubWindow is Active QMdiSubWindow pointer is null
+    //So,Check nullity here;otherwise application will crash
+    if(window != NULL)
+    {
+        updateMenuSession(true);
+        qDebug() << "TODO:(subWindowChanged) check the session is connected or not" ;
+        //TODO: update status bar message by tab
+        //TODO: update menu button status
+      //setWindowTitle("Hello! Active SubWindow is : "+window->windowTitle());
+    }
+    else
+    {
+        updateMenuSession(false);
+      //setWindowTitle("No active window");
+    }
+}
+
+void MainWindow::updateMenuSession(bool state)
+{
+    //ui->actionEdit_session->setEnabled(state);
+    updateActionEditSessionBtnStatus(state);
+    ui->actionClose_session->setEnabled(state);
+    ui->actionConnect->setEnabled(state);
 }
