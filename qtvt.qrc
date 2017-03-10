@@ -2,9 +2,20 @@
     <qresource prefix="/">
         <file>images/connect.png</file>
         <file>images/disconnect.png</file>
-        <file>images/application-exit.png</file>
         <file>images/settings.png</file>
         <file>images/clear.png</file>
         <file>images/qtvt.png</file>
+        <file>images/quit.png</file>
+        <file>images/close.png</file>
+        <file>images/copy.png</file>
+        <file>images/cut.png</file>
+        <file>images/new.png</file>
+        <file>images/paste.png</file>
+        <file>images/cascade.png</file>
+        <file>images/tile.png</file>
+        <file>images/edit.png</file>
+        <file>images/macro.png</file>
+        <file>images/qt.png</file>
+        <file>images/about.png</file>
     </qresource>
 </RCC>
