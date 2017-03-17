@@ -17,5 +17,6 @@
         <file>images/macro.png</file>
         <file>images/qt.png</file>
         <file>images/about.png</file>
+        <file>images/logFile.png</file>
     </qresource>
 </RCC>
