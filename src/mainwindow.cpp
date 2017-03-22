@@ -189,7 +189,6 @@ void MainWindow::sendSerialText()
     termsession *item = get_termsession(sw->windowTitle());
     if (item->serial->isOpen()) {
         if (! ui->HistoryEdit->text().isEmpty()) {
-            //TODO : sendSerialText
             item->serial->write(ui->HistoryEdit->text().toLatin1());
         }
     }
