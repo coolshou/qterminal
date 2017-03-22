@@ -228,6 +228,7 @@ void MainWindow::initActionsConnections()
     connect(ui->actionEdit_session, SIGNAL(triggered()), this, SLOT(edit_session()));
     connect(ui->actionClose_session, SIGNAL(triggered()), this, SLOT(close_session()));
     //TODO: log
+    //connect(ui->actionLogFile, SIGNAL(triggered()), this, SLOT(logtofile()));
     connect(ui->actionQuit, SIGNAL(triggered()), this, SLOT(close()));
     //cell
     connect(ui->actionConnect, SIGNAL(triggered()), this, SLOT(openSerialPort()));
@@ -285,7 +286,7 @@ QMdiSubWindow* MainWindow::get_currentSubWindow()
     return ui->mdiArea->currentSubWindow();
 }
 
-//TODO:get_termsession
+//get_termsession by name
 termsession* MainWindow::get_termsession(QString sName)
 {
     QString tmp;
@@ -321,7 +322,7 @@ int MainWindow::get_session_num()
 //add a session (console) for mdi SubWindow
 void MainWindow::add_session()
 {
-    //show console config dialog
+    //show console config dialog   
     settingDlg->exec(); //show as modal
 }
 //edit session

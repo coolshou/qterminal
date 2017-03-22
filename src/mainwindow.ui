@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>572</width>
-    <height>436</height>
+    <width>570</width>
+    <height>434</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,6 +16,18 @@
   <property name="windowIcon">
    <iconset resource="../qtvt.qrc">
     <normaloff>:/images/qtvt.png</normaloff>:/images/qtvt.png</iconset>
+  </property>
+  <property name="iconSize">
+   <size>
+    <width>32</width>
+    <height>32</height>
+   </size>
+  </property>
+  <property name="documentMode">
+   <bool>false</bool>
+  </property>
+  <property name="unifiedTitleAndToolBarOnMac">
+   <bool>true</bool>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout" stretch="1,0">
@@ -106,13 +118,13 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>572</width>
-     <height>23</height>
+     <width>570</width>
+     <height>28</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuCalls">
     <property name="title">
-     <string>Calls</string>
+     <string>Ca&amp;lls</string>
     </property>
     <addaction name="actionConnect"/>
     <addaction name="actionDisconnect"/>
@@ -145,7 +157,7 @@
    </widget>
    <widget class="QMenu" name="menuWindows">
     <property name="title">
-     <string>Windows</string>
+     <string>Wi&amp;ndows</string>
     </property>
     <addaction name="actionCascade"/>
     <addaction name="actionTile"/>
@@ -201,7 +213,7 @@
      <normaloff>:/images/qt.png</normaloff>:/images/qt.png</iconset>
    </property>
    <property name="text">
-    <string>About Qt</string>
+    <string>About &amp;Qt</string>
    </property>
   </action>
   <action name="actionConnect">
@@ -300,7 +312,7 @@
      <normaloff>:/images/cascade.png</normaloff>:/images/cascade.png</iconset>
    </property>
    <property name="text">
-    <string>cascade</string>
+    <string>&amp;cascade</string>
    </property>
   </action>
   <action name="actionTile">
@@ -309,7 +321,7 @@
      <normaloff>:/images/tile.png</normaloff>:/images/tile.png</iconset>
    </property>
    <property name="text">
-    <string>tile</string>
+    <string>&amp;tile</string>
    </property>
   </action>
   <action name="actionEdit_session">
@@ -321,7 +333,7 @@
      <normaloff>:/images/edit.png</normaloff>:/images/edit.png</iconset>
    </property>
    <property name="text">
-    <string>Edit session</string>
+    <string>&amp;Edit session</string>
    </property>
   </action>
   <action name="actionClose_session">
@@ -333,7 +345,7 @@
      <normaloff>:/images/close.png</normaloff>:/images/close.png</iconset>
    </property>
    <property name="text">
-    <string>Close session</string>
+    <string>&amp;Close session</string>
    </property>
   </action>
   <action name="actionCopy">
@@ -342,7 +354,7 @@
      <normaloff>:/images/copy.png</normaloff>:/images/copy.png</iconset>
    </property>
    <property name="text">
-    <string>Copy</string>
+    <string>&amp;Copy</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+C</string>
@@ -354,7 +366,7 @@
      <normaloff>:/images/paste.png</normaloff>:/images/paste.png</iconset>
    </property>
    <property name="text">
-    <string>Paste</string>
+    <string>&amp;Paste</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+V</string>
@@ -369,7 +381,7 @@
      <normaloff>:/images/logFile.png</normaloff>:/images/logFile.png</iconset>
    </property>
    <property name="text">
-    <string>Log</string>
+    <string>&amp;Log</string>
    </property>
   </action>
   <action name="actionMacro">
@@ -378,7 +390,7 @@
      <normaloff>:/images/macro.png</normaloff>:/images/macro.png</iconset>
    </property>
    <property name="text">
-    <string>Macro</string>
+    <string>&amp;Macro</string>
    </property>
   </action>
   <action name="actionFind">
@@ -387,7 +399,7 @@
      <normaloff>:/images/find.png</normaloff>:/images/find.png</iconset>
    </property>
    <property name="text">
-    <string>Find</string>
+    <string>&amp;Find</string>
    </property>
   </action>
  </widget>
