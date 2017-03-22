@@ -213,8 +213,10 @@ void MainWindow::closeSerialPort()
 
 void MainWindow::about()
 {
-    QMessageBox::about(this, QString("About %s").arg(MYAPP),
-                       QString("The <b>%s</b> to use the Qt Serial Port module").arg(MYAPP));
+    QString title =  QString("About %1").arg(MYAPP);
+    QString about =  QString("The <b>%1</b> use the Qt Serial Port module <br>").arg(MYAPP);
+    about.append(QString(" Author: %1").arg(MYORG));
+    QMessageBox::about(this,title,about);
 }
 
 

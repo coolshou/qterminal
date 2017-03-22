@@ -1,6 +1,11 @@
 #ifndef CONST
 #define CONST
 
+#include <QString>
+
+//const QString MYORG="coolshou";
+//const QString MYORGDOMAIN="coolshou.idv";
+//const QString MYAPP="qtvt";
 #define MYORG "coolshou"
 #define MYORGDOMAIN "coolshou.idv"
 #define MYAPP "qtvt"
