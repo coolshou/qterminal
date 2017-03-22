@@ -22,6 +22,12 @@ public:
     //QSerialPort get_serial();
     //Console get_console();
     QString get_name();
+    QString get_status();
+    //return serial is open or not
+    bool isOpen();
+    void clear();
+    void paste();
+    void copy();
 
 signals:
     void sig_updateStatus(QString sMsg);

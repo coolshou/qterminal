@@ -83,12 +83,21 @@ void Console::keyPressEvent(QKeyEvent *e)
 
 void Console::mousePressEvent(QMouseEvent *e)
 {
+    qDebug() << "mousePressEvent: " << e->pos();
     Q_UNUSED(e)
     setFocus();
 }
 
 void Console::mouseDoubleClickEvent(QMouseEvent *e)
 {
+
+    qDebug() << "mouseDoubleClickEvent: " << e->pos();
+    //TODO: not work
+    //QTextCursor tc(this->document());
+    //tc.select(QTextCursor::WordUnderCursor);
+    //qDebug() << "pos:" << this->textCursor().position();
+    //this->textCursor().select(QTextCursor::WordUnderCursor);
+
     Q_UNUSED(e)
 }
 

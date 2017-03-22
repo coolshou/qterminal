@@ -10,7 +10,7 @@ termsession::termsession(QWidget *parent, QString name, QSettings *settings) : Q
     mGroupName = name;
     mSetting = settings;
     console = new Console;
-    console->setEnabled(false);
+    //console->setEnabled(false);
     console->showMaximized();
     connect(console, SIGNAL(getData(QByteArray)), this, SLOT(writeData(QByteArray)));
 
@@ -53,13 +53,7 @@ void termsession::openSerialPort()
 
             emit sig_updateActionBtnStatus(false);
             //TODO:
-            emit sig_updateStatus(tr("Connected to %1 : %2, %3, %4, %5, %6")
-                                  .arg(mSetting->value("name").toString())
-                                  .arg(mSetting->value("baudRate").toString())
-                                  .arg(mSetting->value("dataBits").toString())
-                                  .arg(mSetting->value("parity").toString())
-                                  .arg(mSetting->value("stopBits").toString())
-                                  .arg(mSetting->value("flowControl").toString()));
+            emit sig_updateStatus(get_status());
     } else {
         QMessageBox::critical(this, tr("Error"), serial->errorString());
         emit sig_updateStatus(tr("Open error"));
@@ -79,6 +73,7 @@ void termsession::closeSerialPort()
 void termsession::readData()
 {
     QByteArray data = serial->readAll();
+    qDebug() << data;
     console->putData(data);
 }
 void termsession::writeData(const QByteArray &data)
@@ -97,6 +92,36 @@ void termsession::handleError(QSerialPort::SerialPortError error)
 QString termsession::get_name()
 {
     return mGroupName;
+}
+QString termsession::get_status()
+{
+    if (isOpen()) {
+        return tr("Connected to %1 : %2, %3, %4, %5, %6")
+                .arg(mSetting->value("name").toString())
+                .arg(mSetting->value("baudRate").toString())
+                .arg(mSetting->value("dataBits").toString())
+                .arg(mSetting->value("parity").toString())
+                .arg(mSetting->value("stopBits").toString())
+                .arg(mSetting->value("flowControl").toString());
+    }
+}
+bool termsession::isOpen()
+{
+    return serial->isOpen();
+}
+void termsession::copy()
+{
+    console->copy();
+}
+
+void termsession::paste()
+{
+    console->paste();
+}
+
+void termsession::clear()
+{
+    console->clear();
 }
 
 void termsession::slot_baudRateChanged(qint32 baudRate,QSerialPort::Directions directions)

@@ -129,6 +129,13 @@ void MainWindow::acceptSettingDlg(int result)
         settings->setValue("flowControl", settingDlg->get_settings().flowControl);
         settings->setValue("localEchoEnabled", settingDlg->get_settings().localEchoEnabled);
         //TODO: other console setting
+        settings->setValue("maxBlockCount", settingDlg->get_settings().maxBlockCount);
+        settings->setValue("baseColor", settingDlg->get_settings().baseColor);
+        settings->setValue("fontColor", settingDlg->get_settings().fontColor);
+        //TODO: Log
+        settings->setValue("logEnable", settingDlg->get_settings().bLogEnable);
+        settings->setValue("logFilename", settingDlg->get_settings().stringLogFilename);
+        settings->setValue("logDateTime", settingDlg->get_settings().bLogDateTime);
         settings->endGroup();
         //TODO: check if serial is alweady exist?
         //setup new console for new SubWindow
@@ -167,6 +174,25 @@ void MainWindow::openSerialPort()
     updateActionEditSessionBtnStatus(false);
 }
 
+void MainWindow::showInputHistory(QString sInput)
+{
+    qDebug() << "TODO: showInputHistory: " <<sInput;
+}
+
+void MainWindow::sendSerialText()
+{
+    QMdiSubWindow *sw = get_currentSubWindow();
+    if ((sw == 0)||(sw == NULL)) {
+        qDebug() << "sendSerialText not found subwindow";
+        return;
+    }
+    termsession *item = get_termsession(sw->windowTitle());
+    if (item->serial->isOpen()) {
+        //TODO : sendSerialText
+        //item->serial->write();
+    }
+}
+
 //close serial base on witch tab
 void MainWindow::closeSerialPort()
 {
@@ -198,15 +224,16 @@ void MainWindow::initActionsConnections()
     connect(ui->actionNew_session, SIGNAL(triggered()), this, SLOT(add_session()));
     connect(ui->actionEdit_session, SIGNAL(triggered()), this, SLOT(edit_session()));
     connect(ui->actionClose_session, SIGNAL(triggered()), this, SLOT(close_session()));
+    //TODO: log
     connect(ui->actionQuit, SIGNAL(triggered()), this, SLOT(close()));
     //cell
     connect(ui->actionConnect, SIGNAL(triggered()), this, SLOT(openSerialPort()));
     connect(ui->actionDisconnect, SIGNAL(triggered()), this, SLOT(closeSerialPort()));
     //edit
-    // copy
-    // paste
-    //connect(ui->actionClear, SIGNAL(triggered()), console, SLOT(clear()));
-
+    connect(ui->actionCopy, SIGNAL(triggered()), this, SLOT(consoleCopy()));
+    connect(ui->actionPaste, SIGNAL(triggered()), this, SLOT(consolePaste()));
+    connect(ui->actionClear, SIGNAL(triggered()), this, SLOT(consoleClear()));
+    //TODO: find
     //config
     //connect(ui->actionConfigure, SIGNAL(triggered()), settingDlg, SLOT(show()));
 
@@ -216,6 +243,10 @@ void MainWindow::initActionsConnections()
     //About
     connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(about()));
     connect(ui->actionAboutQt, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
+
+    //TODO: history
+    connect(ui->HistoryEdit,SIGNAL(textChanged(QString)), this, SLOT(showInputHistory(QString)));
+    connect(ui->SendBtn, SIGNAL(pressed()), this, SLOT(sendSerialText()));
 }
 
 //TODO: this is what I did from the main window to pop out a window.
@@ -315,6 +346,31 @@ void MainWindow::close_session()
         ui->mdiArea->removeSubWindow(sw);
     }
 }
+void MainWindow::consoleCopy()
+{
+    QMdiSubWindow *sw = get_currentSubWindow();
+    if ((sw != 0)||(sw != NULL)) {
+        termsession *item = get_termsession(sw->windowTitle());
+        item->copy();
+    }
+}
+void MainWindow::consolePaste()
+{
+    QMdiSubWindow *sw = get_currentSubWindow();
+    if ((sw != 0)||(sw != NULL)) {
+        termsession *item = get_termsession(sw->windowTitle());
+        item->paste();
+    }
+}
+
+void MainWindow::consoleClear()
+{
+    QMdiSubWindow *sw = get_currentSubWindow();
+    if ((sw != 0)||(sw != NULL)) {
+        termsession *item = get_termsession(sw->windowTitle());
+        item->clear();
+    }
+}
 
 void  MainWindow::updateStatus(QString sMsg)
 {
@@ -325,13 +381,14 @@ void MainWindow::updateActionBtnStatus(bool bStatus)
 {
     ui->actionConnect->setEnabled(bStatus);
     ui->actionDisconnect->setEnabled(!bStatus);
-    ui->actionConfigure->setEnabled(bStatus);
+    //ui->actionConfigure->setEnabled(bStatus);
     //updateActionConfigureBtnStatus(bStatus);
 }
 void MainWindow::updateActionEditSessionBtnStatus(bool bStatus)
 {
     //current is connect
     ui->actionEdit_session->setEnabled(bStatus);
+    ui->actionLogFile->setEnabled(bStatus);
 }
 
 void MainWindow::subWindowChanged(QMdiSubWindow* window)
@@ -340,8 +397,12 @@ void MainWindow::subWindowChanged(QMdiSubWindow* window)
     //So,Check nullity here;otherwise application will crash
     if(window != NULL)
     {
-        updateMenuSession(true);
         qDebug() << "TODO:(subWindowChanged) check the session is connected or not" ;
+        termsession *item = get_termsession(window->windowTitle());
+        updateStatus(item->get_status());
+
+        updateMenuSession(true);
+
         //TODO: update status bar message by tab
         //TODO: update menu button status
       //setWindowTitle("Hello! Active SubWindow is : "+window->windowTitle());

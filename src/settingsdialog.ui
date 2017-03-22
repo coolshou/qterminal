@@ -33,7 +33,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="tab_Serial">
       <attribute name="title">
@@ -193,10 +193,179 @@
        </layout>
       </widget>
      </widget>
+     <widget class="QWidget" name="tab_Log">
+      <attribute name="title">
+       <string>Log</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_4">
+       <item>
+        <widget class="QGroupBox" name="LogEnableGroupBox">
+         <property name="title">
+          <string>Enable Logging:</string>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+         <widget class="QLabel" name="logFilenameLabel">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>30</y>
+            <width>71</width>
+            <height>18</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>File Name:</string>
+          </property>
+         </widget>
+         <widget class="QLineEdit" name="logFilenameLineEdit">
+          <property name="geometry">
+           <rect>
+            <x>100</x>
+            <y>30</y>
+            <width>281</width>
+            <height>26</height>
+           </rect>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="logFilenamePushButton">
+          <property name="geometry">
+           <rect>
+            <x>390</x>
+            <y>30</y>
+            <width>80</width>
+            <height>26</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Browser</string>
+          </property>
+         </widget>
+         <widget class="QCheckBox" name="logDateTimeCheckBox">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>110</y>
+            <width>121</width>
+            <height>24</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Log DateTime</string>
+          </property>
+         </widget>
+         <widget class="QCheckBox" name="checkBox">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>80</y>
+            <width>81</width>
+            <height>24</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>CheckBox</string>
+          </property>
+         </widget>
+        </widget>
+       </item>
+      </layout>
+     </widget>
      <widget class="QWidget" name="tab_console">
       <attribute name="title">
        <string>Console</string>
       </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <item>
+        <widget class="QWidget" name="widget" native="true">
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <item>
+           <widget class="QLabel" name="maxBlockCountLabel">
+            <property name="text">
+             <string>Max Block Count:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QSpinBox" name="maxBlockCountSpinBox">
+            <property name="maximum">
+             <number>10000</number>
+            </property>
+            <property name="value">
+             <number>2000</number>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_2">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="ThemeGroupBox">
+         <property name="title">
+          <string>Theme:</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_3" columnstretch="1,0">
+          <item row="0" column="1" rowspan="3">
+           <widget class="QPlainTextEdit" name="DemoPlainTextEdit">
+            <property name="plainText">
+             <string>Demo
+Text</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0" rowspan="3">
+           <widget class="QWidget" name="widget_2" native="true">
+            <layout class="QFormLayout" name="formLayout">
+             <item row="0" column="0" colspan="2">
+              <widget class="QComboBox" name="ThemeComboBox">
+               <item>
+                <property name="text">
+                 <string>Green</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+             <item row="2" column="0">
+              <widget class="QLabel" name="FontColorLabel">
+               <property name="text">
+                <string>Font Color:</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1">
+              <widget class="QComboBox" name="FontColorComboBox"/>
+             </item>
+             <item row="3" column="1">
+              <widget class="QComboBox" name="BaseColorComboBox"/>
+             </item>
+             <item row="3" column="0">
+              <widget class="QLabel" name="BaseColorLabel">
+               <property name="text">
+                <string>Back Color:</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
      </widget>
     </widget>
    </item>

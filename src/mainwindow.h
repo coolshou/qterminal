@@ -76,21 +76,25 @@ public slots:
 private slots:
     void openSerialPort();
     void closeSerialPort();
+    void sendSerialText();
+
+    void showInputHistory(QString sInput);
+
     void about();
     void savePosSetting();
     void readPosSetting();
     void acceptSettingDlg(int result);
 
-    //void writeData(const QByteArray &data);
-    //void readData();
-
-    //void handleError(QSerialPort::SerialPortError error);
     //actions
     //void on_action_Pop_Out_triggered();
-    //
+    //file
     void add_session();
     void edit_session();
     void close_session();
+    //edit
+    void consoleCopy();
+    void consolePaste();
+    void consoleClear();
     QMdiSubWindow* get_currentSubWindow();
     termsession* get_termsession(QString sName);
     bool del_termsession(termsession* item);

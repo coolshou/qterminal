@@ -39,6 +39,7 @@
 #include <QtSerialPort/QSerialPort>
 #include <QCloseEvent>
 #include <QSettings>
+#include <QColor>
 
 QT_USE_NAMESPACE
 
@@ -72,6 +73,13 @@ public:
         QString stringFlowControl;
         bool localEchoEnabled;
         //TODO: console setting
+        int maxBlockCount;
+        QColor fontColor;
+        QColor baseColor;
+        //TODO: Log
+        bool bLogEnable;
+        QString stringLogFilename;
+        bool bLogDateTime;
 
     };
 
@@ -83,6 +91,7 @@ public:
 
 protected:
     //void closeEvent(QCloseEvent event);
+    void setDemo();
 
 private slots:
     void showPortInfo(int idx);
@@ -94,7 +103,8 @@ private slots:
 private:
     void fillPortsParameters();
     void fillPortsInfo();
-    void updateSettings();
+    bool updateSettings();
+    void fillConsoleParameters();
 
 private:
     Ui::SettingsDialog *ui;

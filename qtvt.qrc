@@ -18,5 +18,7 @@
         <file>images/qt.png</file>
         <file>images/about.png</file>
         <file>images/logFile.png</file>
+        <file>images/logFileStop.png</file>
+        <file>images/find.png</file>
     </qresource>
 </RCC>

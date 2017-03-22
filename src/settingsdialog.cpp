@@ -69,12 +69,24 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
     fillPortsParameters();
     fillPortsInfo();
 
+    fillConsoleParameters();
+
     //updateSettings();
+    setDemo();
 }
 
 SettingsDialog::~SettingsDialog()
 {
     delete ui;
+}
+
+void SettingsDialog::setDemo()
+{
+    QPalette p = palette();
+    //TODO: color theme
+    p.setColor(QPalette::Base, Qt::black);
+    p.setColor(QPalette::Text, Qt::green);
+    ui->DemoPlainTextEdit->setPalette(p);
 }
 
 SettingsDialog::Settings SettingsDialog::get_settings() const
@@ -98,10 +110,11 @@ void SettingsDialog::showPortInfo(int idx)
 
 void SettingsDialog::apply()
 {
-    updateSettings();
-    //hide();
-    close();
-    accept();
+    if (updateSettings()) {
+        //hide();
+        close();
+        accept();
+    }
 }
 void SettingsDialog::cancel()
 {
@@ -125,6 +138,15 @@ void SettingsDialog::checkCustomDevicePathPolicy(int idx)
     ui->serialPortInfoListBox->setEditable(isCustomPath);
     if (isCustomPath)
         ui->serialPortInfoListBox->clearEditText();
+}
+//TODO: console color parameters
+void SettingsDialog::fillConsoleParameters()
+{
+    //TODO
+    QColor blackColor = Qt::black;
+    ui->BaseColorComboBox->addItem(QStringLiteral("black"), blackColor);
+    QColor greenColor = Qt::green;
+    ui->FontColorComboBox->addItem(QStringLiteral("green"), greenColor);
 }
 
 void SettingsDialog::fillPortsParameters()
@@ -186,7 +208,8 @@ void SettingsDialog::fillPortsInfo()
     ui->serialPortInfoListBox->addItem(tr("Custom"));
 }
 
-void SettingsDialog::updateSettings()
+//apply UI's setting to currentSettings
+bool SettingsDialog::updateSettings()
 {
     currentSettings.name = ui->serialPortInfoListBox->currentText();
 
@@ -216,7 +239,23 @@ void SettingsDialog::updateSettings()
 
     currentSettings.localEchoEnabled = ui->localEchoCheckBox->isChecked();
     //TODO: console setting
+    currentSettings.maxBlockCount = ui->maxBlockCountSpinBox->value();
+    currentSettings.baseColor = static_cast<QColor>(ui->BaseColorComboBox->currentText());
+    currentSettings.fontColor = static_cast<QColor>(ui->FontColorComboBox->currentText());
+    //TODO: Log
+    currentSettings.bLogEnable = ui->LogEnableGroupBox->isChecked();
+    if (currentSettings.bLogEnable & ui->logFilenameLineEdit->text().isEmpty()) {
+        ui->tabWidget->setCurrentWidget(ui->tab_Log);
+        ui->logFilenameLineEdit->setFocus();
+        return false;
+    }
+    currentSettings.stringLogFilename = ui->logFilenameLineEdit->text();
+    currentSettings.bLogDateTime = ui->logDateTimeCheckBox->isChecked();
+    //currentSettings.
+
+    return true;
 }
+
 void SettingsDialog::setSettings(QString gname, QSettings *settings)
 {
     settings->beginGroup(gname);
@@ -228,6 +267,13 @@ void SettingsDialog::setSettings(QString gname, QSettings *settings)
     ui->flowControlBox->setCurrentText(settings->value("flowControl").toString());
     ui->localEchoCheckBox->setChecked(settings->value("localEchoEnabled").toBool());
     //TODO: console setting
+    ui->maxBlockCountSpinBox->setValue(settings->value("maxBlockCount").toInt());
+    ui->BaseColorComboBox->setCurrentText(settings->value("baseColor").toString());
+    ui->FontColorComboBox->setCurrentText(settings->value("fontColor").toString());
+    //TODO: Log
+    ui->LogEnableGroupBox->setChecked(settings->value("logEnable").toBool());
+    ui->logFilenameLineEdit->setText(settings->value("logFilename").toString());
+    ui->logDateTimeCheckBox->setChecked(settings->value("logDateTime").toBool());
     settings->endGroup();
 }
 
