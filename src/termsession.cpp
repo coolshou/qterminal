@@ -104,7 +104,9 @@ QString termsession::get_status()
                 .arg(mSetting->value("stopBits").toString())
                 .arg(mSetting->value("flowControl").toString());
     }
+    return "";
 }
+
 bool termsession::isOpen()
 {
     return serial->isOpen();
@@ -128,6 +130,9 @@ void termsession::slot_baudRateChanged(qint32 baudRate,QSerialPort::Directions d
 {
     if (serial->isOpen()) {
         closeSerialPort();
+        qDebug() << "TODO: baudRate change:" << baudRate;
         openSerialPort();
     }
+    Q_UNUSED(baudRate);
+    Q_UNUSED(directions);
 }
