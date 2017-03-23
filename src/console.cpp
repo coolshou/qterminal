@@ -36,7 +36,7 @@
 
 #include <QScrollBar>
 
-#include <QtCore/QDebug>
+#include <QDebug>
 
 Console::Console(QWidget *parent)
     : QPlainTextEdit(parent)
@@ -45,6 +45,71 @@ Console::Console(QWidget *parent)
     //TODO: Maximum Block Count
     document()->setMaximumBlockCount(2000);
     setTheme("default");
+    createActions();
+    createRightMenu();
+    setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(this,SIGNAL(customContextMenuRequested(QPoint)), this,SLOT(showContextMenu(QPoint)));
+    connect(this, SIGNAL(copyAvailable(bool)), this, SLOT(updateCopyAction(bool)));
+
+}
+Console::~Console()
+{
+    delete rightMenu;
+}
+
+void Console::createActions()
+{
+    copyAct = new QAction(QIcon(":/images/copy.png"), tr("&Copy"), this);
+    connect(copyAct, SIGNAL(triggered()), this, SLOT(copy()));
+    updateCopyAction(false);
+
+    pasteAct = new QAction(QIcon(":/images/paste.png"), tr("&Paste"), this);
+    connect(pasteAct, SIGNAL(triggered()), this, SLOT(paste()));
+
+    clearAct = new QAction(QIcon(":/images/clear.png"), tr("Clear"), this);
+    connect(clearAct, SIGNAL(triggered()), this, SLOT(clear()));
+
+    selectAllAct = new QAction(QIcon(":/images/selectAll.png"), tr("&Select All"), this);
+    connect(selectAllAct, SIGNAL(triggered()), this, SLOT(selectAll()));
+}
+void Console::updateCopyAction(bool yes)
+{
+    if (copyAct)
+    {
+        copyAct->setEnabled(yes);
+    }
+}
+
+void Console::createRightMenu()
+{
+    //TODO: custom menu
+    rightMenu = createStandardContextMenu();
+    /* StandardContextMenu
+     * QAction(0x132e2f0, name = "edit-undo"),
+     * QAction(0x1353d40, name = "edit-redo"),
+     * QAction(0x1369870),
+     * QAction(0x1369240, name = "edit-cut"),
+     * QAction(0x132e2d0, name = "edit-copy"),
+     * QAction(0x134a700, name = "edit-paste"),
+     * QAction(0x13497e0, name = "edit-delete"),
+     * QAction(0x13526b0),
+     * QAction(0x1343ca0, name = "select-all")
+     * */
+    rightMenu->clear(); //remove default menu item
+    rightMenu->addAction(selectAllAct);
+    rightMenu->addAction(copyAct);
+    rightMenu->addAction(pasteAct);
+    rightMenu->addSeparator();
+    rightMenu->addAction(clearAct);
+    rightMenu->addSeparator();
+    rightMenu->addAction(tr("TODO: other menu"));
+
+}
+void Console::showContextMenu(QPoint pt)
+{
+    qDebug() << "showContextMenu: " << pt;
+    if(rightMenu)
+        rightMenu->exec(this->mapToGlobal(pt));
 }
 
 void Console::putData(const QByteArray &data)
@@ -111,8 +176,11 @@ void Console::mouseDoubleClickEvent(QMouseEvent *e)
     Q_UNUSED(e)
 }
 
+//replace by showContextMenu
 void Console::contextMenuEvent(QContextMenuEvent *e)
 {
     qDebug() << "contextMenuEvent: " << e->pos();
-    Q_UNUSED(e)
+    if(rightMenu)
+        rightMenu->exec(e->globalPos());
+//    Q_UNUSED(e)
 }

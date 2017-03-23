@@ -36,6 +36,8 @@
 #define CONSOLE_H
 
 #include <QPlainTextEdit>
+#include <QMenu>
+#include <QAction>
 
 class Console : public QPlainTextEdit
 {
@@ -46,6 +48,7 @@ signals:
 
 public:
     explicit Console(QWidget *parent = 0);
+    ~Console();
 
     void putData(const QByteArray &data);
 
@@ -59,10 +62,23 @@ protected:
     virtual void mouseDoubleClickEvent(QMouseEvent *e);
     virtual void contextMenuEvent(QContextMenuEvent *e);
 
+private slots:
+    void showContextMenu(QPoint pt);
+    void updateCopyAction(bool yes);
+
+private:
+    void createRightMenu();
+    void createActions();
+
+
 private:
     bool localEchoEnabled;
     bool scrollToBottom;
-
+    QMenu *rightMenu;
+    QAction *copyAct;
+    QAction *pasteAct;
+    QAction *clearAct;
+    QAction *selectAllAct;
 };
 
 #endif // CONSOLE_H
