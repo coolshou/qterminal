@@ -182,15 +182,22 @@ void Console::mouseMoveEvent(QMouseEvent *e)
 }
 void Console::mouseDoubleClickEvent(QMouseEvent *e)
 {
-
     qDebug() << "mouseDoubleClickEvent: " << e->pos();
-    //TODO: not work
-    //QTextCursor tc(this->document());
-    //tc.select(QTextCursor::WordUnderCursor);
-    //qDebug() << "pos:" << this->textCursor().position();
-    //this->textCursor().select(QTextCursor::WordUnderCursor);
-
-    Q_UNUSED(e)
+    if (e->buttons() & Qt::LeftButton)
+    {
+        QTextCursor tc = this->textCursor();
+        tc.select(QTextCursor::WordUnderCursor);
+        // where the selction starts
+        int newpos = tc.selectionStart();
+        // where the selction end
+        int endpos = tc.selectionEnd();
+        // select from newpos to endpos (order is important)
+        tc.setPosition(newpos, QTextCursor::MoveAnchor);
+        tc.setPosition(endpos, QTextCursor::KeepAnchor);
+        setTextCursor(tc);//mark it selected
+//        QString SearchedText = tc.selectedText();
+//        qDebug()<< "oldpos:" << oldpos << " newpos:" << newpos << ", " << SearchedText ;
+    }
 }
 
 //replace by showContextMenu
