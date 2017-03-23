@@ -242,6 +242,7 @@ bool SettingsDialog::updateSettings()
     currentSettings.maxBlockCount = ui->maxBlockCountSpinBox->value();
     currentSettings.baseColor = static_cast<QColor>(ui->BaseColorComboBox->currentText());
     currentSettings.fontColor = static_cast<QColor>(ui->FontColorComboBox->currentText());
+    currentSettings.scrollToBottom = ui->scrollToBottomCheckBox->isChecked();
     //TODO: Log
     currentSettings.bLogEnable = ui->LogEnableGroupBox->isChecked();
     if (currentSettings.bLogEnable & ui->logFilenameLineEdit->text().isEmpty()) {
@@ -270,6 +271,7 @@ void SettingsDialog::setSettings(QString gname, QSettings *settings)
     ui->maxBlockCountSpinBox->setValue(settings->value("maxBlockCount").toInt());
     ui->BaseColorComboBox->setCurrentText(settings->value("baseColor").toString());
     ui->FontColorComboBox->setCurrentText(settings->value("fontColor").toString());
+    ui->scrollToBottomCheckBox->setChecked(settings->value("scrollToBottom").toBool());
     //TODO: Log
     ui->LogEnableGroupBox->setChecked(settings->value("logEnable").toBool());
     ui->logFilenameLineEdit->setText(settings->value("logFilename").toString());

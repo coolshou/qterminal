@@ -9,10 +9,8 @@ termsession::termsession(QWidget *parent, QString name, QSettings *settings) : Q
 {
     mGroupName = name;
     mSetting = settings;
-    console = new Console;
-    //console->setEnabled(false);
-    console->showMaximized();
-    connect(console, SIGNAL(getData(QByteArray)), this, SLOT(writeData(QByteArray)));
+
+    new_console();
 
     serial = new QSerialPort(this);
     connect(serial, SIGNAL(error(QSerialPort::SerialPortError)),
@@ -36,10 +34,9 @@ Console termsession::get_console()
     return console;
 }
 */
-void termsession::openSerialPort()
+void termsession::apply_setting()
 {
     mSetting->beginGroup(mGroupName);
-    //qDebug() << "PortName: " << mSetting->value("name").toString();
     serial->setPortName(mSetting->value("name").toString());
     //serial->setBaudRate(mSetting->value("baudRate").value<QSerialPort::BaudRate>());
     serial->setBaudRate(mSetting->value("baudRate").toInt());
@@ -47,10 +44,18 @@ void termsession::openSerialPort()
     serial->setParity(mSetting->value("parity").value<QSerialPort::Parity>());
     serial->setStopBits(mSetting->value("stopBits").value<QSerialPort::StopBits>());
     serial->setFlowControl(mSetting->value("flowControl").value<QSerialPort::FlowControl>());
-    if (serial->open(QIODevice::ReadWrite)) {
-            console->setEnabled(true);
-            console->setLocalEchoEnabled(mSetting->value("localEchoEnabled").toBool());
 
+    console->setEnabled(true);
+    console->setLocalEchoEnabled(mSetting->value("localEchoEnabled").toBool());
+    console->setScrollToBottom(mSetting->value("scrollToBottom").toBool());
+
+    mSetting->endGroup();
+}
+
+void termsession::openSerialPort()
+{
+    apply_setting();
+    if (serial->open(QIODevice::ReadWrite)) {
             emit sig_updateActionBtnStatus(false);
             //TODO:
             emit sig_updateStatus(get_status());
@@ -58,7 +63,6 @@ void termsession::openSerialPort()
         QMessageBox::critical(this, tr("Error"), serial->errorString());
         emit sig_updateStatus(tr("Open error"));
     }
-    mSetting->endGroup();
 }
 
 void termsession::closeSerialPort()
@@ -73,12 +77,17 @@ void termsession::closeSerialPort()
 void termsession::readData()
 {
     QByteArray data = serial->readAll();
-    qDebug() << data;
+    //qDebug() << data;
     console->putData(data);
 }
 void termsession::writeData(const QByteArray &data)
 {
     serial->write(data);
+}
+void termsession::writeln(const QByteArray &data)
+{
+    writeData(data);
+    writeData("\r\n");
 }
 
 void termsession::handleError(QSerialPort::SerialPortError error)
@@ -111,6 +120,20 @@ bool termsession::isOpen()
 {
     return serial->isOpen();
 }
+//console
+void termsession::new_console()
+{
+    console = new Console;
+    //console->setEnabled(false);
+    console->showMaximized();
+    connect(console, SIGNAL(getData(QByteArray)), this, SLOT(writeData(QByteArray)));
+    mSetting->beginGroup(mGroupName);
+    console->setMaximumBlockCount(mSetting->value("maxBlockCount").toInt());
+    console->setScrollToBottom(mSetting->value("scrollToBottom").toBool());
+
+    mSetting->endGroup();
+}
+
 void termsession::copy()
 {
     console->copy();

@@ -40,29 +40,39 @@
 
 Console::Console(QWidget *parent)
     : QPlainTextEdit(parent)
-    , localEchoEnabled(false)
+    , localEchoEnabled(false), scrollToBottom(true)
 {
     //TODO: Maximum Block Count
     document()->setMaximumBlockCount(2000);
-    QPalette p = palette();
-    //TODO: color theme
-    p.setColor(QPalette::Base, Qt::black);
-    p.setColor(QPalette::Text, Qt::green);
-    setPalette(p);
-
+    setTheme("default");
 }
 
 void Console::putData(const QByteArray &data)
 {
     insertPlainText(QString(data));
 
-    QScrollBar *bar = verticalScrollBar();
-    bar->setValue(bar->maximum());
+    if (scrollToBottom) {
+        QScrollBar *bar = verticalScrollBar();
+        bar->setValue(bar->maximum());
+    }
 }
 
 void Console::setLocalEchoEnabled(bool set)
 {
     localEchoEnabled = set;
+}
+void Console::setScrollToBottom(bool set)
+{
+    scrollToBottom = set;
+}
+void Console::setTheme(QString sTheme)
+{
+    QPalette p = palette();
+    //TODO: color theme
+    p.setColor(QPalette::Base, Qt::black);
+    p.setColor(QPalette::Text, Qt::green);
+    setPalette(p);
+
 }
 
 void Console::keyPressEvent(QKeyEvent *e)
@@ -103,5 +113,6 @@ void Console::mouseDoubleClickEvent(QMouseEvent *e)
 
 void Console::contextMenuEvent(QContextMenuEvent *e)
 {
+    qDebug() << "contextMenuEvent: " << e->pos();
     Q_UNUSED(e)
 }

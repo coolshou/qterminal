@@ -28,6 +28,8 @@ public:
     void clear();
     void paste();
     void copy();
+    void new_console();
+    void apply_setting();
 
 signals:
     void sig_updateStatus(QString sMsg);
@@ -36,10 +38,12 @@ signals:
 public slots:
     void openSerialPort();
     void closeSerialPort();
+    void writeln(const QByteArray &data);
 
 private slots:
     void readData();
     void writeData(const QByteArray &data);
+
     void handleError(QSerialPort::SerialPortError error);
     void slot_baudRateChanged(qint32 baudRate,QSerialPort::Directions directions);
 

@@ -76,6 +76,7 @@ public:
         int maxBlockCount;
         QColor fontColor;
         QColor baseColor;
+        bool scrollToBottom;
         //TODO: Log
         bool bLogEnable;
         QString stringLogFilename;

@@ -115,11 +115,8 @@ void MainWindow::acceptSettingDlg(int result)
     //qDebug() << "acceptSettingDlg: " << result;
     if (result == QDialog::Accepted) {
         qDebug() << "Accepted";
+
         QString sName = settingDlg->get_settings().name;
-        if (session_exist(sName)){
-            qDebug() << "TODO:acceptSettingDlg session_exist: " << sName;
-            return;
-        }
         settings->beginGroup(sName);
         settings->setValue("name", sName);
         settings->setValue("baudRate", settingDlg->get_settings().baudRate);
@@ -128,34 +125,44 @@ void MainWindow::acceptSettingDlg(int result)
         settings->setValue("stopBits", settingDlg->get_settings().stopBits);
         settings->setValue("flowControl", settingDlg->get_settings().flowControl);
         settings->setValue("localEchoEnabled", settingDlg->get_settings().localEchoEnabled);
-        //TODO: other console setting
+        //console setting
         settings->setValue("maxBlockCount", settingDlg->get_settings().maxBlockCount);
         settings->setValue("baseColor", settingDlg->get_settings().baseColor);
         settings->setValue("fontColor", settingDlg->get_settings().fontColor);
+        settings->setValue("scrollToBottom", settingDlg->get_settings().scrollToBottom);
         //TODO: Log
         settings->setValue("logEnable", settingDlg->get_settings().bLogEnable);
         settings->setValue("logFilename", settingDlg->get_settings().stringLogFilename);
         settings->setValue("logDateTime", settingDlg->get_settings().bLogDateTime);
         settings->endGroup();
-        //TODO: check if serial is alweady exist?
-        //setup new console for new SubWindow
-        termsession *termSession = new termsession(this, sName, settings);
-        sessionlist.append(termSession);
-        //TODO: delete termSession;
-        connect(termSession, SIGNAL(sig_updateStatus(QString)), this, SLOT(updateStatus(QString)));
-        connect(termSession, SIGNAL(sig_updateActionBtnStatus(bool)), this, SLOT(updateActionBtnStatus(bool)));
-        //console = termSession->console;
 
-        QMdiSubWindow *subwin1 = new QMdiSubWindow;
-        subwin1->setWidget(termSession->console);
-        subwin1->setWindowIcon(QIcon(":/images/qtvt.png"));
-        subwin1->setAttribute(Qt::WA_DeleteOnClose, false);
-        subwin1->resize(QSize(ui->mdiArea->width(),ui->mdiArea->height()));
-        subwin1->setWindowTitle(sName);
-        ui->mdiArea->addSubWindow(subwin1);
-        //ui->mdiArea->setOption(QMdiArea::DontMaximizeSubWindowOnActivation);//what this do for?
-        subwin1->show();
-        ui->mdiArea->setActiveSubWindow(subwin1);
+        if (session_exist(sName)){
+            qDebug() << "TODO:acceptSettingDlg session_exist: " << sName;
+            termsession *termSession = get_termsession(sName);
+            termSession->apply_setting();
+            //TODO: update setting in termsession
+            return;
+        } else {
+            //TODO: check if serial is alweady exist?
+            //setup new console for new SubWindow
+            termsession *termSession = new termsession(this, sName, settings);
+            sessionlist.append(termSession);
+            //TODO: delete termSession;
+            connect(termSession, SIGNAL(sig_updateStatus(QString)), this, SLOT(updateStatus(QString)));
+            connect(termSession, SIGNAL(sig_updateActionBtnStatus(bool)), this, SLOT(updateActionBtnStatus(bool)));
+            //console = termSession->console;
+
+            QMdiSubWindow *subwin1 = new QMdiSubWindow;
+            subwin1->setWidget(termSession->console);
+            subwin1->setWindowIcon(QIcon(":/images/qtvt.png"));
+            subwin1->setAttribute(Qt::WA_DeleteOnClose, false);
+            subwin1->resize(QSize(ui->mdiArea->width(),ui->mdiArea->height()));
+            subwin1->setWindowTitle(sName);
+            ui->mdiArea->addSubWindow(subwin1);
+            //ui->mdiArea->setOption(QMdiArea::DontMaximizeSubWindowOnActivation);//what this do for?
+            subwin1->show();
+            ui->mdiArea->setActiveSubWindow(subwin1);
+        }
     }
 }
 //open serial base on witch tab
@@ -169,8 +176,8 @@ void MainWindow::openSerialPort()
         return;
     }
     qDebug() << "openSerialPort:" << sw->windowTitle();
-    termsession *item = get_termsession(sw->windowTitle());
-    item->openSerialPort();
+    termsession *term = get_termsession(sw->windowTitle());
+    term->openSerialPort();
     updateActionEditSessionBtnStatus(false);
 }
 
@@ -186,10 +193,11 @@ void MainWindow::sendSerialText()
         qDebug() << "sendSerialText not found subwindow";
         return;
     }
-    termsession *item = get_termsession(sw->windowTitle());
-    if (item->serial->isOpen()) {
+    termsession *term = get_termsession(sw->windowTitle());
+    if (term->serial->isOpen()) {
         if (! ui->HistoryEdit->text().isEmpty()) {
-            item->serial->write(ui->HistoryEdit->text().toLatin1());
+            //term->serial->write(ui->HistoryEdit->text().toLatin1());
+            term->writeln(ui->HistoryEdit->text().toLatin1());
         }
     }
 }
@@ -205,9 +213,9 @@ void MainWindow::closeSerialPort()
         return;
     }
 
-    termsession *item = get_termsession(sw->windowTitle());
-    if (item->serial->isOpen()) {
-        item->closeSerialPort();
+    termsession *term = get_termsession(sw->windowTitle());
+    if (term->serial->isOpen()) {
+        term->closeSerialPort();
         updateActionEditSessionBtnStatus(true);
     }
 }
@@ -248,8 +256,9 @@ void MainWindow::initActionsConnections()
     connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(about()));
     connect(ui->actionAboutQt, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
 
-    //TODO: history
+    //history input
     connect(ui->HistoryEdit,SIGNAL(textChanged(QString)), this, SLOT(showInputHistory(QString)));
+    connect(ui->HistoryEdit,SIGNAL(returnPressed()), ui->SendBtn, SLOT(click()));
     connect(ui->SendBtn, SIGNAL(pressed()), this, SLOT(sendSerialText()));
 }
 
@@ -343,10 +352,10 @@ void MainWindow::close_session()
     QMdiSubWindow *sw = get_currentSubWindow();
     if ((sw != 0)||(sw != NULL)) {
         //qDebug() << "close_session: " << sw->windowTitle();
-        termsession *item = get_termsession(sw->windowTitle());
-        item->closeSerialPort();
-        item->close();
-        del_termsession(item);
+        termsession *term = get_termsession(sw->windowTitle());
+        term->closeSerialPort();
+        term->close();
+        del_termsession(term);
         ui->mdiArea->removeSubWindow(sw);
     }
 }
@@ -354,16 +363,16 @@ void MainWindow::consoleCopy()
 {
     QMdiSubWindow *sw = get_currentSubWindow();
     if ((sw != 0)||(sw != NULL)) {
-        termsession *item = get_termsession(sw->windowTitle());
-        item->copy();
+        termsession *term = get_termsession(sw->windowTitle());
+        term->copy();
     }
 }
 void MainWindow::consolePaste()
 {
     QMdiSubWindow *sw = get_currentSubWindow();
     if ((sw != 0)||(sw != NULL)) {
-        termsession *item = get_termsession(sw->windowTitle());
-        item->paste();
+        termsession *term = get_termsession(sw->windowTitle());
+        term->paste();
     }
 }
 
@@ -371,8 +380,8 @@ void MainWindow::consoleClear()
 {
     QMdiSubWindow *sw = get_currentSubWindow();
     if ((sw != 0)||(sw != NULL)) {
-        termsession *item = get_termsession(sw->windowTitle());
-        item->clear();
+        termsession *term = get_termsession(sw->windowTitle());
+        term->clear();
     }
 }
 
@@ -402,8 +411,8 @@ void MainWindow::subWindowChanged(QMdiSubWindow* window)
     if(window != NULL)
     {
         qDebug() << "TODO:(subWindowChanged) check the session is connected or not" ;
-        termsession *item = get_termsession(window->windowTitle());
-        updateStatus(item->get_status());
+        termsession *term = get_termsession(window->windowTitle());
+        updateStatus(term->get_status());
 
         updateMenuSession(true);
 

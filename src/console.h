@@ -50,6 +50,8 @@ public:
     void putData(const QByteArray &data);
 
     void setLocalEchoEnabled(bool set);
+    void setScrollToBottom(bool set);
+    void setTheme(QString sTheme);
 
 protected:
     virtual void keyPressEvent(QKeyEvent *e);
@@ -59,6 +61,7 @@ protected:
 
 private:
     bool localEchoEnabled;
+    bool scrollToBottom;
 
 };
 
