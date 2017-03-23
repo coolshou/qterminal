@@ -59,6 +59,7 @@ public:
 protected:
     virtual void keyPressEvent(QKeyEvent *e);
     virtual void mousePressEvent(QMouseEvent *e);
+    virtual void mouseMoveEvent(QMouseEvent *e);
     virtual void mouseDoubleClickEvent(QMouseEvent *e);
     virtual void contextMenuEvent(QContextMenuEvent *e);
 
@@ -79,6 +80,7 @@ private:
     QAction *pasteAct;
     QAction *clearAct;
     QAction *selectAllAct;
+    int posCursor; //remember cursor pos variable
 };
 
 #endif // CONSOLE_H

@@ -35,7 +35,7 @@
 #include "console.h"
 
 #include <QScrollBar>
-
+#include <QTextCursor>
 #include <QDebug>
 
 Console::Console(QWidget *parent)
@@ -158,11 +158,28 @@ void Console::keyPressEvent(QKeyEvent *e)
 
 void Console::mousePressEvent(QMouseEvent *e)
 {
-    qDebug() << "mousePressEvent: " << e->pos();
-    Q_UNUSED(e)
-    setFocus();
+    //QTextEdit::mousePressEvent(e);
+    if (e->buttons() & Qt::LeftButton)
+    {
+        QTextCursor cursor = cursorForPosition(e->pos());
+        posCursor = cursor.position();
+        cursor.clearSelection();
+        setTextCursor(cursor);
+    }
+    //setFocus();
 }
-
+void Console::mouseMoveEvent(QMouseEvent *e)
+{
+    //QTextEdit::mouseMoveEvent(e);
+    if (e->buttons() & Qt::LeftButton)
+    {
+        QTextCursor cursor = textCursor();
+        QTextCursor endCursor = cursorForPosition(e->pos()); // key point
+        cursor.setPosition(posCursor, QTextCursor::MoveAnchor);
+        cursor.setPosition(endCursor.position(), QTextCursor::KeepAnchor);
+        setTextCursor(cursor);
+    }
+}
 void Console::mouseDoubleClickEvent(QMouseEvent *e)
 {
 
