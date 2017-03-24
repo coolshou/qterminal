@@ -53,9 +53,9 @@ MainWindow::MainWindow(QWidget *parent) :
     settings = new QSettings();
     readPosSetting();
     settingDlg = new SettingsDialog();
-    connect(settingDlg, SIGNAL(finished(int)), this, SLOT(acceptSettingDlg(int)));
+    connect(settingDlg, SIGNAL(finished(int)), this, SLOT(slot_acceptSettingDlg(int)));
 
-    connect(ui->mdiArea, SIGNAL(subWindowActivated(QMdiSubWindow*)), this, SLOT(subWindowChanged(QMdiSubWindow*)));
+    connect(ui->mdiArea, SIGNAL(subWindowActivated(QMdiSubWindow*)), this, SLOT(slot_subWindowChanged(QMdiSubWindow*)));
 
     //this->updateActionBtnStatus(true);
     ui->actionQuit->setEnabled(true);
@@ -109,9 +109,9 @@ void MainWindow::readPosSetting()
     settings->endGroup();
 }
 
-void MainWindow::acceptSettingDlg(int result)
+void MainWindow::slot_acceptSettingDlg(int result)
 {
-    //qDebug() << "acceptSettingDlg: " << result;
+    //qDebug() << "slot_acceptSettingDlg: " << result;
     if (result == QDialog::Accepted) {
         qDebug() << "Accepted";
 
@@ -135,24 +135,21 @@ void MainWindow::acceptSettingDlg(int result)
         settings->setValue("logDateTime", settingDlg->get_settings().bLogDateTime);
         settings->endGroup();
 
+        //check if serial is alweady exist
         if (session_exist(sName)){
-            qDebug() << "TODO:acceptSettingDlg session_exist: " << sName;
+            qDebug() << "TODO:slot_acceptSettingDlg session_exist: " << sName;
             termsession *termSession = get_termsession(sName);
             termSession->apply_setting();
             //TODO: update setting in termsession
             return;
         } else {
-            //TODO: check if serial is alweady exist?
-            //setup new console for new SubWindow
+            //setup new termsession for new SubWindow
             termsession *termSession = new termsession(this, sName, settings);
             sessionlist.append(termSession);
-            //TODO: delete termSession;
             connect(termSession, SIGNAL(sig_updateStatus(QString)), this, SLOT(updateStatus(QString)));
             connect(termSession, SIGNAL(sig_updateActionBtnStatus(bool)), this, SLOT(updateActionBtnStatus(bool)));
-            //console = termSession->console;
 
             QMdiSubWindow *subwin1 = new QMdiSubWindow;
-            //subwin1->setWidget(termSession->console);
             subwin1->setWidget(termSession);
             subwin1->setWindowIcon(QIcon(":/images/qtvt.png"));
             subwin1->setAttribute(Qt::WA_DeleteOnClose, false);
@@ -403,13 +400,13 @@ void MainWindow::updateActionEditSessionBtnStatus(bool bStatus)
     ui->actionLogFile->setEnabled(bStatus);
 }
 
-void MainWindow::subWindowChanged(QMdiSubWindow* window)
+void MainWindow::slot_subWindowChanged(QMdiSubWindow* window)
 {
     //When no SubWindow is Active QMdiSubWindow pointer is null
     //So,Check nullity here;otherwise application will crash
     if(window != NULL)
     {
-        qDebug() << "TODO:(subWindowChanged) check the session is connected or not" ;
+        qDebug() << "TODO:(slot_subWindowChanged) check the session is connected or not" ;
         termsession *term = get_termsession(window->windowTitle());
         updateStatus(term->get_status());
 

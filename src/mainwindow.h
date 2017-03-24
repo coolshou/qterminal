@@ -82,7 +82,7 @@ private slots:
     void about();
     void savePosSetting();
     void readPosSetting();
-    void acceptSettingDlg(int result);
+    void slot_acceptSettingDlg(int result);
 
     //actions
     //void on_action_Pop_Out_triggered();
@@ -98,7 +98,7 @@ private slots:
     termsession* get_termsession(QString sName);
     bool del_termsession(termsession* item);
     bool del_termsessionByName(QString sName);
-    void subWindowChanged(QMdiSubWindow* window);
+    void slot_subWindowChanged(QMdiSubWindow* window);
 
 
 private:
