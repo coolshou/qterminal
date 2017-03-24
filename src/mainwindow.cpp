@@ -201,6 +201,7 @@ void MainWindow::sendSerialText()
 //close serial base on witch tab
 void MainWindow::closeSerialPort()
 {
+    //TODO: close then open serial will cause problem??
     //qDebug() <<"close serial base on witch tab";
     //QMdiSubWindow *sw = ui->mdiArea->currentSubWindow();
     QMdiSubWindow *sw = get_currentSubWindow();

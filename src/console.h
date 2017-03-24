@@ -54,6 +54,7 @@ public:
 
     void setLocalEchoEnabled(bool set);
     void setScrollToBottom(bool set);
+    void setLogDatetime(bool set);
     void setTheme(QString sTheme);
 
 protected:
@@ -75,6 +76,7 @@ private:
 private:
     bool localEchoEnabled;
     bool scrollToBottom;
+    bool logDatetime;
     QMenu *rightMenu;
     QAction *copyAct;
     QAction *pasteAct;

@@ -138,6 +138,7 @@ void Console::setScrollToBottom(bool set)
 {
     scrollToBottom = set;
 }
+
 void Console::setTheme(QString sTheme)
 {
     QPalette p = palette();

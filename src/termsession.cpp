@@ -2,6 +2,7 @@
 #include "settingsdialog.h"
 #include <QMessageBox>
 #include <QIcon>
+#include <QDateTime>
 
 #include "const.h"
 
@@ -26,16 +27,13 @@ termsession::~termsession()
     //delete console;
     delete serial;
 }
-/*
-QSerialPort termsession::get_serial()
+QVariant termsession::get_settingValue(QString key)
 {
-    return serial;
+    mSetting->beginGroup(mGroupName);
+    return mSetting->value(key);
+    mSetting->endGroup();
 }
-Console termsession::get_console()
-{
-    return console;
-}
-*/
+
 void termsession::apply_setting()
 {
     mSetting->beginGroup(mGroupName);
@@ -46,16 +44,26 @@ void termsession::apply_setting()
     serial->setParity(mSetting->value("parity").value<QSerialPort::Parity>());
     serial->setStopBits(mSetting->value("stopBits").value<QSerialPort::StopBits>());
     serial->setFlowControl(mSetting->value("flowControl").value<QSerialPort::FlowControl>());
-/*
-    console->setEnabled(true);
-    console->setLocalEchoEnabled(mSetting->value("localEchoEnabled").toBool());
-    console->setScrollToBottom(mSetting->value("scrollToBottom").toBool());
-*/
+
     this->setEnabled(true);
     this->setLocalEchoEnabled(mSetting->value("localEchoEnabled").toBool());
     this->setScrollToBottom(mSetting->value("scrollToBottom").toBool());
-
+    this->setLogDatetime(mSetting->value("logDateTime").toBool());
+    this->setLogEnable(mSetting->value("logEnable").toBool());
+    this->setLogFilename(mSetting->value("logFilename").toString());
     mSetting->endGroup();
+}
+void termsession::setLogDatetime(bool set)
+{
+    bLogDatetime = set;
+}
+void termsession::setLogEnable(bool set)
+{
+    bLogEnable = set;
+}
+void termsession::setLogFilename(QString filename)
+{
+    sLogFilename = filename;
 }
 
 void termsession::openSerialPort()
@@ -75,7 +83,6 @@ void termsession::closeSerialPort()
 {
     if (serial->isOpen())
         serial->close();
-    //console->setEnabled(false);
     this->setEnabled(false);
     emit sig_updateActionBtnStatus(true);
     emit sig_updateStatus(tr("Disconnected"));
@@ -84,9 +91,17 @@ void termsession::closeSerialPort()
 void termsession::readData()
 {
     QByteArray data = serial->readAll();
-    //qDebug() << data;
-    //console->putData(data);
+    if (bLogDatetime) {
+        //qDebug() << data;
+        //qDebug() << get_settingValue("logDateTime");
+        QDateTime dateTime = dateTime.currentDateTime();
+        QString dateTimeString = QString("\n[%1] ").arg(dateTime.toString("yyyy-MM-dd hh:mm:ss"));
+        data.replace(QString("\n"), dateTimeString.toLatin1());
+    }
     this->putData(data);
+    if (bLogEnable) {
+        qDebug() << "TODO: log to file";
+    }
 }
 void termsession::writeData(const QByteArray &data)
 {
@@ -134,15 +149,6 @@ bool termsession::isOpen()
 //console
 void termsession::new_console()
 {
-    /*
-    console = new Console;
-    //console->setEnabled(false);
-    console->showMaximized();
-    connect(console, SIGNAL(getData(QByteArray)), this, SLOT(writeData(QByteArray)));
-    mSetting->beginGroup(mGroupName);
-    console->setMaximumBlockCount(mSetting->value("maxBlockCount").toInt());
-    console->setScrollToBottom(mSetting->value("scrollToBottom").toBool());
-*/
     this->showMaximized();
     connect(this, SIGNAL(getData(QByteArray)), this, SLOT(writeData(QByteArray)));
     mSetting->beginGroup(mGroupName);
@@ -151,22 +157,6 @@ void termsession::new_console()
 
     mSetting->endGroup();
 }
-/*
-void termsession::copy()
-{
-    console->copy();
-}
-
-void termsession::paste()
-{
-    console->paste();
-}
-
-void termsession::clear()
-{
-    console->clear();
-}
-*/
 void termsession::slot_baudRateChanged(qint32 baudRate,QSerialPort::Directions directions)
 {
     if (serial->isOpen()) {

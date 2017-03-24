@@ -16,20 +16,17 @@ class termsession : public Console
 public:
     explicit termsession(QWidget *parent = 0, QString name = "term", QSettings *settings = NULL);
     ~termsession();
-    //
-    //QSerialPort get_serial();
-    //Console get_console();
+
     QString get_name();
     QString get_status();
     //return serial is open or not
     bool isOpen();
-    /*
-    void clear();
-    void paste();
-    void copy();
-    */
     void new_console();
     void apply_setting();
+    QVariant get_settingValue(QString key);
+    void setLogDatetime(bool set);
+    void setLogEnable(bool set);
+    void setLogFilename(QString filename);
 
 signals:
     void sig_updateStatus(QString sMsg);
@@ -48,14 +45,13 @@ private slots:
     void slot_baudRateChanged(qint32 baudRate,QSerialPort::Directions directions);
 
 private:
-    //Console *console;
     QSerialPort *serial;
     QString mGroupName;
     QSettings *mSetting;
-    //MainWindow *mParent;
     //TODO: log
-    bool bLogging;
-    QString sLogFile;
+    bool bLogEnable;
+    QString sLogFilename;
+    bool bLogDatetime;
 
 };
 
