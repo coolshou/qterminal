@@ -119,7 +119,7 @@
      <x>0</x>
      <y>0</y>
      <width>570</width>
-     <height>28</height>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuCalls">
@@ -142,6 +142,9 @@
     <property name="title">
      <string>Help</string>
     </property>
+    <addaction name="actionHelp"/>
+    <addaction name="actionUpdate"/>
+    <addaction name="separator"/>
     <addaction name="actionAbout"/>
     <addaction name="actionAboutQt"/>
    </widget>
@@ -400,6 +403,16 @@
    </property>
    <property name="text">
     <string>&amp;Find</string>
+   </property>
+  </action>
+  <action name="actionUpdate">
+   <property name="text">
+    <string>update</string>
+   </property>
+  </action>
+  <action name="actionHelp">
+   <property name="text">
+    <string>Help</string>
    </property>
   </action>
  </widget>

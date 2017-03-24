@@ -21,7 +21,8 @@ HEADERS += \
     src/mainwindow.h \
     src/settingsdialog.h \
     src/termsession.h \
-    src/const.h
+    src/const.h \
+    src/version.h
 
 FORMS += \
     src/mainwindow.ui \

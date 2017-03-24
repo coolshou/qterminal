@@ -41,6 +41,7 @@
 #include <QDialog>
 
 #include "const.h"
+#include "version.h"
 #include <QDebug>
 
 //! [0]
@@ -221,13 +222,16 @@ void MainWindow::about()
 {
     QString title =  QString("About %1").arg(MYAPP);
     QString about =  QString("The <b>%1</b> use the Qt Serial Port module <br>").arg(MYAPP);
-    about.append(QString(" Author: %1").arg(MYORG));
+    about.append(QString(" Author: %1<br>").arg(MYORG));
+    about.append(QString(" Version: %1<br>").arg(VERSION));
+    about.append(QString(" <a href='%1'>Source</a> <br>").arg(MYSOURCEURL));
     QMessageBox::about(this,title,about);
 }
 
 
 void MainWindow::initActionsConnections()
 {
+    //menu
     //file - session
     connect(ui->actionNew_session, SIGNAL(triggered()), this, SLOT(add_session()));
     connect(ui->actionEdit_session, SIGNAL(triggered()), this, SLOT(edit_session()));
@@ -250,9 +254,11 @@ void MainWindow::initActionsConnections()
     connect(ui->actionCascade, SIGNAL(triggered()), ui->mdiArea, SLOT(cascadeSubWindows()));
     connect(ui->actionTile, SIGNAL(triggered()), ui->mdiArea, SLOT(tileSubWindows()));
     //About
+    //TODO: help, update
     connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(about()));
     connect(ui->actionAboutQt, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
 
+    //other
     //history input
     connect(ui->HistoryEdit,SIGNAL(textChanged(QString)), this, SLOT(showInputHistory(QString)));
     connect(ui->HistoryEdit,SIGNAL(returnPressed()), ui->SendBtn, SLOT(click()));

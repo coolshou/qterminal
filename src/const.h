@@ -1,14 +1,13 @@
 #ifndef CONST
 #define CONST
 
-#include <QString>
-
-//const QString MYORG="coolshou";
-//const QString MYORGDOMAIN="coolshou.idv";
-//const QString MYAPP="qtvt";
 #define MYORG "coolshou"
 #define MYORGDOMAIN "coolshou.idv"
 #define MYAPP "qtvt"
+
+#define MYWEBURL "http://www.coolshou.idv.tw"
+#define MYSOURCEURL "https://github.com/coolshou/qtvt.git"
+#define MYRELEASEURL "https://github.com/coolshou/qtvt/releases"
 
 #include <QSerialPort>
 
