@@ -1,9 +1,9 @@
 #ifndef CONST
 #define CONST
 
-#define MYORG "coolshou"
+//#define MYORG "coolshou"
 #define MYORGDOMAIN "coolshou.idv"
-#define MYAPP "qtvt"
+//#define MYAPP "qtvt"
 
 #define MYWEBURL "http://www.coolshou.idv.tw"
 #define MYSOURCEURL "https://github.com/coolshou/qtvt.git"

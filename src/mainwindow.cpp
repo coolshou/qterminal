@@ -41,7 +41,7 @@
 #include <QDialog>
 
 #include "const.h"
-#include "version.h"
+//#include "version.h"
 #include <QDebug>
 
 //! [0]
@@ -220,10 +220,10 @@ void MainWindow::closeSerialPort()
 
 void MainWindow::about()
 {
-    QString title =  QString("About %1").arg(MYAPP);
-    QString about =  QString("The <b>%1</b> use the Qt Serial Port module <br>").arg(MYAPP);
-    about.append(QString(" Author: %1<br>").arg(MYORG));
-    about.append(QString(" Version: %1<br>").arg(VERSION));
+    QString title =  QString("About %1").arg(APP_PRODUCT);
+    QString about =  QString("The <b>%1</b> use the Qt Serial Port module <br>").arg(APP_PRODUCT);
+    about.append(QString(" Author: %1<br>").arg(APP_COMPANY));
+    about.append(QString(" Version: %1<br>").arg(APP_VERSION));
     about.append(QString(" <a href='%1'>Source</a> <br>").arg(MYSOURCEURL));
     QMessageBox::about(this,title,about);
 }

@@ -20,5 +20,7 @@
         <file>images/logFile.png</file>
         <file>images/logFileStop.png</file>
         <file>images/find.png</file>
+        <file>images/help.png</file>
+        <file>images/update.png</file>
     </qresource>
 </RCC>

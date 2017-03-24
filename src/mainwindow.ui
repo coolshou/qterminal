@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>570</width>
-    <height>434</height>
+    <width>568</width>
+    <height>432</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -118,8 +118,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>570</width>
-     <height>23</height>
+     <width>568</width>
+     <height>28</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuCalls">
@@ -406,13 +406,21 @@
    </property>
   </action>
   <action name="actionUpdate">
+   <property name="icon">
+    <iconset resource="../qtvt.qrc">
+     <normaloff>:/images/update.png</normaloff>:/images/update.png</iconset>
+   </property>
    <property name="text">
-    <string>update</string>
+    <string>&amp;update</string>
    </property>
   </action>
   <action name="actionHelp">
+   <property name="icon">
+    <iconset resource="../qtvt.qrc">
+     <normaloff>:/images/help.png</normaloff>:/images/help.png</iconset>
+   </property>
    <property name="text">
-    <string>Help</string>
+    <string>&amp;Help</string>
    </property>
   </action>
  </widget>

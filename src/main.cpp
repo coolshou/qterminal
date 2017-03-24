@@ -40,9 +40,9 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    a.setOrganizationName(MYORG);
+    a.setOrganizationName(APP_COMPANY);
     a.setOrganizationDomain(MYORGDOMAIN);
-    a.setApplicationName(MYAPP);
+    a.setApplicationName(APP_PRODUCT);
     MainWindow w;
     w.show();
     return a.exec();
