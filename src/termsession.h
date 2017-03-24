@@ -5,6 +5,8 @@
 #include <QWidget>
 #include <QtSerialPort/QSerialPort>
 #include <QSettings>
+//#include <QMutexLocker>
+
 #include "console.h"
 
 #include <QDebug>
@@ -27,6 +29,9 @@ public:
     void setLogDatetime(bool set);
     void setLogEnable(bool set);
     void setLogFilename(QString filename);
+    QString getLogFileName();
+    void logToFile(QByteArray log);
+    void logToFile(QString lineToBelogged);
 
 signals:
     void sig_updateStatus(QString sMsg);
@@ -43,12 +48,14 @@ private slots:
 
     void handleError(QSerialPort::SerialPortError error);
     void slot_baudRateChanged(qint32 baudRate,QSerialPort::Directions directions);
+    //void slot_onTextChanged();
 
 private:
     QSerialPort *serial;
     QString mGroupName;
     QSettings *mSetting;
     //TODO: log
+    //QMutexLocker m_lineLoggerMutex;
     bool bLogEnable;
     QString sLogFilename;
     bool bLogDatetime;

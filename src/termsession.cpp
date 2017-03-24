@@ -4,11 +4,12 @@
 #include <QIcon>
 #include <QDateTime>
 
+#include <QFile>
+
 #include "const.h"
 
 termsession::termsession(QWidget *parent, QString name, QSettings *settings) :
     Console(parent)
-//    QWidget(parent)
 {
     mGroupName = name;
     mSetting = settings;
@@ -21,12 +22,69 @@ termsession::termsession(QWidget *parent, QString name, QSettings *settings) :
     connect(serial, SIGNAL(readyRead()), this, SLOT(readData()));
     connect(serial, SIGNAL(baudRateChanged(qint32,QSerialPort::Directions)),
             this, SLOT(slot_baudRateChanged(qint32,QSerialPort::Directions)));
+    //connect(this, SIGNAL(textChanged()), this, SLOT(slot_onTextChanged()));
+    apply_setting();
+//    if (bLogEnable) {
+//        QFile file(sLogFilename);
+//        /*
+//         * If file not exit it will create
+//         * */
+//        if (!file.open(QIODevice::ReadOnly | QIODevice::Text | QIODevice::ReadWrite))
+//        {
+//            qDebug() << "FAIL TO CREATE FILE / FILE NOT EXIT***";
+//        }
+//        if (file.open(QIODevice::ReadWrite))
+//        {
+//            QTextStream stream(&file);
+//            stream << "1_XYZ"<<endl;
+//            stream << "2_XYZ"<<endl;
+//        }
+//    }
 }
 termsession::~termsession()
 {
     //delete console;
     delete serial;
 }
+QString termsession::getLogFileName()
+{
+    return sLogFilename;
+}
+void termsession::logToFile(QByteArray log)
+{
+    QString myString(log);
+    logToFile(myString);
+
+}
+
+void termsession::logToFile(QString lineToBelogged)
+{
+ //   QMutexLocker locker(&m_lineLoggerMutex);
+
+    QFile f(getLogFileName());
+    //doRollLogsIfNeeded(static_cast<qint64>(f.size() + lineToBelogged.length()));
+
+    // Do not open in append mode but seek() to avoid warning for unseekable
+    // devices, note that if open is made with WriteOnly without Append, the
+    // file gets truncated
+    if (!f.open(QIODevice::ReadWrite | QIODevice::Text))
+    {
+        QTextStream out(stdout);
+        out << "CANNOT OPEN LOG FILE: " << getLogFileName();
+        return;
+    }
+    // seek() does nothing on sequential devices, this is in essence what QFile
+    // does when Append flag is set in open() but without warning (on Qt 4.8.3)
+    // However, Qt 4.8.1 issues the warning, so check it explicitly
+    if (!f.isSequential())
+    {
+        f.seek(f.size());
+    }
+
+    QTextStream out(&f);
+    out << lineToBelogged;
+}
+
 QVariant termsession::get_settingValue(QString key)
 {
     mSetting->beginGroup(mGroupName);
@@ -100,12 +158,17 @@ void termsession::readData()
     }
     this->putData(data);
     if (bLogEnable) {
-        qDebug() << "TODO: log to file";
+        qDebug() << "TODO: log readData";
+        logToFile(data);
     }
 }
 void termsession::writeData(const QByteArray &data)
 {
     serial->write(data);
+    if (bLogEnable) {
+        qDebug() << "TODO: log writeData";
+        logToFile(data);
+    }
 }
 void termsession::writeln(const QByteArray &data)
 {
@@ -167,3 +230,9 @@ void termsession::slot_baudRateChanged(qint32 baudRate,QSerialPort::Directions d
     Q_UNUSED(baudRate);
     Q_UNUSED(directions);
 }
+/*
+void termsession::slot_onTextChanged()
+{
+
+}
+*/
