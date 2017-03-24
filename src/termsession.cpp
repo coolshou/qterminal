@@ -113,13 +113,16 @@ QString termsession::get_name()
 QString termsession::get_status()
 {
     if (isOpen()) {
-        return tr("Connected to %1 : %2, %3, %4, %5, %6")
+        mSetting->beginGroup(mGroupName);
+        QString res = tr("Connected to %1 : %2, %3, %4, %5, %6")
                 .arg(mSetting->value("name").toString())
                 .arg(mSetting->value("baudRate").toString())
                 .arg(mSetting->value("dataBits").toString())
                 .arg(mSetting->value("parity").toString())
                 .arg(mSetting->value("stopBits").toString())
                 .arg(mSetting->value("flowControl").toString());
+        mSetting->endGroup();
+        return res;
     }
     return "";
 }
