@@ -34,7 +34,6 @@
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "console.h"
 #include "settingsdialog.h"
 
 #include <QMessageBox>
@@ -153,7 +152,8 @@ void MainWindow::acceptSettingDlg(int result)
             //console = termSession->console;
 
             QMdiSubWindow *subwin1 = new QMdiSubWindow;
-            subwin1->setWidget(termSession->console);
+            //subwin1->setWidget(termSession->console);
+            subwin1->setWidget(termSession);
             subwin1->setWindowIcon(QIcon(":/images/qtvt.png"));
             subwin1->setAttribute(Qt::WA_DeleteOnClose, false);
             subwin1->resize(QSize(ui->mdiArea->width(),ui->mdiArea->height()));
@@ -194,9 +194,8 @@ void MainWindow::sendSerialText()
         return;
     }
     termsession *term = get_termsession(sw->windowTitle());
-    if (term->serial->isOpen()) {
+    if (term->isOpen()) {
         if (! ui->HistoryEdit->text().isEmpty()) {
-            //term->serial->write(ui->HistoryEdit->text().toLatin1());
             term->writeln(ui->HistoryEdit->text().toLatin1());
         }
     }
@@ -214,7 +213,7 @@ void MainWindow::closeSerialPort()
     }
 
     termsession *term = get_termsession(sw->windowTitle());
-    if (term->serial->isOpen()) {
+    if (term->isOpen()) {
         term->closeSerialPort();
         updateActionEditSessionBtnStatus(true);
     }

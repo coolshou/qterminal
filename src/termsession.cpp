@@ -5,7 +5,9 @@
 
 #include "const.h"
 
-termsession::termsession(QWidget *parent, QString name, QSettings *settings) : QWidget(parent)
+termsession::termsession(QWidget *parent, QString name, QSettings *settings) :
+    Console(parent)
+//    QWidget(parent)
 {
     mGroupName = name;
     mSetting = settings;
@@ -44,10 +46,14 @@ void termsession::apply_setting()
     serial->setParity(mSetting->value("parity").value<QSerialPort::Parity>());
     serial->setStopBits(mSetting->value("stopBits").value<QSerialPort::StopBits>());
     serial->setFlowControl(mSetting->value("flowControl").value<QSerialPort::FlowControl>());
-
+/*
     console->setEnabled(true);
     console->setLocalEchoEnabled(mSetting->value("localEchoEnabled").toBool());
     console->setScrollToBottom(mSetting->value("scrollToBottom").toBool());
+*/
+    this->setEnabled(true);
+    this->setLocalEchoEnabled(mSetting->value("localEchoEnabled").toBool());
+    this->setScrollToBottom(mSetting->value("scrollToBottom").toBool());
 
     mSetting->endGroup();
 }
@@ -69,7 +75,8 @@ void termsession::closeSerialPort()
 {
     if (serial->isOpen())
         serial->close();
-    console->setEnabled(false);
+    //console->setEnabled(false);
+    this->setEnabled(false);
     emit sig_updateActionBtnStatus(true);
     emit sig_updateStatus(tr("Disconnected"));
 }
@@ -78,7 +85,8 @@ void termsession::readData()
 {
     QByteArray data = serial->readAll();
     //qDebug() << data;
-    console->putData(data);
+    //console->putData(data);
+    this->putData(data);
 }
 void termsession::writeData(const QByteArray &data)
 {
@@ -123,6 +131,7 @@ bool termsession::isOpen()
 //console
 void termsession::new_console()
 {
+    /*
     console = new Console;
     //console->setEnabled(false);
     console->showMaximized();
@@ -130,10 +139,16 @@ void termsession::new_console()
     mSetting->beginGroup(mGroupName);
     console->setMaximumBlockCount(mSetting->value("maxBlockCount").toInt());
     console->setScrollToBottom(mSetting->value("scrollToBottom").toBool());
+*/
+    this->showMaximized();
+    connect(this, SIGNAL(getData(QByteArray)), this, SLOT(writeData(QByteArray)));
+    mSetting->beginGroup(mGroupName);
+    this->setMaximumBlockCount(mSetting->value("maxBlockCount").toInt());
+    this->setScrollToBottom(mSetting->value("scrollToBottom").toBool());
 
     mSetting->endGroup();
 }
-
+/*
 void termsession::copy()
 {
     console->copy();
@@ -148,7 +163,7 @@ void termsession::clear()
 {
     console->clear();
 }
-
+*/
 void termsession::slot_baudRateChanged(qint32 baudRate,QSerialPort::Directions directions)
 {
     if (serial->isOpen()) {

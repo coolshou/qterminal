@@ -9,25 +9,25 @@
 
 #include <QDebug>
 
-class termsession : public QWidget
+//class termsession : public QWidget
+class termsession : public Console
 {
     Q_OBJECT
 public:
     explicit termsession(QWidget *parent = 0, QString name = "term", QSettings *settings = NULL);
     ~termsession();
     //
-    Console *console;
-    QSerialPort *serial;
-
     //QSerialPort get_serial();
     //Console get_console();
     QString get_name();
     QString get_status();
     //return serial is open or not
     bool isOpen();
+    /*
     void clear();
     void paste();
     void copy();
+    */
     void new_console();
     void apply_setting();
 
@@ -48,6 +48,8 @@ private slots:
     void slot_baudRateChanged(qint32 baudRate,QSerialPort::Directions directions);
 
 private:
+    //Console *console;
+    QSerialPort *serial;
     QString mGroupName;
     QSettings *mSetting;
     //MainWindow *mParent;

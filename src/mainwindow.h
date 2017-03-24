@@ -53,7 +53,6 @@ class MainWindow;
 
 QT_END_NAMESPACE
 
-class Console;
 class SettingsDialog;
 
 class MainWindow : public QMainWindow
@@ -110,10 +109,7 @@ private:
 private:
     Ui::MainWindow *ui;
     QSettings *settings;
-    //Console *console;
     SettingsDialog *settingDlg;
-    //QSerialPort *serial;
-    //termsession *termSession;
     QList<termsession *> sessionlist;
 };
 
