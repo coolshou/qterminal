@@ -230,7 +230,7 @@ void MainWindow::initActionsConnections()
     //file - session
     connect(ui->actionNew_session, SIGNAL(triggered()), this, SLOT(add_session()));
     connect(ui->actionEdit_session, SIGNAL(triggered()), this, SLOT(edit_session()));
-    connect(ui->actionClose_session, SIGNAL(triggered()), this, SLOT(close_session()));
+    connect(ui->actionClose_session, SIGNAL(triggered()), this, SLOT(slot_closeSession()));
     //TODO: log
     //connect(ui->actionLogFile, SIGNAL(triggered()), this, SLOT(logtofile()));
     connect(ui->actionQuit, SIGNAL(triggered()), this, SLOT(close()));
@@ -328,6 +328,9 @@ int MainWindow::get_session_num()
 void MainWindow::add_session()
 {
     //show console config dialog   
+    //TODO: already used setting
+    //TODO: do not show used serial port in settingDlg?
+
     settingDlg->exec(); //show as modal
 }
 //edit session
@@ -342,19 +345,23 @@ void MainWindow::edit_session()
     }
 }
 //close session
-void MainWindow::close_session()
+void  MainWindow::closeSession(QString sName)
 {
-    //QMdiSubWindow *sw = ui->mdiArea->activeSubWindow();
+    termsession *term = get_termsession(sName);
+    term->closeSerialPort();
+    term->close();
+    del_termsession(term);
+}
+
+void MainWindow::slot_closeSession()
+{
     QMdiSubWindow *sw = get_currentSubWindow();
     if ((sw != 0)||(sw != NULL)) {
-        //qDebug() << "close_session: " << sw->windowTitle();
-        termsession *term = get_termsession(sw->windowTitle());
-        term->closeSerialPort();
-        term->close();
-        del_termsession(term);
+        closeSession(sw->windowTitle());
         ui->mdiArea->removeSubWindow(sw);
     }
 }
+
 void MainWindow::consoleCopy()
 {
     QMdiSubWindow *sw = get_currentSubWindow();

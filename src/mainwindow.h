@@ -89,7 +89,7 @@ private slots:
     //file
     void add_session();
     void edit_session();
-    void close_session();
+    void slot_closeSession();
     //edit
     void consoleCopy();
     void consolePaste();
@@ -105,6 +105,7 @@ private:
     void initActionsConnections();
     bool session_exist(QString sName);
     void updateMenuSession(bool state);
+    void closeSession(QString sName);
 
 private:
     Ui::MainWindow *ui;
