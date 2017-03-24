@@ -59,17 +59,25 @@ Console::~Console()
 
 void Console::createActions()
 {
-    copyAct = new QAction(QIcon(":/images/copy.png"), tr("&Copy"), this);
+    copyAct = new QAction(QIcon(":/images/copy.png"), tr("Copy"), this);
+    //TODO: ctrl +c will send ^c in serial
+    //copyAct->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_C));
     connect(copyAct, SIGNAL(triggered()), this, SLOT(copy()));
     updateCopyAction(false);
 
-    pasteAct = new QAction(QIcon(":/images/paste.png"), tr("&Paste"), this);
+    pasteAct = new QAction(QIcon(":/images/paste.png"), tr("Paste"), this);
+    //TODO: pasteAct->setShortcut
+    //pasteAct->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_V));
     connect(pasteAct, SIGNAL(triggered()), this, SLOT(paste()));
 
     clearAct = new QAction(QIcon(":/images/clear.png"), tr("Clear"), this);
+    //TODO: clearAct->setShortcut
+    //clearAct->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_L));
     connect(clearAct, SIGNAL(triggered()), this, SLOT(clear()));
 
-    selectAllAct = new QAction(QIcon(":/images/selectAll.png"), tr("&Select All"), this);
+    selectAllAct = new QAction(QIcon(":/images/selectAll.png"), tr("Select All"), this);
+    //TODO: selectAllAct->setShortcut
+    //selectAllAct->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_A));
     connect(selectAllAct, SIGNAL(triggered()), this, SLOT(selectAll()));
 }
 void Console::updateCopyAction(bool yes)
