@@ -6,7 +6,7 @@ QMAKE_TARGET_COPYRIGHT = copyright 2017
 
 
 greaterThan(QT_MAJOR_VERSION, 4) {
-    QT       += widgets serialport
+    QT       += widgets serialport network
 } else {
     include($$QTSERIALPORT_PROJECT_ROOT/src/serialport/qt4support/serialport.prf)
 }
