@@ -34,7 +34,7 @@
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "settingsdialog.h"
+
 
 #include <QMessageBox>
 #include <QtSerialPort/QSerialPort>
@@ -223,12 +223,18 @@ void MainWindow::about()
     QString title =  QString("About %1").arg(APP_PRODUCT);
     QString about =  QString("The <b>%1</b> use the Qt Serial Port module <br>").arg(APP_PRODUCT);
     about.append(QString(" Author: %1<br>").arg(APP_COMPANY));
-    about.append(QString(" Version: %1<br>").arg(APP_VERSION));
+    about.append(QString(" Version: %1-%2<br>").arg(APP_VERSION).arg(GIT_VERSION));
     about.append(QString(" <a href='%1'>Source</a> <br>").arg(MYSOURCEURL));
     QMessageBox::about(this,title,about);
 }
 
+void MainWindow::update()
+{
+    //updatedialog updateDlg = new updatedialog(this);
+    updatedialog updateDlg(this);
+    updateDlg.exec();
 
+}
 void MainWindow::initActionsConnections()
 {
     //menu
@@ -255,6 +261,8 @@ void MainWindow::initActionsConnections()
     connect(ui->actionTile, SIGNAL(triggered()), ui->mdiArea, SLOT(tileSubWindows()));
     //About
     //TODO: help, update
+    //connect(ui->actionHelp, SIGNAL(triggered()), this, SLOT(about()));
+    connect(ui->actionUpdate, SIGNAL(triggered()), this, SLOT(update()));
     connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(about()));
     connect(ui->actionAboutQt, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
 

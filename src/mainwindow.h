@@ -44,6 +44,8 @@
 #include <QCloseEvent>
 
 #include "termsession.h"
+#include "settingsdialog.h"
+#include "updatedialog.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -80,6 +82,7 @@ private slots:
     void showInputHistory(QString sInput);
 
     void about();
+    void update();
     void savePosSetting();
     void readPosSetting();
     void slot_acceptSettingDlg(int result);
@@ -112,6 +115,7 @@ private:
     QSettings *settings;
     SettingsDialog *settingDlg;
     QList<termsession *> sessionlist;
+    //updatedialog *updateDlg;
 };
 
 #endif // MAINWINDOW_H

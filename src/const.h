@@ -7,7 +7,7 @@
 
 #define MYWEBURL "http://www.coolshou.idv.tw"
 #define MYSOURCEURL "https://github.com/coolshou/qtvt.git"
-#define MYRELEASEURL "https://github.com/coolshou/qtvt/releases"
+#define MYRELEASEURL "https://github.com/coolshou/qtvt/releases/latest"
 
 #include <QSerialPort>
 
