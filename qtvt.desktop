@@ -5,4 +5,4 @@ Name=qtvt
 Comment=qt vitrual terminal for serial communications
 Type=Application
 Exec=/usr/bin/qtvt
-Icon=/usr/share/pixmaps/qtvt.svg
+Icon=/usr/share/pixmaps/qtvt.png
