@@ -36,6 +36,7 @@ private slots:
     void httpFinished();
     void cancelDownload();
     void httpReadyRead();
+    void networkReplyProgress(qint64 bytesRead, qint64 totalBytes);
 
 private:
     void startRequest(const QUrl &requestedUrl);

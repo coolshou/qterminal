@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>431</width>
-    <height>194</height>
+    <width>514</width>
+    <height>190</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -35,10 +35,23 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="downloadButton">
-        <property name="text">
-         <string>PushButton</string>
+       <widget class="QProgressBar" name="progressBar">
+        <property name="value">
+         <number>24</number>
         </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QWidget" name="widget_2" native="true">
+        <layout class="QHBoxLayout" name="horizontalLayout" stretch="1">
+         <item>
+          <widget class="QPushButton" name="downloadButton">
+           <property name="text">
+            <string>download</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </widget>
       </item>
      </layout>

@@ -10,6 +10,8 @@
 
 #include <QDebug>
 
+static const char defaultFileName[] = "release.html";
+
 //=================================================================
 ProgressDialog::ProgressDialog(const QUrl &url, QWidget *parent)
   : QProgressDialog(parent)
@@ -40,7 +42,7 @@ updatedialog::updatedialog(QWidget *parent) :
         downloadDirectory = QDir::currentPath();
     qDebug() << "download Directory:" << downloadDirectory;
 
-
+    downloadFile();
 }
 
 updatedialog::~updatedialog()
@@ -61,11 +63,11 @@ void updatedialog::downloadFile()
         return;
     }
 
-//    QString fileName = newUrl.fileName();
+    QString fileName = newUrl.fileName();
 //    if (fileName.isEmpty())
 //        fileName = defaultFileLineEdit->text().trimmed();
-//    if (fileName.isEmpty())
-//        fileName = defaultFileName;
+    if (fileName.isEmpty())
+        fileName = defaultFileName;
 //    QString downloadDirectory = QDir::cleanPath(downloadDirectoryLineEdit->text().trimmed());
 //    if (!downloadDirectory.isEmpty() && QFileInfo(downloadDirectory).isDir())
 //        fileName.prepend(downloadDirectory + '/');
@@ -79,9 +81,9 @@ void updatedialog::downloadFile()
 //        QFile::remove(fileName);
 //    }
 
-//    file = openFileForWrite(fileName);
-//    if (!file)
-//        return;
+    file = openFileForWrite(fileName);
+    if (!file)
+        return;
 
 //    downloadButton->setEnabled(false);
 
@@ -94,25 +96,35 @@ void updatedialog::startRequest(const QUrl &requestedUrl)
     url = requestedUrl;
     httpRequestAborted = false;
 
-    reply = qnam.get(QNetworkRequest(url));
-    connect(reply, &QNetworkReply::finished, this, &updatedialog::httpFinished);
-    connect(reply, &QIODevice::readyRead, this, &updatedialog::httpReadyRead);
+    QNetworkRequest request(url);
+    request.setSslConfiguration(QSslConfiguration::defaultConfiguration());
 
+    reply = qnam.get(request);
+    connect(reply, SIGNAL(finished()), this, SLOT(httpFinished()));
+    connect(reply, SIGNAL(readyRead()), this, SLOT(httpReadyRead()));
+
+    connect(reply, SIGNAL(bytesWritten(qint64)), this, SLOT(networkReplyProgress(int)));
+/*
     ProgressDialog *progressDialog = new ProgressDialog(url, this);
     progressDialog->setAttribute(Qt::WA_DeleteOnClose);
-    connect(progressDialog, &QProgressDialog::canceled, this, &updatedialog::cancelDownload);
-    connect(reply, &QNetworkReply::downloadProgress, progressDialog, &ProgressDialog::networkReplyProgress);
-    connect(reply, &QNetworkReply::finished, progressDialog, &ProgressDialog::hide);
+    connect(progressDialog, SIGNAL(canceled()), this, SLOT(cancelDownload()));
+    connect(reply, SIGNAL(downloadProgress(qint64,qint64)), progressDialog, SLOT(networkReplyProgress(qint64,qint64)));
+    connect(reply, SIGNAL(finished()), progressDialog, SLOT(hide()));
     progressDialog->show();
-
+*/
     ui->statusLabel->setText(tr("Downloading %1...").arg(url.toString()));
 }
 void updatedialog::httpFinished()
 {
+    qDebug() << "httpFinished:";
+
     QFileInfo fi;
     if (file) {
         fi.setFile(file->fileName());
+        qDebug() << "fileName:" << file->fileName();
+        qDebug() << file->readAll();
         file->close();
+
         delete file;
         file = Q_NULLPTR;
     }
@@ -166,8 +178,11 @@ void updatedialog::httpReadyRead()
     // We read all of its new data and write it into the file.
     // That way we use less RAM than when reading it at the finished()
     // signal of the QNetworkReply
-    if (file)
-        file->write(reply->readAll());
+    if (file) {
+        QByteArray a = reply->readAll();
+        //qDebug() << "data: " << a;
+        file->write(a);
+    }
 }
 void updatedialog::cancelDownload()
 {
@@ -179,7 +194,8 @@ void updatedialog::cancelDownload()
 QFile *updatedialog::openFileForWrite(const QString &fileName)
 {
     QScopedPointer<QFile> file(new QFile(fileName));
-    if (!file->open(QIODevice::WriteOnly)) {
+    if (!file->open(QIODevice::ReadWrite)) {
+    //if (!file->open(QIODevice::WriteOnly)) {
         QMessageBox::information(this, tr("Error"),
                                  tr("Unable to save the file %1: %2.")
                                  .arg(QDir::toNativeSeparators(fileName),
@@ -187,4 +203,9 @@ QFile *updatedialog::openFileForWrite(const QString &fileName)
         return Q_NULLPTR;
     }
     return file.take();
+}
+void updatedialog::networkReplyProgress(qint64 bytesRead, qint64 totalBytes)
+{
+    ui->progressBar->setMaximum(totalBytes);
+    ui->progressBar->setValue(bytesRead);
 }
