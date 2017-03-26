@@ -107,6 +107,7 @@ void updatedialog::httpFinished()
     if (reply->error()) {
         QFile::remove(fi.absoluteFilePath());
         setStatus(tr("Error! not found latest version."));
+        networkReplyProgress(0,100);
         reply->deleteLater();
         reply = Q_NULLPTR;
         return;
