@@ -207,7 +207,6 @@ QJsonDocument updatedialog::loadJson(QString fileName)
 
 bool updatedialog::isLatestVersionExist(QString latestVersion)
 {
-    return true;//TODO: test
     int iLatest = latestVersion.replace("v","").replace(".", "").toInt();
     QString ver = APP_VERSION;
     int iVer = ver.replace(".","").toInt();
