@@ -4,5 +4,7 @@ Version=1.0
 Name=qtvt
 Comment=qt vitrual terminal for serial communications
 Type=Application
+Terminal=false
 Exec=/usr/bin/qtvt
 Icon=/usr/share/pixmaps/qtvt.png
+Categories=Qt;Development;

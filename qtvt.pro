@@ -41,7 +41,9 @@ RESOURCES += \
     qtvt.qrc
 
 DISTFILES += \
-    README.md
+    README.md \
+    debian/changelog \
+    qtvt.desktop
 
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 DEFINES += APP_COMPANY=\\\"$$QMAKE_TARGET_COMPANY\\\"
