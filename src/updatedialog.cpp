@@ -5,37 +5,22 @@
 #include <QMessageBox>
 #include <QStandardPaths>
 #include <QDir>
+#include <QFileInfo>
 
 #include "const.h"
 
 #include <QDebug>
 
-static const char defaultFileName[] = "release.html";
-
-//=================================================================
-ProgressDialog::ProgressDialog(const QUrl &url, QWidget *parent)
-  : QProgressDialog(parent)
-{
-    setWindowTitle(tr("Download Progress"));
-    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
-    setLabelText(tr("Downloading %1.").arg(url.toDisplayString()));
-    setMinimum(0);
-    setValue(0);
-    setMinimumDuration(0);
-}
-
-void ProgressDialog::networkReplyProgress(qint64 bytesRead, qint64 totalBytes)
-{
-    setMaximum(totalBytes);
-    setValue(bytesRead);
-}
-//=================================================================
+static const char defaultFileName[] = "qtvt_release.html";
 
 updatedialog::updatedialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::updatedialog)
 {
     ui->setupUi(this);
+    ui->currentVersion->setText(APP_VERSION);
+    connect(ui->updateButton, SIGNAL(pressed()), this, SLOT(getUpdate()));
+
     //tmp download Directory
     QString downloadDirectory = QStandardPaths::writableLocation(QStandardPaths::TempLocation);
     if (downloadDirectory.isEmpty() || !QFileInfo(downloadDirectory).isDir())
@@ -52,10 +37,6 @@ updatedialog::~updatedialog()
 
 void updatedialog::downloadFile()
 {
-//    const QString urlSpec = urlLineEdit->text().trimmed();
-//    if (urlSpec.isEmpty())
-//        return;
-
     const QUrl newUrl = QUrl::fromUserInput(MYRELEASEURL);
     if (!newUrl.isValid()) {
         QMessageBox::information(this, tr("Error"),
@@ -85,8 +66,6 @@ void updatedialog::downloadFile()
     if (!file)
         return;
 
-//    downloadButton->setEnabled(false);
-
     // schedule the request
     startRequest(newUrl);
 }
@@ -102,27 +81,17 @@ void updatedialog::startRequest(const QUrl &requestedUrl)
     reply = qnam.get(request);
     connect(reply, SIGNAL(finished()), this, SLOT(httpFinished()));
     connect(reply, SIGNAL(readyRead()), this, SLOT(httpReadyRead()));
+    connect(reply, SIGNAL(downloadProgress(qint64, qint64)), this, SLOT(networkReplyProgress(qint64, qint64)));
 
-    connect(reply, SIGNAL(bytesWritten(qint64)), this, SLOT(networkReplyProgress(int)));
-/*
-    ProgressDialog *progressDialog = new ProgressDialog(url, this);
-    progressDialog->setAttribute(Qt::WA_DeleteOnClose);
-    connect(progressDialog, SIGNAL(canceled()), this, SLOT(cancelDownload()));
-    connect(reply, SIGNAL(downloadProgress(qint64,qint64)), progressDialog, SLOT(networkReplyProgress(qint64,qint64)));
-    connect(reply, SIGNAL(finished()), progressDialog, SLOT(hide()));
-    progressDialog->show();
-*/
-    ui->statusLabel->setText(tr("Downloading %1...").arg(url.toString()));
+    setStatus(tr("Downloading %1...").arg(url.toString()));
 }
 void updatedialog::httpFinished()
 {
-    qDebug() << "httpFinished:";
+    ui->progressBar->setValue(0);
 
     QFileInfo fi;
     if (file) {
         fi.setFile(file->fileName());
-        qDebug() << "fileName:" << file->fileName();
-        qDebug() << file->readAll();
         file->close();
 
         delete file;
@@ -137,8 +106,7 @@ void updatedialog::httpFinished()
 
     if (reply->error()) {
         QFile::remove(fi.absoluteFilePath());
-        ui->statusLabel->setText(tr("Download failed:\n%1.").arg(reply->errorString()));
-        ui->downloadButton->setEnabled(true);
+        setStatus(tr("Error! not found latest version."));
         reply->deleteLater();
         reply = Q_NULLPTR;
         return;
@@ -154,23 +122,40 @@ void updatedialog::httpFinished()
         if (QMessageBox::question(this, tr("Redirect"),
                                   tr("Redirect to %1 ?").arg(redirectedUrl.toString()),
                                   QMessageBox::Yes | QMessageBox::No) == QMessageBox::No) {
-            ui->downloadButton->setEnabled(true);
             return;
         }
         file = openFileForWrite(fi.absoluteFilePath());
         if (!file) {
-            ui->downloadButton->setEnabled(true);
             return;
         }
         startRequest(redirectedUrl);
         return;
     }
 
-    ui->statusLabel->setText(tr("Downloaded %1 bytes to %2\nin\n%3")
-                         .arg(fi.size()).arg(fi.fileName(), QDir::toNativeSeparators(fi.absolutePath())));
-//    if (launchCheckBox->isChecked())
-//        QDesktopServices::openUrl(QUrl::fromLocalFile(fi.absoluteFilePath()));
-    ui->downloadButton->setEnabled(true);
+    //parser JSON file
+    QJsonDocument jsonDoc = loadJson(fi.absoluteFilePath());
+    //QString strJson(jsonDoc.toJson(QJsonDocument::Compact));
+    //qDebug()<<strJson.toStdString().data();
+    QJsonObject json_obj=jsonDoc.object();
+    QString name=json_obj["name"].toString();
+    ui->latestVersion->setText(name);
+    if (isLatestVersionExist(name)) {
+        //TODO: Latest file to download and install
+        //assets/name, browser_download_url, size
+        QJsonArray assets_arr=json_obj["assets"].toArray();
+        for(int i=0; i<assets_arr.size(); i++){
+            QJsonObject assets_obj=assets_arr[i].toObject();
+            //TODO: check name-> platform file (deb, amd64 ...)
+            qDebug() <<"assets name:" << assets_obj["name"].toString();
+            qDebug() <<"assets browser_download_url:" << assets_obj["browser_download_url"].toString();
+            qDebug() <<"assets size:" << assets_obj["size"].toInt();
+        }
+        setStatus(tr("Found New version!"));
+        ui->updateButton->setEnabled(true);
+    } else {
+        setStatus(tr("No new version founded!"));
+    }
+
 }
 void updatedialog::httpReadyRead()
 {
@@ -184,15 +169,13 @@ void updatedialog::httpReadyRead()
         file->write(a);
     }
 }
-void updatedialog::cancelDownload()
-{
-    ui->statusLabel->setText(tr("Download canceled."));
-    httpRequestAborted = true;
-    reply->abort();
-    ui->downloadButton->setEnabled(true);
-}
+
 QFile *updatedialog::openFileForWrite(const QString &fileName)
 {
+    if (fileExists(fileName)) {
+        QFile::remove(fileName);
+    }
+
     QScopedPointer<QFile> file(new QFile(fileName));
     if (!file->open(QIODevice::ReadWrite)) {
     //if (!file->open(QIODevice::WriteOnly)) {
@@ -208,4 +191,36 @@ void updatedialog::networkReplyProgress(qint64 bytesRead, qint64 totalBytes)
 {
     ui->progressBar->setMaximum(totalBytes);
     ui->progressBar->setValue(bytesRead);
+}
+bool updatedialog::fileExists(QString path) {
+    QFileInfo check_file(path);
+    // check if file exists and if yes: Is it really a file and no directory?
+    return check_file.exists() && check_file.isFile();
+}
+QJsonDocument updatedialog::loadJson(QString fileName)
+{
+    QFile jsonFile(fileName);
+    jsonFile.open(QFile::ReadOnly);
+    return QJsonDocument().fromJson(jsonFile.readAll());
+}
+
+bool updatedialog::isLatestVersionExist(QString latestVersion)
+{
+    return true;//TODO: test
+    int iLatest = latestVersion.replace("v","").replace(".", "").toInt();
+    QString ver = APP_VERSION;
+    int iVer = ver.replace(".","").toInt();
+    if (iLatest > iVer) {
+        return true;
+    } else {
+        return false;
+    }
+}
+void updatedialog::setStatus(QString msg)
+{
+    ui->statusLabel->setText(msg);
+}
+void updatedialog::getUpdate()
+{
+    qDebug() << "TODO: getUpdate";
 }

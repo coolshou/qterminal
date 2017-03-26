@@ -8,16 +8,9 @@
 #include <QFile>
 #include <QFileInfo>
 #include <QProgressDialog>
-
-class ProgressDialog : public QProgressDialog {
-    Q_OBJECT
-
-public:
-    explicit ProgressDialog(const QUrl &url, QWidget *parent = Q_NULLPTR);
-
-public slots:
-   void networkReplyProgress(qint64 bytesRead, qint64 totalBytes);
-};
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
 
 namespace Ui {
 class updatedialog;
@@ -34,22 +27,29 @@ public:
 private slots:
     void downloadFile();
     void httpFinished();
-    void cancelDownload();
     void httpReadyRead();
     void networkReplyProgress(qint64 bytesRead, qint64 totalBytes);
+    void getUpdate();
 
 private:
     void startRequest(const QUrl &requestedUrl);
     QFile *openFileForWrite(const QString &fileName);
+    bool fileExists(QString path);
+    QJsonDocument loadJson(QString fileName);
+    bool isLatestVersionExist(QString latestVersion);
+    void setStatus(QString msg);
 
 private:
-
     Ui::updatedialog *ui;
     QUrl url;
     QNetworkAccessManager qnam;
     QNetworkReply *reply;
     QFile *file;
     bool httpRequestAborted;
+    QString latestDLFilename;
+    QUrl latestDLUrl;
+    qint64 latestDLSize;
+
 };
 
 #endif // UPDATEDIALOG_H

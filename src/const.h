@@ -1,14 +1,11 @@
 #ifndef CONST
 #define CONST
 
-//#define MYORG "coolshou"
 #define MYORGDOMAIN "coolshou.idv"
-//#define MYAPP "qtvt"
 
 #define MYWEBURL "http://www.coolshou.idv.tw"
 #define MYSOURCEURL "https://github.com/coolshou/qtvt.git"
-//#define MYRELEASEURL "https://github.com/coolshou/qtvt/releases/latest"
-#define MYRELEASEURL "https://api.github.com/repos/coolshou/qtvt/release/least"
+#define MYRELEASEURL "https://api.github.com/repos/coolshou/qtvt/releases/latest"
 
 #include <QSerialPort>
 
