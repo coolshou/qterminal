@@ -68,9 +68,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
-    /*
     delete settingDlg;
-    */
     delete ui;
     delete settings;
 
