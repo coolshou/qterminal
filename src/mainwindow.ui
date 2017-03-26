@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>564</width>
-    <height>428</height>
+    <width>560</width>
+    <height>424</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -118,7 +118,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>564</width>
+     <width>560</width>
      <height>28</height>
     </rect>
    </property>
@@ -147,6 +147,8 @@
     <addaction name="separator"/>
     <addaction name="actionAbout"/>
     <addaction name="actionAboutQt"/>
+    <addaction name="separator"/>
+    <addaction name="actionDonate"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
@@ -435,6 +437,15 @@
   <action name="actionUpdatre">
    <property name="text">
     <string>updatre</string>
+   </property>
+  </action>
+  <action name="actionDonate">
+   <property name="icon">
+    <iconset resource="../qtvt.qrc">
+     <normaloff>:/images/Donate.png</normaloff>:/images/Donate.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Donate (TODO)</string>
    </property>
   </action>
  </widget>

@@ -22,5 +22,6 @@
         <file>images/find.png</file>
         <file>images/help.png</file>
         <file>images/update.png</file>
+        <file>images/Donate.png</file>
     </qresource>
 </RCC>
