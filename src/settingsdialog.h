@@ -88,12 +88,13 @@ public:
     explicit SettingsDialog(QWidget *parent = 0);
     ~SettingsDialog();
 
-    Settings get_settings() const;
+    Settings get_settings();
     void setSettings(QString gname, QSettings *settings);
 
 protected:
     //void closeEvent(QCloseEvent event);
     void setDemo();
+    void setDefaultSetting();
 
 private slots:
     void showPortInfo(int idx);

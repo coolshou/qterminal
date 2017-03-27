@@ -74,6 +74,7 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
     fillConsoleParameters();
 
     //updateSettings();
+    setDefaultSetting();
     setDemo();
 }
 
@@ -90,8 +91,14 @@ void SettingsDialog::setDemo()
     p.setColor(QPalette::Text, Qt::green);
     ui->DemoPlainTextEdit->setPalette(p);
 }
+void SettingsDialog::setDefaultSetting()
+{
+    //TODO: read default setting?
+    QString gname = ui->serialPortInfoListBox->currentText();
+    qDebug() << "setDefaultSetting: " <<gname;
 
-SettingsDialog::Settings SettingsDialog::get_settings() const
+}
+SettingsDialog::Settings SettingsDialog::get_settings()
 {
     return currentSettings;
 }
@@ -165,11 +172,14 @@ void SettingsDialog::selectLogFileName()
 //TODO: console color parameters
 void SettingsDialog::fillConsoleParameters()
 {
-    //TODO
+    //TODO, theme
+    //backgroung color
     QColor blackColor = Qt::black;
     ui->BaseColorComboBox->addItem(QStringLiteral("black"), blackColor);
+    //font color
     QColor greenColor = Qt::green;
     ui->FontColorComboBox->addItem(QStringLiteral("green"), greenColor);
+
 }
 
 void SettingsDialog::fillPortsParameters()
