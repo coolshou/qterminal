@@ -14,7 +14,7 @@ termsession::termsession(QWidget *parent, QString name, QSettings *settings) :
     mGroupName = name;
     mSetting = settings;
 
-    new_console();
+    setConsole();
 
     serial = new QSerialPort(this);
     connect(serial, SIGNAL(error(QSerialPort::SerialPortError)),
@@ -22,28 +22,10 @@ termsession::termsession(QWidget *parent, QString name, QSettings *settings) :
     connect(serial, SIGNAL(readyRead()), this, SLOT(readData()));
     connect(serial, SIGNAL(baudRateChanged(qint32,QSerialPort::Directions)),
             this, SLOT(slot_baudRateChanged(qint32,QSerialPort::Directions)));
-    //connect(this, SIGNAL(textChanged()), this, SLOT(slot_onTextChanged()));
     apply_setting();
-//    if (bLogEnable) {
-//        QFile file(sLogFilename);
-//        /*
-//         * If file not exit it will create
-//         * */
-//        if (!file.open(QIODevice::ReadOnly | QIODevice::Text | QIODevice::ReadWrite))
-//        {
-//            qDebug() << "FAIL TO CREATE FILE / FILE NOT EXIT***";
-//        }
-//        if (file.open(QIODevice::ReadWrite))
-//        {
-//            QTextStream stream(&file);
-//            stream << "1_XYZ"<<endl;
-//            stream << "2_XYZ"<<endl;
-//        }
-//    }
 }
 termsession::~termsession()
 {
-    //delete console;
     delete serial;
 }
 QString termsession::getLogFileName()
@@ -156,18 +138,17 @@ void termsession::readData()
         QString dateTimeString = QString("\n[%1] ").arg(dateTime.toString("yyyy-MM-dd hh:mm:ss"));
         data.replace(QString("\n"), dateTimeString.toLatin1());
     }
-    this->putData(data);
     if (bLogEnable) {
         logToFile(data);
     }
+    this->putData(data);
 }
 void termsession::writeData(const QByteArray &data)
 {
-    serial->write(data);
     if (bLogEnable) {
-        qDebug() << "TODO: log writeData";
         logToFile(data);
     }
+    serial->write(data);
 }
 void termsession::writeln(const QByteArray &data)
 {
@@ -209,14 +190,13 @@ bool termsession::isOpen()
     return serial->isOpen();
 }
 //console
-void termsession::new_console()
+void termsession::setConsole()
 {
     this->showMaximized();
     connect(this, SIGNAL(getData(QByteArray)), this, SLOT(writeData(QByteArray)));
     mSetting->beginGroup(mGroupName);
     this->setMaximumBlockCount(mSetting->value("maxBlockCount").toInt());
     this->setScrollToBottom(mSetting->value("scrollToBottom").toBool());
-
     mSetting->endGroup();
 }
 void termsession::slot_baudRateChanged(qint32 baudRate,QSerialPort::Directions directions)

@@ -23,7 +23,7 @@ public:
     QString get_status();
     //return serial is open or not
     bool isOpen();
-    void new_console();
+    void setConsole();
     void apply_setting();
     QVariant get_settingValue(QString key);
     void setLogDatetime(bool set);
