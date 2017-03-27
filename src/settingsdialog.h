@@ -40,6 +40,7 @@
 #include <QCloseEvent>
 #include <QSettings>
 #include <QColor>
+#include <QStandardPaths>
 
 QT_USE_NAMESPACE
 
@@ -100,6 +101,7 @@ private slots:
     void cancel();
     void checkCustomBaudRatePolicy(int idx);
     void checkCustomDevicePathPolicy(int idx);
+    void selectLogFileName();
 
 private:
     void fillPortsParameters();

@@ -38,6 +38,7 @@
 #include <QtSerialPort/QSerialPortInfo>
 #include <QIntValidator>
 #include <QLineEdit>
+#include <QFileDialog>
 
 #include <QDebug>
 
@@ -65,6 +66,7 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
             this, SLOT(checkCustomBaudRatePolicy(int)));
     connect(ui->serialPortInfoListBox, SIGNAL(currentIndexChanged(int)),
             this, SLOT(checkCustomDevicePathPolicy(int)));
+    connect(ui->browserBtn,SIGNAL(pressed()),this, SLOT(selectLogFileName()));
 
     fillPortsParameters();
     fillPortsInfo();
@@ -139,6 +141,27 @@ void SettingsDialog::checkCustomDevicePathPolicy(int idx)
     if (isCustomPath)
         ui->serialPortInfoListBox->clearEditText();
 }
+
+void SettingsDialog::selectLogFileName()
+{
+    QString path;
+    if (ui->logFilenameLineEdit->text().isEmpty()){
+        //default home path
+        path = QStandardPaths::writableLocation(QStandardPaths::HomeLocation);
+    } else {
+        path = ui->logFilenameLineEdit->text();
+    }
+    QString fileName;
+    //use system's dialog
+    fileName = QFileDialog::getSaveFileName(this,
+        tr("Set Log Filename"), path, tr("Log Files (*.log *.LOG);; Text Files(*.txt *.TXT))"));
+    if (!fileName.isEmpty()) {
+        qDebug() << "selected file:" << fileName;
+        ui->logFilenameLineEdit->setText(fileName);
+    }
+
+}
+
 //TODO: console color parameters
 void SettingsDialog::fillConsoleParameters()
 {
