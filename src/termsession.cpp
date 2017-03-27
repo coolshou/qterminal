@@ -158,7 +158,6 @@ void termsession::readData()
     }
     this->putData(data);
     if (bLogEnable) {
-        qDebug() << "TODO: log readData";
         logToFile(data);
     }
 }
