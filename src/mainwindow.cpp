@@ -41,7 +41,7 @@
 #include <QDialog>
 
 #include "const.h"
-//#include "version.h"
+
 #include <QDebug>
 
 //! [0]
