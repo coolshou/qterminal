@@ -62,7 +62,7 @@ protected:
     virtual void mousePressEvent(QMouseEvent *e);
     virtual void mouseMoveEvent(QMouseEvent *e);
     virtual void mouseDoubleClickEvent(QMouseEvent *e);
-    virtual void contextMenuEvent(QContextMenuEvent *e);
+    //virtual void contextMenuEvent(QContextMenuEvent *e);
 
 private slots:
     void showContextMenu(QPoint pt);

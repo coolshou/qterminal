@@ -90,7 +90,7 @@ void Console::updateCopyAction(bool yes)
 
 void Console::createRightMenu()
 {
-    //TODO: custom menu
+    //custom right click menu
     rightMenu = createStandardContextMenu();
     /* StandardContextMenu
      * QAction(0x132e2f0, name = "edit-undo"),
@@ -109,13 +109,12 @@ void Console::createRightMenu()
     rightMenu->addAction(pasteAct);
     rightMenu->addSeparator();
     rightMenu->addAction(clearAct);
-    rightMenu->addSeparator();
-    rightMenu->addAction(tr("TODO: other menu"));
+    //rightMenu->addSeparator();
+    //rightMenu->addAction(tr("TODO: other menu"));
 
 }
 void Console::showContextMenu(QPoint pt)
 {
-    qDebug() << "showContextMenu: " << pt;
     if(rightMenu)
         rightMenu->exec(this->mapToGlobal(pt));
 }
@@ -143,6 +142,7 @@ void Console::setTheme(QString sTheme)
 {
     QPalette p = palette();
     //TODO: color theme
+    Q_UNUSED(sTheme)
     p.setColor(QPalette::Base, Qt::black);
     p.setColor(QPalette::Text, Qt::green);
     setPalette(p);
@@ -153,8 +153,8 @@ void Console::keyPressEvent(QKeyEvent *e)
 {
     switch (e->key()) {
     case Qt::Key_Backspace:
-    case Qt::Key_Left:
-    case Qt::Key_Right:
+    case Qt::Key_Left://TODO: Qt::Key_Left
+    case Qt::Key_Right://TODO: Qt::Key_Right
     case Qt::Key_Up:
     case Qt::Key_Down:
         break;
@@ -210,6 +210,7 @@ void Console::mouseDoubleClickEvent(QMouseEvent *e)
 }
 
 //replace by showContextMenu
+/*
 void Console::contextMenuEvent(QContextMenuEvent *e)
 {
     qDebug() << "contextMenuEvent: " << e->pos();
@@ -217,3 +218,4 @@ void Console::contextMenuEvent(QContextMenuEvent *e)
         rightMenu->exec(e->globalPos());
 //    Q_UNUSED(e)
 }
+*/
