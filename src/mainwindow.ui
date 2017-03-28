@@ -119,7 +119,7 @@
      <x>0</x>
      <y>0</y>
      <width>560</width>
-     <height>28</height>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuCalls">
@@ -136,7 +136,7 @@
     </property>
     <addaction name="actionMacro"/>
     <addaction name="separator"/>
-    <addaction name="actionConfigure"/>
+    <addaction name="actionOptions"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -227,7 +227,7 @@
      <normaloff>:/images/qt.png</normaloff>:/images/qt.png</iconset>
    </property>
    <property name="text">
-    <string>About &amp;Qt</string>
+    <string>About Qt</string>
    </property>
   </action>
   <action name="actionConnect">
@@ -266,13 +266,13 @@
     <string>Ctrl+D</string>
    </property>
   </action>
-  <action name="actionConfigure">
+  <action name="actionOptions">
    <property name="icon">
     <iconset resource="../qtvt.qrc">
      <normaloff>:/images/settings.png</normaloff>:/images/settings.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Configure</string>
+    <string>O&amp;ptions</string>
    </property>
    <property name="toolTip">
     <string>Configure serial port</string>
@@ -326,7 +326,7 @@
      <normaloff>:/images/cascade.png</normaloff>:/images/cascade.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;cascade</string>
+    <string>Cascade</string>
    </property>
   </action>
   <action name="actionTile">
@@ -335,7 +335,7 @@
      <normaloff>:/images/tile.png</normaloff>:/images/tile.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;tile</string>
+    <string>Tile</string>
    </property>
   </action>
   <action name="actionEdit_session">
@@ -359,7 +359,7 @@
      <normaloff>:/images/close.png</normaloff>:/images/close.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Close session</string>
+    <string>Close &amp;session</string>
    </property>
   </action>
   <action name="actionCopy">
@@ -395,7 +395,7 @@
      <normaloff>:/images/logFile.png</normaloff>:/images/logFile.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Log</string>
+    <string>Lo&amp;g</string>
    </property>
   </action>
   <action name="actionMacro">
@@ -406,6 +406,9 @@
    <property name="text">
     <string>&amp;Macro</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+M</string>
+   </property>
   </action>
   <action name="actionFind">
    <property name="icon">
@@ -415,6 +418,9 @@
    <property name="text">
     <string>&amp;Find</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+F</string>
+   </property>
   </action>
   <action name="actionUpdate">
    <property name="icon">
@@ -422,7 +428,7 @@
      <normaloff>:/images/update.png</normaloff>:/images/update.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;update</string>
+    <string>&amp;Update</string>
    </property>
   </action>
   <action name="actionHelp">
@@ -434,11 +440,6 @@
     <string>&amp;Help</string>
    </property>
   </action>
-  <action name="actionUpdatre">
-   <property name="text">
-    <string>updatre</string>
-   </property>
-  </action>
   <action name="actionDonate">
    <property name="icon">
     <iconset resource="../qtvt.qrc">
@@ -446,6 +447,9 @@
    </property>
    <property name="text">
     <string>&amp;Donate (TODO)</string>
+   </property>
+   <property name="visible">
+    <bool>false</bool>
    </property>
   </action>
  </widget>
