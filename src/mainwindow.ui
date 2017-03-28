@@ -145,10 +145,10 @@
     <addaction name="actionHelp"/>
     <addaction name="actionUpdate"/>
     <addaction name="separator"/>
+    <addaction name="actionDonate"/>
+    <addaction name="separator"/>
     <addaction name="actionAbout"/>
     <addaction name="actionAboutQt"/>
-    <addaction name="separator"/>
-    <addaction name="actionDonate"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
@@ -449,7 +449,7 @@
     <string>&amp;Donate (TODO)</string>
    </property>
    <property name="visible">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
   </action>
  </widget>

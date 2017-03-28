@@ -260,19 +260,6 @@
            <string>Log DateTime</string>
           </property>
          </widget>
-         <widget class="QCheckBox" name="checkBox">
-          <property name="geometry">
-           <rect>
-            <x>10</x>
-            <y>80</y>
-            <width>211</width>
-            <height>24</height>
-           </rect>
-          </property>
-          <property name="text">
-           <string>CheckBox</string>
-          </property>
-         </widget>
          <widget class="QWidget" name="widget_3" native="true">
           <property name="geometry">
            <rect>
@@ -333,6 +320,9 @@
            <widget class="QCheckBox" name="scrollToBottomCheckBox">
             <property name="text">
              <string>Scroll To Bottom</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
             </property>
            </widget>
           </item>
@@ -433,6 +423,23 @@ Text</string>
               <widget class="QLabel" name="BaseColorLabel">
                <property name="text">
                 <string>Back Color:</string>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="1">
+              <widget class="QSpinBox" name="spinBox">
+               <property name="maximum">
+                <number>64</number>
+               </property>
+               <property name="value">
+                <number>9</number>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="0">
+              <widget class="QLabel" name="FontSizeLabel">
+               <property name="text">
+                <string>Font Size:</string>
                </property>
               </widget>
              </item>
