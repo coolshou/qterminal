@@ -32,23 +32,23 @@ public:
     QString getLogFileName();
     void logToFile(QByteArray log);
     void logToFile(QString lineToBelogged);
+    void openSerialPort();
+    void closeSerialPort();
+    void writeln(const QByteArray &data);
 
 signals:
     void sig_updateStatus(QString sMsg);
     void sig_updateActionBtnStatus(bool bStatus);
 
-public slots:
-    void openSerialPort();
-    void closeSerialPort();
-    void writeln(const QByteArray &data);
-
 private slots:
     void readData();
     void writeData(const QByteArray &data);
 
-    void handleError(QSerialPort::SerialPortError error);
+    void slot_handleError(QSerialPort::SerialPortError error);
     void slot_baudRateChanged(qint32 baudRate,QSerialPort::Directions directions);
     //void slot_onTextChanged();
+private:
+    QString getCurrentDateTimeString();
 
 private:
     QSerialPort *serial;

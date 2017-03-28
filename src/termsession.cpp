@@ -18,7 +18,7 @@ termsession::termsession(QWidget *parent, QString name, QSettings *settings) :
 
     serial = new QSerialPort(this);
     connect(serial, SIGNAL(error(QSerialPort::SerialPortError)),
-            this, SLOT(handleError(QSerialPort::SerialPortError)));
+            this, SLOT(slot_handleError(QSerialPort::SerialPortError)));
     connect(serial, SIGNAL(readyRead()), this, SLOT(readData()));
     connect(serial, SIGNAL(baudRateChanged(qint32,QSerialPort::Directions)),
             this, SLOT(slot_baudRateChanged(qint32,QSerialPort::Directions)));
@@ -128,14 +128,18 @@ void termsession::closeSerialPort()
     emit sig_updateStatus(tr("Disconnected"));
 }
 
+QString termsession::getCurrentDateTimeString()
+{
+    QDateTime dateTime = dateTime.currentDateTime();
+    QString dateTimeString = QString("\n[%1] ").arg(dateTime.toString("yyyy-MM-dd hh:mm:ss"));
+    return dateTimeString;
+}
+
 void termsession::readData()
 {
     QByteArray data = serial->readAll();
     if (bLogDatetime) {
-        //qDebug() << data;
-        //qDebug() << get_settingValue("logDateTime");
-        QDateTime dateTime = dateTime.currentDateTime();
-        QString dateTimeString = QString("\n[%1] ").arg(dateTime.toString("yyyy-MM-dd hh:mm:ss"));
+        QString dateTimeString = getCurrentDateTimeString();
         data.replace(QString("\n"), dateTimeString.toLatin1());
     }
     if (bLogEnable) {
@@ -156,7 +160,7 @@ void termsession::writeln(const QByteArray &data)
     writeData("\r\n");
 }
 
-void termsession::handleError(QSerialPort::SerialPortError error)
+void termsession::slot_handleError(QSerialPort::SerialPortError error)
 {
     if (error == QSerialPort::ResourceError) {
         QMessageBox::critical(this, tr("Critical Error"), serial->errorString());
