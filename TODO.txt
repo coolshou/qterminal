@@ -1,0 +1,9 @@
+3. script (macro)
+4. filter to get/trigger event
+5. console left/right/up/down arrow
+6. line to send history
+
+
+finish:
+1. line to send
+2. log to file

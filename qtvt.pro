@@ -48,7 +48,8 @@ DISTFILES += \
     debian/control \
     debian/copyright \
     debian/rules \
-    debian/source/format
+    debian/source/format \
+    TODO.txt
 
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 DEFINES += APP_COMPANY=\\\"$$QMAKE_TARGET_COMPANY\\\"
