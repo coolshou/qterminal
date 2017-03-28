@@ -87,7 +87,20 @@ void termsession::apply_setting()
 
     this->setEnabled(true);
     this->setLocalEchoEnabled(mSetting->value("localEchoEnabled").toBool());
+    //console
+    this->setMaximumBlockCount(mSetting->value("maxBlockCount").toInt());
+    QPalette p = palette();
+    //TODO: color theme
+    p.setColor(QPalette::Base, mSetting->value("baseColor").toString());
+    p.setColor(QPalette::Text, mSetting->value("fontColor").toString());
+    this->setPalette(p);
+    QFont f;
+    f.setFamily(mSetting->value("fontFamily").toString());
+    f.setPointSize(mSetting->value("fontSize").toInt());
+    this->setFont(f);
     this->setScrollToBottom(mSetting->value("scrollToBottom").toBool());
+
+    //log
     this->setLogDatetime(mSetting->value("logDateTime").toBool());
     this->setLogEnable(mSetting->value("logEnable").toBool());
     this->setLogFilename(mSetting->value("logFilename").toString());

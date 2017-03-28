@@ -67,6 +67,7 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
     connect(ui->serialPortInfoListBox, SIGNAL(currentIndexChanged(int)),
             this, SLOT(checkCustomDevicePathPolicy(int)));
     connect(ui->browserBtn,SIGNAL(pressed()),this, SLOT(selectLogFileName()));
+    connect(ui->FontSizeSpinBox, SIGNAL(valueChanged(int)), this, SLOT(slot_changeFontSize(int)));
 
     fillPortsParameters();
     fillPortsInfo();
@@ -90,6 +91,7 @@ void SettingsDialog::setDemo()
     p.setColor(QPalette::Base, Qt::black);
     p.setColor(QPalette::Text, Qt::green);
     ui->DemoPlainTextEdit->setPalette(p);
+    slot_changeFontSize(currentSettings.fontSize);
 }
 void SettingsDialog::setDefaultSetting()
 {
@@ -147,6 +149,16 @@ void SettingsDialog::checkCustomDevicePathPolicy(int idx)
     ui->serialPortInfoListBox->setEditable(isCustomPath);
     if (isCustomPath)
         ui->serialPortInfoListBox->clearEditText();
+}
+void SettingsDialog::slot_changeFontSize(int size)
+{
+    QFont f;
+    //TODO: font family
+    f.setFamily(ui->DemoPlainTextEdit->font().family());
+    //qDebug() << "font family:" <<ui->DemoPlainTextEdit->font().family();
+    //qDebug() << "font size:" <<ui->DemoPlainTextEdit->font().pointSize() << "to " << size;
+    f.setPointSize(size);
+    ui->DemoPlainTextEdit->setFont(f);
 }
 
 void SettingsDialog::selectLogFileName()
@@ -275,6 +287,9 @@ bool SettingsDialog::updateSettings()
     currentSettings.maxBlockCount = ui->maxBlockCountSpinBox->value();
     currentSettings.baseColor = static_cast<QColor>(ui->BaseColorComboBox->currentText());
     currentSettings.fontColor = static_cast<QColor>(ui->FontColorComboBox->currentText());
+    //TODO font fontFamily setting
+    currentSettings.fontFamily = ui->DemoPlainTextEdit->font().family();
+    currentSettings.fontSize = ui->FontSizeSpinBox->value();
     currentSettings.scrollToBottom = ui->scrollToBottomCheckBox->isChecked();
     //TODO: Log
     currentSettings.bLogEnable = ui->LogEnableGroupBox->isChecked();
@@ -304,6 +319,9 @@ void SettingsDialog::setSettings(QString gname, QSettings *settings)
     ui->maxBlockCountSpinBox->setValue(settings->value("maxBlockCount").toInt());
     ui->BaseColorComboBox->setCurrentText(settings->value("baseColor").toString());
     ui->FontColorComboBox->setCurrentText(settings->value("fontColor").toString());
+    //TODO: font family
+    //
+    ui->FontSizeSpinBox->setValue(settings->value("fontSize").toInt());
     ui->scrollToBottomCheckBox->setChecked(settings->value("scrollToBottom").toBool());
     //TODO: Log
     ui->LogEnableGroupBox->setChecked(settings->value("logEnable").toBool());

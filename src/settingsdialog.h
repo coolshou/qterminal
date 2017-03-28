@@ -41,6 +41,7 @@
 #include <QSettings>
 #include <QColor>
 #include <QStandardPaths>
+#include <QFont>
 
 QT_USE_NAMESPACE
 
@@ -76,6 +77,8 @@ public:
         //TODO: console setting
         int maxBlockCount;
         QColor fontColor;
+        QString fontFamily;
+        int fontSize;
         QColor baseColor;
         bool scrollToBottom;
         //TODO: Log
@@ -103,6 +106,7 @@ private slots:
     void checkCustomBaudRatePolicy(int idx);
     void checkCustomDevicePathPolicy(int idx);
     void selectLogFileName();
+    void slot_changeFontSize(int size);
 
 private:
     void fillPortsParameters();

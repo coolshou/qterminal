@@ -127,6 +127,8 @@ void MainWindow::slot_acceptSettingDlg(int result)
         settings->setValue("maxBlockCount", settingDlg->get_settings().maxBlockCount);
         settings->setValue("baseColor", settingDlg->get_settings().baseColor);
         settings->setValue("fontColor", settingDlg->get_settings().fontColor);
+        settings->setValue("fontFamily", settingDlg->get_settings().fontFamily);
+        settings->setValue("fontSize", settingDlg->get_settings().fontSize);
         settings->setValue("scrollToBottom", settingDlg->get_settings().scrollToBottom);
         //TODO: Log
         settings->setValue("logEnable", settingDlg->get_settings().bLogEnable);
