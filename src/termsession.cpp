@@ -96,7 +96,9 @@ void termsession::apply_setting()
     this->setPalette(p);
     QFont f;
     f.setFamily(mSetting->value("fontFamily").toString());
+    //f.setFamily("Noto Sans CJK TC");
     f.setPointSize(mSetting->value("fontSize").toInt());
+    //f.setBold(true);
     this->setFont(f);
     this->setScrollToBottom(mSetting->value("scrollToBottom").toBool());
 

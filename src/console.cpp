@@ -146,6 +146,11 @@ void Console::setTheme(QString sTheme)
     Q_UNUSED(sTheme)
     p.setColor(QPalette::Base, Qt::black);
     p.setColor(QPalette::Text, Qt::green);
+    QFont f;
+    //f.setFamily(mSetting->value("fontFamily").toString());
+    f.setPointSize(10);
+    //f.setBold(true);
+    this->setFont(f);
     setPalette(p);
 
 }

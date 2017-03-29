@@ -1,7 +1,12 @@
+Issue:
+
+TODO:
+1. send ctrl+c (break?)
 3. script (macro)
 4. filter to get/trigger event
 5. console left/right/up/down arrow
 6. line to send history
+7. mouse wheel to zoom in/out font size
 
 
 finish:
