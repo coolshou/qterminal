@@ -121,6 +121,7 @@ void Console::showContextMenu(QPoint pt)
 
 void Console::putData(const QByteArray &data)
 {
+    moveCurserToEnd();
     insertPlainText(QString(data));
 
     if (scrollToBottom) {
@@ -148,15 +149,22 @@ void Console::setTheme(QString sTheme)
     setPalette(p);
 
 }
+void Console::moveCurserToEnd()
+{
+    QTextCursor newCursor = QTextCursor(this->document());
+    newCursor.movePosition(QTextCursor::End);
+    setTextCursor(newCursor);
+}
 
 void Console::keyPressEvent(QKeyEvent *e)
 {
     switch (e->key()) {
     case Qt::Key_Backspace:
-    case Qt::Key_Left://TODO: Qt::Key_Left
-    case Qt::Key_Right://TODO: Qt::Key_Right
     case Qt::Key_Up:
     case Qt::Key_Down:
+        break;
+    case Qt::Key_Left://TODO: Qt::Key_Left
+    case Qt::Key_Right://TODO: Qt::Key_Right
         break;
     default:
         if (localEchoEnabled)

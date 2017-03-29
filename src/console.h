@@ -71,7 +71,7 @@ private slots:
 private:
     void createRightMenu();
     void createActions();
-
+    void moveCurserToEnd();
 
 private:
     bool localEchoEnabled;
