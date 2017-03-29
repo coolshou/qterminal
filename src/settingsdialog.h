@@ -79,6 +79,7 @@ public:
         QColor fontColor;
         QString fontFamily;
         int fontSize;
+        int fontSizeDefault=10;
         QColor baseColor;
         bool scrollToBottom;
         //TODO: Log

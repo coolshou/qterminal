@@ -155,8 +155,9 @@ void SettingsDialog::slot_changeFontSize(int size)
     QFont f;
     //TODO: font family
     f.setFamily(ui->DemoPlainTextEdit->font().family());
-    //qDebug() << "font family:" <<ui->DemoPlainTextEdit->font().family();
-    //qDebug() << "font size:" <<ui->DemoPlainTextEdit->font().pointSize() << "to " << size;
+    if (size<=0) {
+        size = currentSettings.fontSizeDefault;
+    }
     f.setPointSize(size);
     ui->DemoPlainTextEdit->setFont(f);
 }
