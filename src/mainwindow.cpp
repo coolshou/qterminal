@@ -112,7 +112,6 @@ void MainWindow::slot_acceptSettingDlg(int result)
 {
     //qDebug() << "slot_acceptSettingDlg: " << result;
     if (result == QDialog::Accepted) {
-        qDebug() << "Accepted";
 
         QString sName = settingDlg->get_settings().name;
         settings->beginGroup(sName);
