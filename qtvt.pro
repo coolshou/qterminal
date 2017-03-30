@@ -11,6 +11,8 @@ greaterThan(QT_MAJOR_VERSION, 4) {
     include($$QTSERIALPORT_PROJECT_ROOT/src/serialport/qt4support/serialport.prf)
 }
 
+CONFIG += c++11
+
 CFLAG+=-fPIC
 
 TARGET = qtvt
