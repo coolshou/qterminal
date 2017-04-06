@@ -119,7 +119,7 @@ void Console::showContextMenu(QPoint pt)
         rightMenu->exec(this->mapToGlobal(pt));
 }
 
-void Console::putData(const QByteArray &data)
+void Console::showDataOnTextEdit(const QByteArray &data)
 {
     moveCurserToEnd();
     insertPlainText(QString(data));
@@ -163,18 +163,33 @@ void Console::moveCurserToEnd()
 
 void Console::keyPressEvent(QKeyEvent *e)
 {
-    switch (e->key()) {
-    case Qt::Key_Backspace:
-    case Qt::Key_Up:
-    case Qt::Key_Down:
-        break;
-    case Qt::Key_Left://TODO: Qt::Key_Left
-    case Qt::Key_Right://TODO: Qt::Key_Right
-        break;
-    default:
-        if (localEchoEnabled)
-            QPlainTextEdit::keyPressEvent(e);
-        emit getData(e->text().toLocal8Bit());
+    if(e->type() == QKeyEvent::KeyPress) {
+        /*
+        QKeyEvent *keyEvent = static_cast<QKeyEvent*>(e);
+        if (keyEvent->key() == Qt::Key_A) {
+            qDebug() << "CTRL-A Key pressed" << keyEvent->key();
+            return true;
+        }*/
+        if(e->matches(QKeySequence::Copy)) {
+            qDebug()<< "CTRL+C press";
+            QString test="\x03";
+            emit sig_DataReady(test.toLocal8Bit());
+            //e->accept();
+            //return;
+        }
+        switch (e->key()) {
+        case Qt::Key_Backspace:
+        case Qt::Key_Up: // TODO: history
+        case Qt::Key_Down: // TODO: history
+            break;
+        case Qt::Key_Left://TODO: Qt::Key_Left
+        case Qt::Key_Right://TODO: Qt::Key_Right
+            break;
+        default:
+            if (localEchoEnabled)
+                QPlainTextEdit::keyPressEvent(e);
+            emit sig_DataReady(e->text().toLocal8Bit());
+        }
     }
 }
 

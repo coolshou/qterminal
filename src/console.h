@@ -43,19 +43,20 @@ class Console : public QPlainTextEdit
 {
     Q_OBJECT
 
-signals:
-    void getData(const QByteArray &data);
 
 public:
     explicit Console(QWidget *parent = 0);
     ~Console();
 
-    void putData(const QByteArray &data);
+    void showDataOnTextEdit(const QByteArray &data);
 
     void setLocalEchoEnabled(bool set);
     void setScrollToBottom(bool set);
     void setLogDatetime(bool set);
     void setTheme(QString sTheme);
+
+signals:
+    void sig_DataReady(const QByteArray &data);
 
 protected:
     virtual void keyPressEvent(QKeyEvent *e);

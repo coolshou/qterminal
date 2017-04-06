@@ -77,6 +77,8 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
     //updateSettings();
     setDefaultSetting();
     setDemo();
+    //show serial tab
+    ui->tabWidget->setCurrentWidget(ui->tab_Serial);
 }
 
 SettingsDialog::~SettingsDialog()

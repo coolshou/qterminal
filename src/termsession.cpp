@@ -19,7 +19,7 @@ termsession::termsession(QWidget *parent, QString name, QSettings *settings) :
     serial = new QSerialPort(this);
     connect(serial, SIGNAL(error(QSerialPort::SerialPortError)),
             this, SLOT(slot_handleError(QSerialPort::SerialPortError)));
-    connect(serial, SIGNAL(readyRead()), this, SLOT(readData()));
+    connect(serial, SIGNAL(readyRead()), this, SLOT(readDataFromSerial()));
     connect(serial, SIGNAL(baudRateChanged(qint32,QSerialPort::Directions)),
             this, SLOT(slot_baudRateChanged(qint32,QSerialPort::Directions)));
     apply_setting();
@@ -136,7 +136,7 @@ void termsession::openSerialPort()
 
 void termsession::closeSerialPort()
 {
-    if (serial->isOpen())
+    if (isOpen())
         serial->close();
     this->setEnabled(false);
     emit sig_updateActionBtnStatus(true);
@@ -150,7 +150,7 @@ QString termsession::getCurrentDateTimeString()
     return dateTimeString;
 }
 
-void termsession::readData()
+void termsession::readDataFromSerial()
 {
     QByteArray data = serial->readAll();
     if (bLogDatetime) {
@@ -160,19 +160,23 @@ void termsession::readData()
     if (bLogEnable) {
         logToFile(data);
     }
-    this->putData(data);
+    this->showDataOnTextEdit(data);
 }
-void termsession::writeData(const QByteArray &data)
+void termsession::writeDataToSerial(const QByteArray &data)
 {
     if (bLogEnable) {
         logToFile(data);
     }
-    serial->write(data);
+    if (isOpen()) {
+        serial->write(data);
+    } else {
+        qDebug()<< "open serial first!";
+    }
 }
 void termsession::writeln(const QByteArray &data)
 {
-    writeData(data);
-    writeData("\r\n");
+    writeDataToSerial(data);
+    writeDataToSerial("\r\n");
 }
 
 void termsession::slot_handleError(QSerialPort::SerialPortError error)
@@ -212,7 +216,7 @@ bool termsession::isOpen()
 void termsession::setConsole()
 {
     this->showMaximized();
-    connect(this, SIGNAL(getData(QByteArray)), this, SLOT(writeData(QByteArray)));
+    connect(this, SIGNAL(sig_DataReady(QByteArray)), this, SLOT(writeDataToSerial(QByteArray)));
     mSetting->beginGroup(mGroupName);
     this->setMaximumBlockCount(mSetting->value("maxBlockCount").toInt());
     this->setScrollToBottom(mSetting->value("scrollToBottom").toBool());

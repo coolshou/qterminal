@@ -41,8 +41,8 @@ signals:
     void sig_updateActionBtnStatus(bool bStatus);
 
 private slots:
-    void readData();
-    void writeData(const QByteArray &data);
+    void readDataFromSerial();
+    void writeDataToSerial(const QByteArray &data);
 
     void slot_handleError(QSerialPort::SerialPortError error);
     void slot_baudRateChanged(qint32 baudRate,QSerialPort::Directions directions);
