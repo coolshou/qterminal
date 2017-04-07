@@ -1,7 +1,6 @@
 #include "updatedialog.h"
 #include "ui_updatedialog.h"
 
-//#include <QProgressDialog>
 #include <QMessageBox>
 #include <QStandardPaths>
 #include <QDir>
@@ -19,13 +18,13 @@ updatedialog::updatedialog(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->currentVersion->setText(APP_VERSION);
+    ui->latestVersion->setText("checking");
     connect(ui->updateButton, SIGNAL(pressed()), this, SLOT(getUpdate()));
 
     //tmp download Directory
     QString downloadDirectory = QStandardPaths::writableLocation(QStandardPaths::TempLocation);
     if (downloadDirectory.isEmpty() || !QFileInfo(downloadDirectory).isDir())
         downloadDirectory = QDir::currentPath();
-    qDebug() << "download Directory:" << downloadDirectory;
 
     downloadFile();
 }
@@ -45,8 +44,6 @@ void updatedialog::downloadFile()
     }
 
     QString fileName = newUrl.fileName();
-//    if (fileName.isEmpty())
-//        fileName = defaultFileLineEdit->text().trimmed();
     if (fileName.isEmpty())
         fileName = defaultFileName;
 //    QString downloadDirectory = QDir::cleanPath(downloadDirectoryLineEdit->text().trimmed());
