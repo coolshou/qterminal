@@ -160,7 +160,10 @@ void SettingsDialog::slot_changeFontSize(int size)
     if (size<=0) {
         size = currentSettings.fontSizeDefault;
     }
-    f.setPointSize(size);
+    //qDebug() << "default size:" << f.pointSize();
+    if (f.pointSize() != size) {
+        f.setPointSize(size);
+    }
     ui->DemoPlainTextEdit->setFont(f);
 }
 
@@ -322,8 +325,8 @@ void SettingsDialog::setSettings(QString gname, QSettings *settings)
     ui->maxBlockCountSpinBox->setValue(settings->value("maxBlockCount").toInt());
     ui->BaseColorComboBox->setCurrentText(settings->value("baseColor").toString());
     ui->FontColorComboBox->setCurrentText(settings->value("fontColor").toString());
-    //TODO: font family
-    //
+    //font family
+    ui->fontComboBox->setCurrentText(settings->value("fontFamily").toString());
     ui->FontSizeSpinBox->setValue(settings->value("fontSize").toInt());
     ui->scrollToBottomCheckBox->setChecked(settings->value("scrollToBottom").toBool());
     //TODO: Log
