@@ -222,7 +222,8 @@ void MainWindow::about()
     QString title =  QString("About %1").arg(APP_PRODUCT);
     QString about =  QString("The <b>%1</b> use the Qt Serial Port module <br>").arg(APP_PRODUCT);
     about.append(QString(" Author: %1<br>").arg(APP_COMPANY));
-    about.append(QString(" Version: %1-%2<br>").arg(APP_VERSION).arg(GIT_VERSION));
+    about.append(QString(" Version: %1<br>").arg(APP_VERSION));
+    about.append(QString(" Git Version: %1<br>").arg(GIT_VERSION));
     about.append(QString(" <a href='%1'>Source</a> <br>").arg(MYSOURCEURL));
     QMessageBox::about(this,title,about);
 }
