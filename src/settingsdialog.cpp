@@ -176,7 +176,7 @@ void SettingsDialog::selectLogFileName()
     QString fileName;
     //use system's dialog
     fileName = QFileDialog::getSaveFileName(this,
-        tr("Set Log Filename"), path, tr("Log Files (*.log *.LOG);; Text Files(*.txt *.TXT))"));
+        tr("Set Log Filename"), path, tr("Log Files (*.log *.LOG);;Text Files(*.txt *.TXT)"));
     if (!fileName.isEmpty()) {
         qDebug() << "selected file:" << fileName;
         ui->logFilenameLineEdit->setText(fileName);
