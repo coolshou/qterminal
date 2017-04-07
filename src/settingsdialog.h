@@ -94,6 +94,7 @@ public:
 
     Settings get_settings();
     void setSettings(QString gname, QSettings *settings);
+    void setSettings(QString gname);
 
 protected:
     //void closeEvent(QCloseEvent event);
@@ -119,6 +120,7 @@ private:
     Ui::SettingsDialog *ui;
     Settings currentSettings;
     QIntValidator *intValidator;
+    QString defaultGroupName;
 };
 
 #endif // SETTINGSDIALOG_H

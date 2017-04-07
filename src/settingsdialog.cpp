@@ -76,7 +76,8 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
 
     //updateSettings();
     setDefaultSetting();
-    setDemo();
+    setSettings(defaultGroupName);
+
     //show serial tab
     ui->tabWidget->setCurrentWidget(ui->tab_Serial);
 }
@@ -89,7 +90,7 @@ SettingsDialog::~SettingsDialog()
 void SettingsDialog::setDemo()
 {
     QPalette p = palette();
-    //TODO: color theme
+    //TODO: color theme form settings
     p.setColor(QPalette::Base, Qt::black);
     p.setColor(QPalette::Text, Qt::green);
     ui->DemoPlainTextEdit->setPalette(p);
@@ -98,8 +99,8 @@ void SettingsDialog::setDemo()
 void SettingsDialog::setDefaultSetting()
 {
     //TODO: read default setting?
-    QString gname = ui->serialPortInfoListBox->currentText();
-    qDebug() << "setDefaultSetting: " <<gname;
+    defaultGroupName = ui->serialPortInfoListBox->currentText();
+    qDebug() << "setDefaultSetting: " <<defaultGroupName;
 
 }
 SettingsDialog::Settings SettingsDialog::get_settings()
@@ -187,7 +188,7 @@ void SettingsDialog::selectLogFileName()
 
 }
 
-//TODO: console color parameters
+//console color parameters
 void SettingsDialog::fillConsoleParameters()
 {
     //TODO, theme
@@ -202,7 +203,7 @@ void SettingsDialog::fillConsoleParameters()
 
 void SettingsDialog::fillPortsParameters()
 {
-    //TODO: all supported baudrate
+    //TODO: all supported baudrate?
     ui->baudRateBox->addItem(QStringLiteral("9600"), QSerialPort::Baud9600);
     ui->baudRateBox->addItem(QStringLiteral("19200"), QSerialPort::Baud19200);
     ui->baudRateBox->addItem(QStringLiteral("38400"), QSerialPort::Baud38400);
@@ -289,15 +290,15 @@ bool SettingsDialog::updateSettings()
     currentSettings.stringFlowControl = ui->flowControlBox->currentText();
 
     currentSettings.localEchoEnabled = ui->localEchoCheckBox->isChecked();
-    //TODO: console setting
+    //console setting
     currentSettings.maxBlockCount = ui->maxBlockCountSpinBox->value();
     currentSettings.baseColor = static_cast<QColor>(ui->BaseColorComboBox->currentText());
     currentSettings.fontColor = static_cast<QColor>(ui->FontColorComboBox->currentText());
-    //TODO font fontFamily setting
+    //font fontFamily setting
     currentSettings.fontFamily = ui->DemoPlainTextEdit->font().family();
     currentSettings.fontSize = ui->FontSizeSpinBox->value();
     currentSettings.scrollToBottom = ui->scrollToBottomCheckBox->isChecked();
-    //TODO: Log
+    //Log
     currentSettings.bLogEnable = ui->LogEnableGroupBox->isChecked();
     if (currentSettings.bLogEnable & ui->logFilenameLineEdit->text().isEmpty()) {
         ui->tabWidget->setCurrentWidget(ui->tab_Log);
@@ -311,6 +312,13 @@ bool SettingsDialog::updateSettings()
     return true;
 }
 
+void SettingsDialog::setSettings(QString gname)
+{
+    QSettings *settings=new QSettings();
+    setSettings(gname, settings);
+
+}
+
 void SettingsDialog::setSettings(QString gname, QSettings *settings)
 {
     settings->beginGroup(gname);
@@ -321,7 +329,7 @@ void SettingsDialog::setSettings(QString gname, QSettings *settings)
     ui->stopBitsBox->setCurrentText(settings->value("stopBits").toString());
     ui->flowControlBox->setCurrentText(settings->value("flowControl").toString());
     ui->localEchoCheckBox->setChecked(settings->value("localEchoEnabled").toBool());
-    //TODO: console setting
+    //console setting
     ui->maxBlockCountSpinBox->setValue(settings->value("maxBlockCount").toInt());
     ui->BaseColorComboBox->setCurrentText(settings->value("baseColor").toString());
     ui->FontColorComboBox->setCurrentText(settings->value("fontColor").toString());
@@ -329,10 +337,11 @@ void SettingsDialog::setSettings(QString gname, QSettings *settings)
     ui->fontComboBox->setCurrentText(settings->value("fontFamily").toString());
     ui->FontSizeSpinBox->setValue(settings->value("fontSize").toInt());
     ui->scrollToBottomCheckBox->setChecked(settings->value("scrollToBottom").toBool());
-    //TODO: Log
+    //Log
     ui->LogEnableGroupBox->setChecked(settings->value("logEnable").toBool());
     ui->logFilenameLineEdit->setText(settings->value("logFilename").toString());
     ui->logDateTimeCheckBox->setChecked(settings->value("logDateTime").toBool());
+    setDemo();
     settings->endGroup();
 }
 
