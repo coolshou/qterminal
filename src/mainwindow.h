@@ -42,6 +42,7 @@
 #include <QtSerialPort/QSerialPort>
 #include <QSettings>
 #include <QCloseEvent>
+#include <QStringList>
 
 #include "termsession.h"
 #include "settingsdialog.h"
@@ -64,6 +65,8 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+
+    QStringList getUsedSerial();
 
 protected:
     void closeEvent(QCloseEvent *event);

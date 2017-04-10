@@ -204,6 +204,7 @@ void SettingsDialog::fillConsoleParameters()
 void SettingsDialog::fillPortsParameters()
 {
     //TODO: all supported baudrate?
+    ui->baudRateBox->addItem(QStringLiteral("9600"), QSerialPort::Baud4800);
     ui->baudRateBox->addItem(QStringLiteral("9600"), QSerialPort::Baud9600);
     ui->baudRateBox->addItem(QStringLiteral("19200"), QSerialPort::Baud19200);
     ui->baudRateBox->addItem(QStringLiteral("38400"), QSerialPort::Baud38400);
@@ -242,22 +243,25 @@ void SettingsDialog::fillPortsInfo()
     QString manufacturer;
     QString serialNumber;
     foreach (const QSerialPortInfo &info, QSerialPortInfo::availablePorts()) {
-        QStringList list;
-        description = info.description();
-        manufacturer = info.manufacturer();
-        serialNumber = info.serialNumber();
-        list << info.portName()
-             << (!description.isEmpty() ? description : blankString)
-             << (!manufacturer.isEmpty() ? manufacturer : blankString)
-             << (!serialNumber.isEmpty() ? serialNumber : blankString)
-             << info.systemLocation()
-             << (info.vendorIdentifier() ? QString::number(info.vendorIdentifier(), 16) : blankString)
-             << (info.productIdentifier() ? QString::number(info.productIdentifier(), 16) : blankString);
+        if (! isExistUsedSerial(info.portName())) {
+            qDebug() << "portName: " << info.portName();
+            QStringList list;
+            description = info.description();
+            manufacturer = info.manufacturer();
+            serialNumber = info.serialNumber();
+            list << info.portName()
+                 << (!description.isEmpty() ? description : blankString)
+                 << (!manufacturer.isEmpty() ? manufacturer : blankString)
+                 << (!serialNumber.isEmpty() ? serialNumber : blankString)
+                 << info.systemLocation()
+                 << (info.vendorIdentifier() ? QString::number(info.vendorIdentifier(), 16) : blankString)
+                 << (info.productIdentifier() ? QString::number(info.productIdentifier(), 16) : blankString);
 
-        ui->serialPortInfoListBox->addItem(list.first(), list);
+            ui->serialPortInfoListBox->addItem(list.first(), list);
+        }
     }
 
-    ui->serialPortInfoListBox->addItem(tr("Custom"));
+    //ui->serialPortInfoListBox->addItem(tr("Custom"));
 }
 
 //apply UI's setting to currentSettings
@@ -345,6 +349,46 @@ void SettingsDialog::setSettings(QString gname, QSettings *settings)
     settings->endGroup();
 }
 
+bool SettingsDialog::isExistUsedSerial(QString serName)
+{
+    if (usedSerials.indexOf(serName)<0) {
+        return false;
+    } else {
+        return true;
+    }
+
+}
+
+void SettingsDialog::addUsedSerial(QString serName)
+{
+    if (! isExistUsedSerial(serName)) {
+        qDebug() << "addUsedSerial: " << serName;
+        usedSerials.append(serName);
+    }
+}
+void SettingsDialog::delUsedSerial(QString serName)
+{
+    int idx = usedSerials.indexOf(serName);
+    if (idx>=0) {
+        qDebug() << "delUsedSerial remove: "<<idx << " - " << usedSerials.value(idx);
+        usedSerials.removeAt(idx);
+    }
+}
+
+//TODO: closed serial need to add back!!
+void SettingsDialog::updateUsedSerials(QStringList serials)
+{
+    int i;
+    usedSerials.clear();
+    for (i=0; i<ui->serialPortInfoListBox->count()-1; i++) {
+        //usedSerials.append(serials.value(i));
+        //addUsedSerial(serials.value(i));
+        if (serials.indexOf(ui->serialPortInfoListBox->itemText(i))>=0) {
+            qDebug() << "updateUsedSerials remove: " << ui->serialPortInfoListBox->itemText(i);
+            ui->serialPortInfoListBox->removeItem(i);
+        }
+    }
+}
 /*
 void SettingsDialog::closeEvent(QCloseEvent event)
 {

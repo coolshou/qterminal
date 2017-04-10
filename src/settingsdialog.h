@@ -42,6 +42,7 @@
 #include <QColor>
 #include <QStandardPaths>
 #include <QFont>
+#include <QStringList>
 
 QT_USE_NAMESPACE
 
@@ -96,6 +97,11 @@ public:
     void setSettings(QString gname, QSettings *settings);
     void setSettings(QString gname);
 
+    bool isExistUsedSerial(QString serName);
+    void addUsedSerial(QString serName);
+    void delUsedSerial(QString serName);
+    void updateUsedSerials(QStringList serials);
+
 protected:
     //void closeEvent(QCloseEvent event);
     void setDemo();
@@ -121,6 +127,7 @@ private:
     Settings currentSettings;
     QIntValidator *intValidator;
     QString defaultGroupName;
+    QStringList usedSerials; //TODO: record used serial port.
 };
 
 #endif // SETTINGSDIALOG_H

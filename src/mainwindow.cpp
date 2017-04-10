@@ -294,7 +294,6 @@ bool MainWindow::session_exist(QString sName)
     foreach( termsession *item, sessionlist )
     {
         tmp = item->get_name();
-        qDebug() << "name:" << tmp;
         if (QString::compare(sName, tmp, Qt::CaseInsensitive) == 0  ) {
             return true;
         }
@@ -306,6 +305,17 @@ QMdiSubWindow* MainWindow::get_currentSubWindow()
     return ui->mdiArea->currentSubWindow();
 }
 
+QStringList MainWindow::getUsedSerial()
+{
+    QStringList ls;
+    foreach( termsession *item, sessionlist )
+    {
+        qDebug() << "getUsedSerial: " << item->get_name();
+        ls.append(item->get_name());
+    }
+    return ls;
+}
+
 //get_termsession by name
 termsession* MainWindow::get_termsession(QString sName)
 {
@@ -314,7 +324,6 @@ termsession* MainWindow::get_termsession(QString sName)
     foreach( termsession *item, sessionlist )
     {
         tmp = item->get_name();
-        //qDebug() << "get_termsession name:" << tmp;
         if (QString::compare(sName, tmp, Qt::CaseInsensitive) == 0  ) {
             return item;
         }
@@ -345,7 +354,7 @@ void MainWindow::add_session()
     //show console config dialog   
     //TODO: already used setting
     //TODO: do not show used serial port in settingDlg?
-
+    settingDlg->updateUsedSerials(getUsedSerial());
     settingDlg->exec(); //show as modal
 }
 //edit session
