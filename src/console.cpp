@@ -171,24 +171,23 @@ void Console::keyPressEvent(QKeyEvent *e)
             return true;
         }*/
         if(e->matches(QKeySequence::Copy)) {
-            qDebug()<< "CTRL+C press";
+            //qDebug()<< "TODO: CTRL+C press";
             QString test="\x03";
             emit sig_DataReady(test.toLocal8Bit());
-            //e->accept();
-            //return;
-        }
-        switch (e->key()) {
-        case Qt::Key_Backspace:
-        case Qt::Key_Up: // TODO: history
-        case Qt::Key_Down: // TODO: history
-            break;
-        case Qt::Key_Left://TODO: Qt::Key_Left
-        case Qt::Key_Right://TODO: Qt::Key_Right
-            break;
-        default:
-            if (localEchoEnabled)
-                QPlainTextEdit::keyPressEvent(e);
-            emit sig_DataReady(e->text().toLocal8Bit());
+        } else {
+            switch (e->key()) {
+            case Qt::Key_Backspace:
+            case Qt::Key_Up: // TODO: history
+            case Qt::Key_Down: // TODO: history
+                break;
+            case Qt::Key_Left://TODO: Qt::Key_Left
+            case Qt::Key_Right://TODO: Qt::Key_Right
+                break;
+            default:
+                if (localEchoEnabled)
+                    QPlainTextEdit::keyPressEvent(e);
+                emit sig_DataReady(e->text().toLocal8Bit());
+            }
         }
     }
 }
