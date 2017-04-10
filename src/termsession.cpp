@@ -129,8 +129,9 @@ void termsession::openSerialPort()
             //TODO:
             emit sig_updateStatus(get_status());
     } else {
-        QMessageBox::critical(this, tr("Error"), serial->errorString());
-        emit sig_updateStatus(tr("Open error"));
+        //QMessageBox::critical(this, tr("Error"), serial->errorString());
+        //emit sig_updateStatus(tr("Open error"));
+        emit sig_updateStatus(serial->errorString());
     }
 }
 
@@ -182,7 +183,8 @@ void termsession::writeln(const QByteArray &data)
 void termsession::slot_handleError(QSerialPort::SerialPortError error)
 {
     if (error == QSerialPort::ResourceError) {
-        QMessageBox::critical(this, tr("Critical Error"), serial->errorString());
+        //QMessageBox::critical(this, tr("Critical Error"), serial->errorString());
+        emit sig_updateStatus(serial->errorString());
         closeSerialPort();
     }
 }
