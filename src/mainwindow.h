@@ -96,6 +96,7 @@ private slots:
     void add_session();
     void edit_session();
     void slot_closeSession();
+    void slot_logToFile();
     //edit
     void consoleCopy();
     void consolePaste();

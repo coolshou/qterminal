@@ -242,8 +242,8 @@ void MainWindow::initActionsConnections()
     connect(ui->actionNew_session, SIGNAL(triggered()), this, SLOT(add_session()));
     connect(ui->actionEdit_session, SIGNAL(triggered()), this, SLOT(edit_session()));
     connect(ui->actionClose_session, SIGNAL(triggered()), this, SLOT(slot_closeSession()));
-    //TODO: log
-    //connect(ui->actionLogFile, SIGNAL(triggered()), this, SLOT(logtofile()));
+    //file - log
+    connect(ui->actionLogFile, SIGNAL(triggered()), this, SLOT(slot_logToFile()));
     connect(ui->actionQuit, SIGNAL(triggered()), this, SLOT(close()));
     //cell
     connect(ui->actionConnect, SIGNAL(triggered()), this, SLOT(openSerialPort()));
@@ -252,7 +252,8 @@ void MainWindow::initActionsConnections()
     connect(ui->actionCopy, SIGNAL(triggered()), this, SLOT(consoleCopy()));
     connect(ui->actionPaste, SIGNAL(triggered()), this, SLOT(consolePaste()));
     connect(ui->actionClear, SIGNAL(triggered()), this, SLOT(consoleClear()));
-    //TODO: find
+    //TODO: actionFind
+    //connect(ui->actionFind, SIGNAL(triggered()), this, SLOT(consoleClear()));
     //config
     //connect(ui->actionConfigure, SIGNAL(triggered()), settingDlg, SLOT(show()));
 
@@ -260,9 +261,11 @@ void MainWindow::initActionsConnections()
     connect(ui->actionCascade, SIGNAL(triggered()), ui->mdiArea, SLOT(cascadeSubWindows()));
     connect(ui->actionTile, SIGNAL(triggered()), ui->mdiArea, SLOT(tileSubWindows()));
     //About
-    //TODO: help, update
+    //TODO: actionHelp
     //connect(ui->actionHelp, SIGNAL(triggered()), this, SLOT(about()));
     connect(ui->actionUpdate, SIGNAL(triggered()), this, SLOT(update()));
+    //TODO: actionDonate
+    //connect(ui->actionDonate, SIGNAL(triggered()), this, SLOT(update()));
     connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(about()));
     connect(ui->actionAboutQt, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
 
@@ -383,6 +386,17 @@ void MainWindow::slot_closeSession()
     if ((sw != 0)||(sw != NULL)) {
         closeSession(sw->windowTitle());
         ui->mdiArea->removeSubWindow(sw);
+    }
+}
+void MainWindow::slot_logToFile()
+{
+    //QMdiSubWindow *sw = ui->mdiArea->activeSubWindow();
+    QMdiSubWindow *sw = get_currentSubWindow();
+    if ((sw != 0)||(sw != NULL)) {
+        //qDebug() << "edit_session: " << sw->windowTitle();
+        settingDlg->setSettings(sw->windowTitle(),settings);
+        settingDlg->setCurrentTab(1);
+        add_session();
     }
 }
 

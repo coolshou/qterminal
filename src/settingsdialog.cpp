@@ -87,6 +87,17 @@ SettingsDialog::~SettingsDialog()
     delete ui;
 }
 
+void SettingsDialog::setCurrentTab(int idx)
+{
+    int i;
+    if ((ui->tabWidget->count()-1) < idx) {
+        i=0;
+    } else {
+        i=idx;
+    }
+    ui->tabWidget->setCurrentIndex(i);
+}
+
 void SettingsDialog::setDemo()
 {
     QPalette p = palette();

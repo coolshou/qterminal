@@ -2,6 +2,7 @@ Issue:
 
 TODO:
 1. send ctrl+c (break?)
+2. close session problem?
 3. script (macro)
 4. filter to get/trigger event
 5. console left/right/up/down arrow

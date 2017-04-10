@@ -102,6 +102,8 @@ public:
     void delUsedSerial(QString serName);
     void updateUsedSerials(QStringList serials);
 
+    void setCurrentTab(int idx);
+
 protected:
     //void closeEvent(QCloseEvent event);
     void setDemo();
