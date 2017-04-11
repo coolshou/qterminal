@@ -1,4 +1,4 @@
-VERSION = 2017.4.11.0
+VERSION = 2017.3.12.0
 QMAKE_TARGET_COMPANY = coolshou
 QMAKE_TARGET_PRODUCT = qtvt
 QMAKE_TARGET_DESCRIPTION = qt base serial virtual console
@@ -24,7 +24,8 @@ SOURCES += \
     src/mainwindow.cpp \
     src/settingsdialog.cpp \
     src/termsession.cpp \
-    src/updatedialog.cpp
+    src/updatedialog.cpp \
+    src/optionsdialog.cpp
 
 HEADERS += \
     src/console.h \
@@ -32,12 +33,14 @@ HEADERS += \
     src/settingsdialog.h \
     src/termsession.h \
     src/const.h \
-    src/updatedialog.h
+    src/updatedialog.h \
+    src/optionsdialog.h
 
 FORMS += \
     src/mainwindow.ui \
     src/settingsdialog.ui \
-    src/updatedialog.ui
+    src/updatedialog.ui \
+    src/optionsdialog.ui
 
 RESOURCES += \
     qtvt.qrc

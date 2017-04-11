@@ -126,7 +126,6 @@ void termsession::openSerialPort()
     apply_setting();
     if (serial->open(QIODevice::ReadWrite)) {
             emit sig_updateActionBtnStatus(false);
-            //TODO:
             emit sig_updateStatus(get_status());
     } else {
         //QMessageBox::critical(this, tr("Error"), serial->errorString());

@@ -47,6 +47,7 @@
 #include "termsession.h"
 #include "settingsdialog.h"
 #include "updatedialog.h"
+#include "optionsdialog.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -106,10 +107,13 @@ private slots:
     bool del_termsession(termsession* item);
     bool del_termsessionByName(QString sName);
     void slot_subWindowChanged(QMdiSubWindow* window);
-
+    //option
+    void slot_options();
+    void slot_acceptOptionDlg(int result);
 
 private:
     void initActionsConnections();
+    void initToolBar();
     bool session_exist(QString sName);
     void updateMenuSession(bool state);
     void closeSession(QString sName);
@@ -118,6 +122,7 @@ private:
     Ui::MainWindow *ui;
     QSettings *settings;
     SettingsDialog *settingDlg;
+    optionsDialog *optionDlg ;
     QList<termsession *> sessionlist;
     //updatedialog *updateDlg;
 };

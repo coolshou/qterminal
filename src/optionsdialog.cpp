@@ -6,9 +6,30 @@ optionsDialog::optionsDialog(QWidget *parent) :
     ui(new Ui::optionsDialog)
 {
     ui->setupUi(this);
+    showSettings();
 }
 
 optionsDialog::~optionsDialog()
 {
     delete ui;
+}
+void optionsDialog::showSettings()
+{
+    QSettings set;
+    set.beginGroup("Main");
+    ui->StartOnBootCheckBox->setChecked(set.value("StartOnBoot", true).toBool());
+    ui->StartMinimalCheckBox->setChecked(set.value("StartMinimal", false).toBool());
+    ui->RestartSessionCheckBox->setChecked(set.value("RestortSession", true).toBool());
+    //set.setValue();
+    set.endGroup();
+
+}
+void optionsDialog::applySettings()
+{
+    QSettings set;
+    set.beginGroup("Main");
+    set.setValue("StartOnBoot", ui->StartOnBootCheckBox->isChecked());
+    set.setValue("StartMinimal", ui->StartMinimalCheckBox->isChecked());
+    set.setValue("RestortSession", ui->RestartSessionCheckBox->isChecked());
+    set.endGroup();
 }

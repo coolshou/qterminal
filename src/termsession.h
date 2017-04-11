@@ -54,8 +54,7 @@ private:
     QSerialPort *serial;
     QString mGroupName;
     QSettings *mSetting;
-    //TODO: log
-    //QMutexLocker m_lineLoggerMutex;
+    //log
     bool bLogEnable;
     QString sLogFilename;
     bool bLogDatetime;

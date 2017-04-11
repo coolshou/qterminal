@@ -109,9 +109,9 @@ void SettingsDialog::setDemo()
 }
 void SettingsDialog::setDefaultSetting()
 {
-    //TODO: read default setting?
+    //read default setting
     defaultGroupName = ui->serialPortInfoListBox->currentText();
-    qDebug() << "setDefaultSetting: " <<defaultGroupName;
+    //qDebug() << "setDefaultSetting: " <<defaultGroupName;
 
 }
 SettingsDialog::Settings SettingsDialog::get_settings()
@@ -167,12 +167,11 @@ void SettingsDialog::checkCustomDevicePathPolicy(int idx)
 void SettingsDialog::slot_changeFontSize(int size)
 {
     QFont f;
-    //TODO: font family
+    //font family
     f.setFamily(ui->DemoPlainTextEdit->font().family());
     if (size<=0) {
         size = currentSettings.fontSizeDefault;
     }
-    //qDebug() << "default size:" << f.pointSize();
     if (f.pointSize() != size) {
         f.setPointSize(size);
     }

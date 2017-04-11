@@ -75,7 +75,7 @@ public:
         QSerialPort::FlowControl flowControl;
         QString stringFlowControl;
         bool localEchoEnabled;
-        //TODO: console setting
+        //console setting
         int maxBlockCount;
         QColor fontColor;
         QString fontFamily;
@@ -83,7 +83,7 @@ public:
         int fontSizeDefault=10;
         QColor baseColor;
         bool scrollToBottom;
-        //TODO: Log
+        //Log
         bool bLogEnable;
         QString stringLogFilename;
         bool bLogDateTime;

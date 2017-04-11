@@ -2,6 +2,7 @@
 #define OPTIONSDIALOG_H
 
 #include <QDialog>
+#include <QSettings>
 
 namespace Ui {
 class optionsDialog;
@@ -14,6 +15,9 @@ class optionsDialog : public QDialog
 public:
     explicit optionsDialog(QWidget *parent = 0);
     ~optionsDialog();
+
+    void showSettings();
+    void applySettings();
 
 private:
     Ui::optionsDialog *ui;

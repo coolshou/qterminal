@@ -22,7 +22,7 @@ updatedialog::updatedialog(QWidget *parent) :
     connect(ui->updateButton, SIGNAL(pressed()), this, SLOT(getUpdate()));
 
     //tmp download Directory
-    QString downloadDirectory = QStandardPaths::writableLocation(QStandardPaths::TempLocation);
+    downloadDirectory = QStandardPaths::writableLocation(QStandardPaths::TempLocation);
     if (downloadDirectory.isEmpty() || !QFileInfo(downloadDirectory).isDir())
         downloadDirectory = QDir::currentPath();
 
@@ -147,6 +147,12 @@ void updatedialog::httpFinished()
             qDebug() <<"assets name:" << assets_obj["name"].toString();
             qDebug() <<"assets browser_download_url:" << assets_obj["browser_download_url"].toString();
             qDebug() <<"assets size:" << assets_obj["size"].toInt();
+
+            latestDLFilename = assets_obj["name"].toString();
+            latestDLUrl = assets_obj["browser_download_url"].toString();
+            latestDLSize = assets_obj["size"].toDouble();
+
+
         }
         setStatus(tr("Found New version!"));
         ui->updateButton->setEnabled(true);
@@ -220,4 +226,61 @@ void updatedialog::setStatus(QString msg)
 void updatedialog::getUpdate()
 {
     qDebug() << "TODO: getUpdate";
+    qDebug() << "CpuArch: " << QSysInfo::currentCpuArchitecture();
+    qDebug() << "productType:" << QSysInfo::productType();
+    qDebug() << "productVersion:" << QSysInfo::productVersion();
+    //system:
+    //x86_64 = amd64 (linux)
+    //i386
+    //
+    qDebug() << "download latestDLUrl: " << latestDLUrl;
+    QNetworkRequest request;
+    request.setUrl(latestDLUrl);
+
+    reply = qnam.get(request); // Manager is my QNetworkAccessManager
+//    reply = qnam.get(request);
+//    connect(reply, SIGNAL(finished()), this, SLOT(httpFinished()));
+//    connect(reply, SIGNAL(readyRead()), this, SLOT(httpReadyRead()));
+//    connect(reply, SIGNAL(downloadProgress(qint64, qint64)), this, SLOT(networkReplyProgress(qint64, qint64)));
+    QString dest = downloadDirectory+QDir::separator()+latestDLFilename;//.append();
+    dlfile = new QFile(dest); // "des" is the file path to the destination file
+    dlfile->open(QIODevice::WriteOnly);
+
+    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)),this, SLOT(dlError(QNetworkReply::NetworkError)));
+    connect(reply, SIGNAL(downloadProgress(qint64, qint64)),  this, SLOT(dlProgress(qint64, qint64)));
+    connect(reply, SIGNAL(finished()),   this, SLOT(dlFinished()));
+}
+void updatedialog::dlError(QNetworkReply::NetworkError err)
+{
+    qDebug() <<"dlError: " << err;
+    // Manage error here.
+    reply->deleteLater();
+    Q_UNUSED(err);
+}
+void updatedialog::dlProgress(qint64 read, qint64 total)
+{
+    ui->progressBar->setMaximum(total);
+    ui->progressBar->setValue(read);
+
+    //TODO: why did not finish download whole file!!
+    QByteArray b = reply->readAll();
+    QDataStream out(dlfile);
+    out << b;
+}
+void updatedialog::dlFinished()
+{
+    // Save the image here
+    /*
+    QByteArray b = reply->readAll();
+    QString dest = downloadDirectory+QDir::separator()+latestDLFilename;//.append();
+    QFile file(dest); // "des" is the file path to the destination file
+    file.open(QIODevice::ReadWrite);
+    QDataStream out(&file);
+    out << b;
+    */
+    reply->deleteLater();
+    // done
+    dlfile->close();
+    qDebug() << "TODO: exec to install it!!: " << dlfile->fileName();//dest;
+
 }

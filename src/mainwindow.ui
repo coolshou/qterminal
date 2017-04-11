@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
+ <author>coolshou</author>
  <class>MainWindow</class>
  <widget class="QMainWindow" name="MainWindow">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>560</width>
-    <height>424</height>
+    <width>558</width>
+    <height>422</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -22,6 +23,9 @@
     <width>32</width>
     <height>32</height>
    </size>
+  </property>
+  <property name="toolButtonStyle">
+   <enum>Qt::ToolButtonIconOnly</enum>
   </property>
   <property name="documentMode">
    <bool>false</bool>
@@ -118,7 +122,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>560</width>
+     <width>558</width>
      <height>23</height>
     </rect>
    </property>
@@ -206,6 +210,17 @@
    </attribute>
    <widget class="QWidget" name="dockWidgetContents"/>
   </widget>
+  <widget class="QToolBar" name="toolBar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+  </widget>
   <action name="actionAbout">
    <property name="icon">
     <iconset resource="../qtvt.qrc">
@@ -227,7 +242,7 @@
      <normaloff>:/images/qt.png</normaloff>:/images/qt.png</iconset>
    </property>
    <property name="text">
-    <string>About Qt</string>
+    <string>About &amp;Qt</string>
    </property>
   </action>
   <action name="actionConnect">
@@ -282,6 +297,9 @@
    </property>
   </action>
   <action name="actionClear">
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="../qtvt.qrc">
      <normaloff>:/images/clear.png</normaloff>:/images/clear.png</iconset>
@@ -326,7 +344,7 @@
      <normaloff>:/images/cascade.png</normaloff>:/images/cascade.png</iconset>
    </property>
    <property name="text">
-    <string>Cascade</string>
+    <string>&amp;Cascade</string>
    </property>
   </action>
   <action name="actionTile">
@@ -335,7 +353,7 @@
      <normaloff>:/images/tile.png</normaloff>:/images/tile.png</iconset>
    </property>
    <property name="text">
-    <string>Tile</string>
+    <string>&amp;Tile</string>
    </property>
   </action>
   <action name="actionEdit_session">
@@ -458,4 +476,21 @@
   <include location="../qtvt.qrc"/>
  </resources>
  <connections/>
+ <designerdata>
+  <property name="gridDeltaX">
+   <number>10</number>
+  </property>
+  <property name="gridDeltaY">
+   <number>10</number>
+  </property>
+  <property name="gridSnapX">
+   <bool>true</bool>
+  </property>
+  <property name="gridSnapY">
+   <bool>true</bool>
+  </property>
+  <property name="gridVisible">
+   <bool>true</bool>
+  </property>
+ </designerdata>
 </ui>

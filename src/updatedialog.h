@@ -29,7 +29,11 @@ private slots:
     void httpFinished();
     void httpReadyRead();
     void networkReplyProgress(qint64 bytesRead, qint64 totalBytes);
+
     void getUpdate();
+    void dlError(QNetworkReply::NetworkError err);
+    void dlProgress(qint64 read, qint64 total);
+    void dlFinished();
 
 private:
     void startRequest(const QUrl &requestedUrl);
@@ -42,6 +46,7 @@ private:
 private:
     Ui::updatedialog *ui;
     QUrl url;
+    QString downloadDirectory;
     QNetworkAccessManager qnam;
     QNetworkReply *reply;
     QFile *file;
@@ -49,6 +54,7 @@ private:
     QString latestDLFilename;
     QUrl latestDLUrl;
     qint64 latestDLSize;
+    QFile *dlfile;
 
 };
 

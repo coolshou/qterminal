@@ -54,6 +54,7 @@ public:
     void setScrollToBottom(bool set);
     void setLogDatetime(bool set);
     void setTheme(QString sTheme);
+    //void setMaximumBlockCount();
 
 signals:
     void sig_DataReady(const QByteArray &data);

@@ -55,14 +55,18 @@ MainWindow::MainWindow(QWidget *parent) :
     readPosSetting();
     settingDlg = new SettingsDialog();
     connect(settingDlg, SIGNAL(finished(int)), this, SLOT(slot_acceptSettingDlg(int)));
+    optionDlg = new optionsDialog();
+    connect(optionDlg, SIGNAL(finished(int)), this, SLOT(slot_acceptOptionDlg(int)));
 
     connect(ui->mdiArea, SIGNAL(subWindowActivated(QMdiSubWindow*)), this, SLOT(slot_subWindowChanged(QMdiSubWindow*)));
 
     //this->updateActionBtnStatus(true);
     ui->actionQuit->setEnabled(true);
     initActionsConnections();
+    initToolBar();
 
-    get_session_num();
+    //get_session_num();
+    //TODO: restore session/ start minial...
 }
 
 
@@ -71,6 +75,7 @@ MainWindow::~MainWindow()
     delete settingDlg;
     delete ui;
     delete settings;
+    delete optionDlg;
 
 }
 void MainWindow::closeEvent(QCloseEvent *event)
@@ -137,10 +142,10 @@ void MainWindow::slot_acceptSettingDlg(int result)
 
         //check if serial is alweady exist
         if (session_exist(sName)){
-            qDebug() << "TODO:slot_acceptSettingDlg session_exist: " << sName;
+            //qDebug() << "TODO:slot_acceptSettingDlg session_exist: " << sName;
             termsession *termSession = get_termsession(sName);
+            //update setting in termSession
             termSession->apply_setting();
-            //TODO: update setting in termsession
             return;
         } else {
             //setup new termsession for new SubWindow
@@ -235,6 +240,16 @@ void MainWindow::update()
     updateDlg.exec();
 
 }
+void MainWindow::initToolBar()
+{
+    ui->toolBar->addAction(ui->actionClear);
+    ui->toolBar->addSeparator();
+    ui->toolBar->addAction(ui->actionConnect);
+    ui->toolBar->addAction(ui->actionDisconnect);
+    ui->toolBar->addSeparator();
+    //TODO: initToolBar
+}
+
 void MainWindow::initActionsConnections()
 {
     //menu
@@ -253,9 +268,11 @@ void MainWindow::initActionsConnections()
     connect(ui->actionPaste, SIGNAL(triggered()), this, SLOT(consolePaste()));
     connect(ui->actionClear, SIGNAL(triggered()), this, SLOT(consoleClear()));
     //TODO: actionFind
-    //connect(ui->actionFind, SIGNAL(triggered()), this, SLOT(consoleClear()));
+    //connect(ui->actionFind, SIGNAL(triggered()), this, SLOT(consoleFind()));
+    //TODO: macro
+
     //config
-    //connect(ui->actionConfigure, SIGNAL(triggered()), settingDlg, SLOT(show()));
+    connect(ui->actionOptions, SIGNAL(triggered()), this, SLOT(slot_options()));
 
     //window
     connect(ui->actionCascade, SIGNAL(triggered()), ui->mdiArea, SLOT(cascadeSubWindows()));
@@ -274,6 +291,23 @@ void MainWindow::initActionsConnections()
     connect(ui->HistoryEdit,SIGNAL(textChanged(QString)), this, SLOT(showInputHistory(QString)));
     connect(ui->HistoryEdit,SIGNAL(returnPressed()), ui->SendBtn, SLOT(click()));
     connect(ui->SendBtn, SIGNAL(pressed()), this, SLOT(sendSerialText()));
+}
+
+//show options Dialog
+void MainWindow::slot_options()
+{
+    if (optionDlg) {
+        optionDlg->showSettings();
+        optionDlg->exec();
+    }
+}
+void MainWindow::slot_acceptOptionDlg(int result)
+{
+    if (result == QDialog::Accepted) {
+        if (optionDlg) {
+            optionDlg->applySettings();
+        }
+    }
 }
 
 //TODO: this is what I did from the main window to pop out a window.
@@ -354,9 +388,7 @@ int MainWindow::get_session_num()
 //add a session (console) for mdi SubWindow
 void MainWindow::add_session()
 {
-    //show console config dialog   
-    //TODO: already used setting
-    //TODO: do not show used serial port in settingDlg?
+    //do not show used serial port in settingDlg?
     settingDlg->updateUsedSerials(getUsedSerial());
     settingDlg->exec(); //show as modal
 }
@@ -448,23 +480,19 @@ void MainWindow::updateActionEditSessionBtnStatus(bool bStatus)
 void MainWindow::slot_subWindowChanged(QMdiSubWindow* window)
 {
     //When no SubWindow is Active QMdiSubWindow pointer is null
-    //So,Check nullity here;otherwise application will crash
+    //So, Check nullity here;otherwise application will crash
     if(window != NULL)
     {
-        qDebug() << "TODO:(slot_subWindowChanged) check the session is connected or not" ;
+        //qDebug() << "TODO:(slot_subWindowChanged) check the session is connected or not" ;
         termsession *term = get_termsession(window->windowTitle());
+        //update status bar message by tab
         updateStatus(term->get_status());
-
+        //update menu button status
         updateMenuSession(true);
-
-        //TODO: update status bar message by tab
-        //TODO: update menu button status
-      //setWindowTitle("Hello! Active SubWindow is : "+window->windowTitle());
     }
     else
     {
         updateMenuSession(false);
-      //setWindowTitle("No active window");
     }
 }
 

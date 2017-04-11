@@ -42,7 +42,7 @@ Console::Console(QWidget *parent)
     : QPlainTextEdit(parent)
     , localEchoEnabled(false), scrollToBottom(true)
 {
-    //TODO: Maximum Block Count
+    //Maximum Block Count
     document()->setMaximumBlockCount(2000);
     setTheme("default");
     createActions();
@@ -60,13 +60,12 @@ Console::~Console()
 void Console::createActions()
 {
     copyAct = new QAction(QIcon(":/images/copy.png"), tr("Copy"), this);
-    //TODO: ctrl +c will send ^c in serial
+    //ctrl +c will send ^c in serial
     //copyAct->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_C));
     connect(copyAct, SIGNAL(triggered()), this, SLOT(copy()));
     updateCopyAction(false);
 
     pasteAct = new QAction(QIcon(":/images/paste.png"), tr("Paste"), this);
-    //TODO: pasteAct->setShortcut
     //pasteAct->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_V));
     connect(pasteAct, SIGNAL(triggered()), this, SLOT(paste()));
 
@@ -177,8 +176,8 @@ void Console::keyPressEvent(QKeyEvent *e)
         } else {
             switch (e->key()) {
             case Qt::Key_Backspace:
-            case Qt::Key_Up: // TODO: history
-            case Qt::Key_Down: // TODO: history
+            case Qt::Key_Up: // TODO: history Key_Up
+            case Qt::Key_Down: // TODO: history Key_Down
                 break;
             case Qt::Key_Left://TODO: Qt::Key_Left
             case Qt::Key_Right://TODO: Qt::Key_Right
