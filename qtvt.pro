@@ -1,4 +1,4 @@
-VERSION = 2017.3.27.0
+VERSION = 2017.4.11.0
 QMAKE_TARGET_COMPANY = coolshou
 QMAKE_TARGET_PRODUCT = qtvt
 QMAKE_TARGET_DESCRIPTION = qt base serial virtual console
@@ -56,5 +56,5 @@ DISTFILES += \
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 DEFINES += APP_COMPANY=\\\"$$QMAKE_TARGET_COMPANY\\\"
 DEFINES += APP_PRODUCT=\\\"$$QMAKE_TARGET_PRODUCT\\\"
-GIT_VERSION = $$system(git --git-dir $$PWD/.git --work-tree $$PWD describe --always --tags)
+GIT_VERSION = $$system(git --git-dir $$PWD/.git --work-tree $$PWD describe --always)
 DEFINES += GIT_VERSION=\\\"$$GIT_VERSION\\\"
