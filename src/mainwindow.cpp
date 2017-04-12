@@ -39,7 +39,7 @@
 #include <QMessageBox>
 #include <QtSerialPort/QSerialPort>
 #include <QDialog>
-
+#include <QProcess>
 #include "const.h"
 
 #include <QDebug>
@@ -240,11 +240,26 @@ void MainWindow::about()
 
 void MainWindow::update()
 {
-    //updatedialog updateDlg = new updatedialog(this);
-    updatedialog updateDlg(this);
-    updateDlg.exec();
+    updatedialog *updateDlg = new updatedialog(this);
+    connect(updateDlg, SIGNAL(doExit()), this, SLOT(close()));
+    connect(updateDlg, SIGNAL(doExec(QString)), this, SLOT(execFile(QString)));
+    updateDlg->exec();//.exec();
+    delete updateDlg;
 
 }
+void MainWindow::execFile(QString Filename)
+{
+    qDebug() <<"going to exec file: " << Filename ;
+    QProcess *process = new QProcess(this);
+
+    if (QSysInfo::productType() == "ubuntu") {
+        QString file = "gdebi-gtk %1";
+        process->startDetached(file.arg(Filename));
+    } else {
+        qDebug() << "TODO: support to exec file at platform: " << QSysInfo::productType();
+    }
+}
+
 void MainWindow::initToolBar()
 {
     ui->toolBar->addAction(ui->actionClear);

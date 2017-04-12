@@ -23,6 +23,9 @@ class updatedialog : public QDialog
 public:
     explicit updatedialog(QWidget *parent = 0);
     ~updatedialog();
+signals:
+    void doExit();
+    void doExec(QString filename);
 
 private slots:
     void downloadFile();
@@ -34,6 +37,7 @@ private slots:
     void dlError(QNetworkReply::NetworkError err);
     void dlProgress(qint64 read, qint64 total);
     void dlFinished();
+    void dlReadyRead();
 
 private:
     void startRequest(const QUrl &requestedUrl);

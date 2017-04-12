@@ -111,6 +111,9 @@ private slots:
     void slot_options();
     void slot_acceptOptionDlg(int result);
 
+    //
+    void execFile(QString Filename);
+
 private:
     void initActionsConnections();
     void initToolBar();

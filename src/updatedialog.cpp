@@ -134,6 +134,11 @@ void updatedialog::httpFinished()
     QJsonDocument jsonDoc = loadJson(fi.absoluteFilePath());
     //QString strJson(jsonDoc.toJson(QJsonDocument::Compact));
     //qDebug()<<strJson.toStdString().data();
+    qDebug() << "TODO: getUpdate";
+    qDebug() << "CpuArch: " << QSysInfo::currentCpuArchitecture();
+    qDebug() << "productType:" << QSysInfo::productType();
+    qDebug() << "productVersion:" << QSysInfo::productVersion();
+
     QJsonObject json_obj=jsonDoc.object();
     QString name=json_obj["name"].toString();
     ui->latestVersion->setText(name);
@@ -168,9 +173,7 @@ void updatedialog::httpReadyRead()
     // That way we use less RAM than when reading it at the finished()
     // signal of the QNetworkReply
     if (file) {
-        QByteArray a = reply->readAll();
-        //qDebug() << "data: " << a;
-        file->write(a);
+        file->write(reply->readAll());
     }
 }
 
@@ -225,23 +228,12 @@ void updatedialog::setStatus(QString msg)
 }
 void updatedialog::getUpdate()
 {
-    qDebug() << "TODO: getUpdate";
-    qDebug() << "CpuArch: " << QSysInfo::currentCpuArchitecture();
-    qDebug() << "productType:" << QSysInfo::productType();
-    qDebug() << "productVersion:" << QSysInfo::productVersion();
-    //system:
-    //x86_64 = amd64 (linux)
-    //i386
-    //
     qDebug() << "download latestDLUrl: " << latestDLUrl;
     QNetworkRequest request;
     request.setUrl(latestDLUrl);
 
     reply = qnam.get(request); // Manager is my QNetworkAccessManager
-//    reply = qnam.get(request);
-//    connect(reply, SIGNAL(finished()), this, SLOT(httpFinished()));
-//    connect(reply, SIGNAL(readyRead()), this, SLOT(httpReadyRead()));
-//    connect(reply, SIGNAL(downloadProgress(qint64, qint64)), this, SLOT(networkReplyProgress(qint64, qint64)));
+
     QString dest = downloadDirectory+QDir::separator()+latestDLFilename;//.append();
     dlfile = new QFile(dest); // "des" is the file path to the destination file
     dlfile->open(QIODevice::WriteOnly);
@@ -249,6 +241,7 @@ void updatedialog::getUpdate()
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)),this, SLOT(dlError(QNetworkReply::NetworkError)));
     connect(reply, SIGNAL(downloadProgress(qint64, qint64)),  this, SLOT(dlProgress(qint64, qint64)));
     connect(reply, SIGNAL(finished()),   this, SLOT(dlFinished()));
+    connect(reply, SIGNAL(readyRead()), this, SLOT(dlReadyRead()));
 }
 void updatedialog::dlError(QNetworkReply::NetworkError err)
 {
@@ -261,26 +254,44 @@ void updatedialog::dlProgress(qint64 read, qint64 total)
 {
     ui->progressBar->setMaximum(total);
     ui->progressBar->setValue(read);
-
-    //TODO: why did not finish download whole file!!
-    QByteArray b = reply->readAll();
-    QDataStream out(dlfile);
-    out << b;
 }
+void updatedialog::dlReadyRead()
+{
+    // this slot gets called every time the QNetworkReply has new data.
+    // We read all of its new data and write it into the file.
+    // That way we use less RAM than when reading it at the finished()
+    // signal of the QNetworkReply
+    if (dlfile) {
+        dlfile->write(reply->readAll());
+    }
+}
+
 void updatedialog::dlFinished()
 {
-    // Save the image here
-    /*
-    QByteArray b = reply->readAll();
-    QString dest = downloadDirectory+QDir::separator()+latestDLFilename;//.append();
-    QFile file(dest); // "des" is the file path to the destination file
-    file.open(QIODevice::ReadWrite);
-    QDataStream out(&file);
-    out << b;
-    */
-    reply->deleteLater();
-    // done
-    dlfile->close();
-    qDebug() << "TODO: exec to install it!!: " << dlfile->fileName();//dest;
 
+    //handle redirect
+    const QVariant redirectionTarget = reply->attribute(QNetworkRequest::RedirectionTargetAttribute);
+    if (!redirectionTarget.isNull()) {
+        const QUrl redirectedUrl = url.resolved(redirectionTarget.toUrl());
+        /* no need to confirm!
+        if (QMessageBox::question(this, tr("Redirect"),
+                                  tr("Redirect to %1 ?").arg(redirectedUrl.toString()),
+                                  QMessageBox::Yes | QMessageBox::No) == QMessageBox::No) {
+            return;
+        }*/
+        dlfile->resize(0);
+        latestDLUrl = redirectedUrl;
+        getUpdate();
+        return;
+    } else {
+        if (dlfile) {
+            dlfile->close();
+        }
+        //TODO: install the downloaded file
+        emit doExec(dlfile->fileName());
+        qDebug() << "TODO: kill self";
+        emit doExit();
+    }
+    /* Clean up. */
+    reply->deleteLater();
 }
