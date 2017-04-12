@@ -233,6 +233,11 @@ void termsession::slot_baudRateChanged(qint32 baudRate,QSerialPort::Directions d
     Q_UNUSED(baudRate);
     Q_UNUSED(directions);
 }
+void termsession::closeEvent(QCloseEvent *event)
+{
+    event->ignore();
+}
+
 /*
 void termsession::slot_onTextChanged()
 {

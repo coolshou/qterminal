@@ -40,6 +40,9 @@ signals:
     void sig_updateStatus(QString sMsg);
     void sig_updateActionBtnStatus(bool bStatus);
 
+protected:
+    void closeEvent(QCloseEvent *event);
+
 private slots:
     void readDataFromSerial();
     void writeDataToSerial(const QByteArray &data);

@@ -154,14 +154,19 @@ void MainWindow::slot_acceptSettingDlg(int result)
             connect(termSession, SIGNAL(sig_updateStatus(QString)), this, SLOT(updateStatus(QString)));
             connect(termSession, SIGNAL(sig_updateActionBtnStatus(bool)), this, SLOT(updateActionBtnStatus(bool)));
 
-            QMdiSubWindow *subwin1 = new QMdiSubWindow;
+            QMdiSubWindow *subwin1 = new QMdiSubWindow();
+            //still show close button
+            //subwin1->setWindowFlags(Qt::Window | Qt::WindowMinMaxButtonsHint);
             subwin1->setWidget(termSession);
             subwin1->setWindowIcon(QIcon(":/images/qtvt.png"));
-            subwin1->setAttribute(Qt::WA_DeleteOnClose, false);
+            //subwin1->setAttribute(Qt::WA_DeleteOnClose, false);
             subwin1->resize(QSize(ui->mdiArea->width(),ui->mdiArea->height()));
             subwin1->setWindowTitle(sName);
             ui->mdiArea->addSubWindow(subwin1);
-            //ui->mdiArea->setOption(QMdiArea::DontMaximizeSubWindowOnActivation);//what this do for?
+            //still show close button
+            //ui->mdiArea->addSubWindow(subwin1, Qt::Window | Qt::WindowMinMaxButtonsHint);
+            //what this do for?
+            //ui->mdiArea->setOption(QMdiArea::DontMaximizeSubWindowOnActivation);
             subwin1->show();
             ui->mdiArea->setActiveSubWindow(subwin1);
         }
@@ -389,7 +394,8 @@ int MainWindow::get_session_num()
 void MainWindow::add_session()
 {
     //do not show used serial port in settingDlg?
-    settingDlg->updateUsedSerials(getUsedSerial());
+    //TODO: this will cause edit session problem!!
+    //settingDlg->updateUsedSerials(getUsedSerial());
     settingDlg->exec(); //show as modal
 }
 //edit session
