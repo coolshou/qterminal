@@ -134,7 +134,7 @@ void MainWindow::slot_acceptSettingDlg(int result)
         settings->setValue("fontFamily", settingDlg->get_settings().fontFamily);
         settings->setValue("fontSize", settingDlg->get_settings().fontSize);
         settings->setValue("scrollToBottom", settingDlg->get_settings().scrollToBottom);
-        //TODO: Log
+        //Log
         settings->setValue("logEnable", settingDlg->get_settings().bLogEnable);
         settings->setValue("logFilename", settingDlg->get_settings().stringLogFilename);
         settings->setValue("logDateTime", settingDlg->get_settings().bLogDateTime);
@@ -290,7 +290,7 @@ void MainWindow::initActionsConnections()
     //TODO: actionFind
     //connect(ui->actionFind, SIGNAL(triggered()), this, SLOT(consoleFind()));
     //TODO: macro
-
+    //connect(ui->actionMacro, SIGNAL(triggered()), this, SLOT(macro()));
     //config
     connect(ui->actionOptions, SIGNAL(triggered()), this, SLOT(slot_options()));
 
@@ -409,7 +409,7 @@ int MainWindow::get_session_num()
 void MainWindow::add_session()
 {
     //do not show used serial port in settingDlg?
-    //TODO: this will cause edit session problem!!
+    //TODO: following will cause edit session problem!!
     //settingDlg->updateUsedSerials(getUsedSerial());
     settingDlg->exec(); //show as modal
 }

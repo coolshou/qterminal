@@ -90,7 +90,7 @@ void termsession::apply_setting()
     //console
     this->setMaximumBlockCount(mSetting->value("maxBlockCount").toInt());
     QPalette p = palette();
-    //TODO: color theme
+    //color theme
     p.setColor(QPalette::Base, mSetting->value("baseColor").toString());
     p.setColor(QPalette::Text, mSetting->value("fontColor").toString());
     this->setPalette(p);

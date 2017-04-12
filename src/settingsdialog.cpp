@@ -247,13 +247,13 @@ void SettingsDialog::fillPortsParameters()
 
 void SettingsDialog::fillPortsInfo()
 {
-    //TODO: when a serial is opened, don't show it here? how?
     ui->serialPortInfoListBox->clear();
     QString description;
     QString manufacturer;
     QString serialNumber;
     foreach (const QSerialPortInfo &info, QSerialPortInfo::availablePorts()) {
         if (! isExistUsedSerial(info.portName())) {
+            //TODO: when a serial is opened, don't show it here?
             qDebug() << "portName: " << info.portName();
             QStringList list;
             description = info.description();
@@ -385,7 +385,6 @@ void SettingsDialog::delUsedSerial(QString serName)
     }
 }
 
-//TODO: closed serial need to add back!!
 void SettingsDialog::updateUsedSerials(QStringList serials)
 {
     int i;

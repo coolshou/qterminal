@@ -129,7 +129,7 @@ private:
     Settings currentSettings;
     QIntValidator *intValidator;
     QString defaultGroupName;
-    QStringList usedSerials; //TODO: record used serial port.
+    QStringList usedSerials; //record used serial port.
 };
 
 #endif // SETTINGSDIALOG_H

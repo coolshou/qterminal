@@ -143,7 +143,10 @@ void updatedialog::httpFinished()
     QString name=json_obj["name"].toString();
     ui->latestVersion->setText(name);
     if (isLatestVersionExist(name)) {
-        //TODO: Latest file to download and install
+        //TODO: record Latest file to be download and install
+        //Windows:
+        //ubuntu:
+        //fedora:...
         //assets/name, browser_download_url, size
         QJsonArray assets_arr=json_obj["assets"].toArray();
         for(int i=0; i<assets_arr.size(); i++){
@@ -287,9 +290,9 @@ void updatedialog::dlFinished()
         if (dlfile) {
             dlfile->close();
         }
-        //TODO: install the downloaded file
+        //signal the downloaded file
         emit doExec(dlfile->fileName());
-        qDebug() << "TODO: kill self";
+        //kill self
         emit doExit();
     }
     /* Clean up. */
