@@ -7,8 +7,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>558</width>
-    <height>422</height>
+    <width>556</width>
+    <height>420</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -122,8 +122,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>558</width>
-     <height>23</height>
+     <width>556</width>
+     <height>28</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuCalls">
@@ -290,7 +290,7 @@
     <string>O&amp;ptions</string>
    </property>
    <property name="toolTip">
-    <string>Configure serial port</string>
+    <string>Configure Options</string>
    </property>
    <property name="shortcut">
     <string>Alt+C</string>
@@ -311,7 +311,7 @@
     <string>Clear data</string>
    </property>
    <property name="shortcut">
-    <string>Alt+L</string>
+    <string>Ctrl+Shift+L</string>
    </property>
   </action>
   <action name="actionNew_session">
@@ -379,6 +379,9 @@
    <property name="text">
     <string>Close &amp;session</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+W</string>
+   </property>
   </action>
   <action name="actionCopy">
    <property name="icon">
@@ -389,7 +392,7 @@
     <string>&amp;Copy</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+C</string>
+    <string>Ctrl+Shift+C</string>
    </property>
   </action>
   <action name="actionPaste">
@@ -401,7 +404,7 @@
     <string>&amp;Paste</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+V</string>
+    <string>Ctrl+Shift+V</string>
    </property>
   </action>
   <action name="actionLogFile">
@@ -464,7 +467,7 @@
      <normaloff>:/images/Donate.png</normaloff>:/images/Donate.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Donate (TODO)</string>
+    <string>&amp;Donate</string>
    </property>
    <property name="visible">
     <bool>true</bool>
