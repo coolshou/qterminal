@@ -163,6 +163,7 @@ void Console::moveCurserToEnd()
 void Console::keyPressEvent(QKeyEvent *e)
 {
     if(e->type() == QKeyEvent::KeyPress) {
+        QString test;
         /*
         QKeyEvent *keyEvent = static_cast<QKeyEvent*>(e);
         if (keyEvent->key() == Qt::Key_A) {
@@ -176,11 +177,40 @@ void Console::keyPressEvent(QKeyEvent *e)
         } else {
             switch (e->key()) {
             case Qt::Key_Backspace:
+                test="\x08"; //Send an ASCII backspace character (0x08).
+                emit sig_DataReady(test.toLocal8Bit());
+                break;
+            case Qt::Key_Delete:
+                test="\x7F"; //Send an ASCII delete character (0x7F).
+                emit sig_DataReady(test.toLocal8Bit());
+                break;
+            /*
+             * Up arrow         E0 48
+             * Down arrow       E0 50
+             * Left arrow       E0 4B
+             * Right arrow      E0 4D
+
+             * Up key - 224 72
+             * Down key - 224 80
+             * Left key - 224 75
+             * Right key - 224 77
+
+            */
             case Qt::Key_Up: // TODO: history Key_Up
+                test="\xE048";
+                emit sig_DataReady(test.toLocal8Bit());
+                break;
             case Qt::Key_Down: // TODO: history Key_Down
+                test="\xE050";
+                emit sig_DataReady(test.toLocal8Bit());
                 break;
             case Qt::Key_Left://TODO: Qt::Key_Left
+                test="\xE04B";
+                emit sig_DataReady(test.toLocal8Bit());
+                break;
             case Qt::Key_Right://TODO: Qt::Key_Right
+                test="\xE04D";
+                emit sig_DataReady(test.toLocal8Bit());
                 break;
             default:
                 if (localEchoEnabled)
