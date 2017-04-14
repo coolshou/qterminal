@@ -176,19 +176,20 @@ void Console::keyPressEvent(QKeyEvent *e)
             emit sig_DataReady(test.toLocal8Bit());
         } else {
             switch (e->key()) {
+            //TODO: backspace, delete
             case Qt::Key_Backspace:
-                test="\x08"; //Send an ASCII backspace character (0x08).
-                emit sig_DataReady(test.toLocal8Bit());
+                //test="\x08"; //Send an ASCII backspace character (0x08).
+                //emit sig_DataReady(test.toLocal8Bit());
                 break;
             case Qt::Key_Delete:
-                test="\x7F"; //Send an ASCII delete character (0x7F).
-                emit sig_DataReady(test.toLocal8Bit());
+                //test="\x7F"; //Send an ASCII delete character (0x7F).
+                //emit sig_DataReady(test.toLocal8Bit());
                 break;
             /*
-             * Up arrow         E0 48
-             * Down arrow       E0 50
-             * Left arrow       E0 4B
-             * Right arrow      E0 4D
+             *TODO: Up arrow         E0 48
+             *TODO: Down arrow       E0 50
+             *TODO: Left arrow       E0 4B
+             *TODO: Right arrow      E0 4D
 
              * Up key - 224 72
              * Down key - 224 80
@@ -197,20 +198,20 @@ void Console::keyPressEvent(QKeyEvent *e)
 
             */
             case Qt::Key_Up: // TODO: history Key_Up
-                test="\xE048";
-                emit sig_DataReady(test.toLocal8Bit());
+                //test="\xE0\x48";
+                //emit sig_DataReady(test.toLocal8Bit());
                 break;
             case Qt::Key_Down: // TODO: history Key_Down
-                test="\xE050";
-                emit sig_DataReady(test.toLocal8Bit());
+                //test="\xE0\x50";
+                //emit sig_DataReady(test.toLocal8Bit());
                 break;
             case Qt::Key_Left://TODO: Qt::Key_Left
-                test="\xE04B";
-                emit sig_DataReady(test.toLocal8Bit());
+                //test="\xE0\x4B";
+                //emit sig_DataReady(test.toLocal8Bit());
                 break;
             case Qt::Key_Right://TODO: Qt::Key_Right
-                test="\xE04D";
-                emit sig_DataReady(test.toLocal8Bit());
+                //test="\xE0\x4D";
+                //emit sig_DataReady(test.toLocal8Bit());
                 break;
             default:
                 if (localEchoEnabled)
