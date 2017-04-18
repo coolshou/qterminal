@@ -69,6 +69,7 @@ protected:
 private slots:
     void showContextMenu(QPoint pt);
     void updateCopyAction(bool yes);
+    void doPaste();
 
 private:
     void createRightMenu();

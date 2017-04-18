@@ -67,7 +67,7 @@ void Console::createActions()
 
     pasteAct = new QAction(QIcon(":/images/paste.png"), tr("Paste"), this);
     //pasteAct->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_V));
-    connect(pasteAct, SIGNAL(triggered()), this, SLOT(paste()));
+    connect(pasteAct, SIGNAL(triggered()), this, SLOT(doPaste()));
 
     clearAct = new QAction(QIcon(":/images/clear.png"), tr("Clear"), this);
     //TODO: clearAct->setShortcut
@@ -79,6 +79,12 @@ void Console::createActions()
     //selectAllAct->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_A));
     connect(selectAllAct, SIGNAL(triggered()), this, SLOT(selectAll()));
 }
+void Console::doPaste()
+{
+    this->moveCurserToEnd();
+    this->paste();
+}
+
 void Console::updateCopyAction(bool yes)
 {
     if (copyAct)
