@@ -508,11 +508,13 @@ void MainWindow::slot_subWindowChanged(QMdiSubWindow* window)
         //update status bar message by tab
         updateStatus(term->get_status());
         //update menu button status
-        updateMenuSession(!term->isOpen());
+        updateMenuSession(true);
+        updateActionStatus(!term->isOpen());
     }
     else
     {
         updateMenuSession(false);
+        updateActionStatus(true);
     }
 }
 
@@ -520,6 +522,9 @@ void MainWindow::updateMenuSession(bool state)
 {
     //ui->actionEdit_session->setEnabled(state);
     updateActionEditSessionBtnStatus(state);
+}
+void MainWindow::updateActionStatus(bool state)
+{
     ui->actionClose_session->setEnabled(state);
     ui->actionConnect->setEnabled(state);
     ui->actionDisconnect->setEnabled(!state);

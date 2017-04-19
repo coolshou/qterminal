@@ -119,6 +119,7 @@ private:
     void initToolBar();
     bool session_exist(QString sName);
     void updateMenuSession(bool state);
+    void updateActionStatus(bool state);
     void closeSession(QString sName);
 
 private:
