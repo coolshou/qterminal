@@ -170,6 +170,7 @@ void MainWindow::slot_acceptSettingDlg(int result)
             subwin1->show();
             ui->mdiArea->setActiveSubWindow(subwin1);
         }
+        openSerialPort();
     }
 }
 //open serial base on witch tab
@@ -267,7 +268,9 @@ void MainWindow::initToolBar()
     ui->toolBar->addAction(ui->actionConnect);
     ui->toolBar->addAction(ui->actionDisconnect);
     ui->toolBar->addSeparator();
+    ui->toolBar->addAction(ui->actionScrollToBottom);
     //TODO: initToolBar
+    //scroll to bottom
 }
 
 void MainWindow::initActionsConnections()
@@ -287,6 +290,7 @@ void MainWindow::initActionsConnections()
     connect(ui->actionCopy, SIGNAL(triggered()), this, SLOT(consoleCopy()));
     connect(ui->actionPaste, SIGNAL(triggered()), this, SLOT(consolePaste()));
     connect(ui->actionClear, SIGNAL(triggered()), this, SLOT(consoleClear()));
+    connect(ui->actionScrollToBottom, SIGNAL(triggered()), this, SLOT(setScrollToBottom()));
     //TODO: actionFind
     //connect(ui->actionFind, SIGNAL(triggered()), this, SLOT(consoleFind()));
     //TODO: macro
@@ -478,6 +482,14 @@ void MainWindow::consoleClear()
         term->clear();
     }
 }
+void MainWindow::setScrollToBottom()
+{
+    QMdiSubWindow *sw = get_currentSubWindow();
+    if ((sw != 0)||(sw != NULL)) {
+        termsession *term = get_termsession(sw->windowTitle());
+        term->setScrollToBottom(!term->getScrollToBottom());
+    }
+}
 
 void  MainWindow::updateStatus(QString sMsg)
 {
@@ -486,8 +498,10 @@ void  MainWindow::updateStatus(QString sMsg)
 
 void MainWindow::updateActionBtnStatus(bool bStatus)
 {
+    ui->actionClose_session->setEnabled(bStatus);
     ui->actionConnect->setEnabled(bStatus);
     ui->actionDisconnect->setEnabled(!bStatus);
+    ui->actionScrollToBottom->setEnabled(!bStatus);
     //ui->actionConfigure->setEnabled(bStatus);
     //updateActionConfigureBtnStatus(bStatus);
 }
@@ -509,12 +523,12 @@ void MainWindow::slot_subWindowChanged(QMdiSubWindow* window)
         updateStatus(term->get_status());
         //update menu button status
         updateMenuSession(true);
-        updateActionStatus(!term->isOpen());
+        updateActionBtnStatus(!term->isOpen());
     }
     else
     {
         updateMenuSession(false);
-        updateActionStatus(true);
+        updateActionBtnStatus(true);
     }
 }
 
@@ -522,10 +536,4 @@ void MainWindow::updateMenuSession(bool state)
 {
     //ui->actionEdit_session->setEnabled(state);
     updateActionEditSessionBtnStatus(state);
-}
-void MainWindow::updateActionStatus(bool state)
-{
-    ui->actionClose_session->setEnabled(state);
-    ui->actionConnect->setEnabled(state);
-    ui->actionDisconnect->setEnabled(!state);
 }

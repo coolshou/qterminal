@@ -102,6 +102,7 @@ private slots:
     void consoleCopy();
     void consolePaste();
     void consoleClear();
+    void setScrollToBottom();
     QMdiSubWindow* get_currentSubWindow();
     termsession* get_termsession(QString sName);
     bool del_termsession(termsession* item);
@@ -119,7 +120,7 @@ private:
     void initToolBar();
     bool session_exist(QString sName);
     void updateMenuSession(bool state);
-    void updateActionStatus(bool state);
+    //void updateActionStatus(bool state);
     void closeSession(QString sName);
 
 private:
