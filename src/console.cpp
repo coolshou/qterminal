@@ -169,7 +169,8 @@ void Console::moveCurserToEnd()
 void Console::keyPressEvent(QKeyEvent *e)
 {
     if(e->type() == QKeyEvent::KeyPress) {
-        QString test;
+        QByteArray test;
+        QByteArray ba;
         /*
         QKeyEvent *keyEvent = static_cast<QKeyEvent*>(e);
         if (keyEvent->key() == Qt::Key_A) {
@@ -185,13 +186,18 @@ void Console::keyPressEvent(QKeyEvent *e)
             //TODO: backspace, delete
             case Qt::Key_Backspace:
                 //test="\x08"; //Send an ASCII backspace character (0x08).
-                //emit sig_DataReady(test.toLocal8Bit());
+                ba.resize(1);
+                ba[0] = 0x08;
+                qDebug() <<  "Key Backspace: " << ba;
+                emit sig_DataReady(ba);//TODO: not update to console?
                 break;
             case Qt::Key_Delete:
                 //test="\x7F"; //Send an ASCII delete character (0x7F).
                 //emit sig_DataReady(test.toLocal8Bit());
                 break;
             /*
+             * http://ascii-table.com/ansi-escape-sequences.php
+             *
              *TODO: Up arrow         E0 48
              *TODO: Down arrow       E0 50
              *TODO: Left arrow       E0 4B
@@ -201,11 +207,20 @@ void Console::keyPressEvent(QKeyEvent *e)
              * Down key - 224 80
              * Left key - 224 75
              * Right key - 224 77
-
+             Cursor Up:       escape-[-A => \x1B\x5B\x61
+             Cursor Down:     escape-[-B => \x1B\x5B\x62
+             Cursor Forward:  escape-[-C => \x1B\x5B\x63
+             Cursor Backward: escape-[-D => \x1B\x5B\x64
             */
             case Qt::Key_Up: // TODO: history Key_Up
-                //test="\xE0\x48";
-                //emit sig_DataReady(test.toLocal8Bit());
+                test="\x1B\x5B\x61";
+                //char arr[3] = {0x1B, 0x5B, 0x41};
+                ba.resize(3);
+                ba[0] = 0x1B;
+                ba[1] = 0x5B;
+                ba[2] = 0x41;
+                qDebug() <<  "key up: " << ba;
+                emit sig_DataReady(ba);
                 break;
             case Qt::Key_Down: // TODO: history Key_Down
                 //test="\xE0\x50";
@@ -239,7 +254,25 @@ void Console::mousePressEvent(QMouseEvent *e)
         setTextCursor(cursor);
     }
     //setFocus();
+    if (e->buttons() & Qt::RightButton)
+    {
+        qDebug() << "Qt::RightButton";
+    }
+    if (e->buttons() & Qt::MiddleButton)
+    {
+        //TODO: when some text selected, copy first
+        doPaste();
+    }
+    QPlainTextEdit::mousePressEvent(e);
 }
+
+void Console::mouseReleaseEvent(QMouseEvent *e)
+{
+    //with following line, on mouse middle button release will cause paste text to Console. why?
+    //QPlainTextEdit::mousePressEvent(e);
+    Q_UNUSED(e);
+}
+
 void Console::mouseMoveEvent(QMouseEvent *e)
 {
     //QTextEdit::mouseMoveEvent(e);
