@@ -504,12 +504,11 @@ void MainWindow::slot_subWindowChanged(QMdiSubWindow* window)
     //So, Check nullity here;otherwise application will crash
     if(window != NULL)
     {
-        //qDebug() << "TODO:(slot_subWindowChanged) check the session is connected or not" ;
         termsession *term = get_termsession(window->windowTitle());
         //update status bar message by tab
         updateStatus(term->get_status());
         //update menu button status
-        updateMenuSession(true);
+        updateMenuSession(!term->isOpen());
     }
     else
     {
@@ -523,4 +522,5 @@ void MainWindow::updateMenuSession(bool state)
     updateActionEditSessionBtnStatus(state);
     ui->actionClose_session->setEnabled(state);
     ui->actionConnect->setEnabled(state);
+    ui->actionDisconnect->setEnabled(!state);
 }
