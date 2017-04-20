@@ -488,6 +488,9 @@ void MainWindow::setScrollToBottom()
     if ((sw != 0)||(sw != NULL)) {
         termsession *term = get_termsession(sw->windowTitle());
         term->setScrollToBottom(!term->getScrollToBottom());
+        settings->beginGroup(term->get_name());
+        settings->setValue("scrollToBottom", term->getScrollToBottom());
+        settings->endGroup();
     }
 }
 
@@ -498,7 +501,7 @@ void  MainWindow::updateStatus(QString sMsg)
 
 void MainWindow::updateActionBtnStatus(bool bStatus)
 {
-    ui->actionClose_session->setEnabled(bStatus);
+    ui->actionClose_session->setEnabled(!bStatus);
     ui->actionConnect->setEnabled(bStatus);
     ui->actionDisconnect->setEnabled(!bStatus);
     ui->actionScrollToBottom->setEnabled(!bStatus);
