@@ -52,6 +52,7 @@ public:
 
     void setLocalEchoEnabled(bool set);
     void setScrollToBottom(bool set);
+    bool getScrollToBottom();
     void setLogDatetime(bool set);
     void setTheme(QString sTheme);
     //void setMaximumBlockCount();
@@ -76,6 +77,9 @@ private:
     void createRightMenu();
     void createActions();
     void moveCurserToEnd();
+    void saveCurser();
+    void restoreCurser();
+    QTextCursor getOldCurser();
 
 private:
     bool localEchoEnabled;
@@ -87,6 +91,7 @@ private:
     QAction *clearAct;
     QAction *selectAllAct;
     int posCursor; //remember cursor pos variable
+    QTextCursor prev_cursor;
 };
 
 #endif // CONSOLE_H

@@ -40,7 +40,7 @@
 
 Console::Console(QWidget *parent)
     : QPlainTextEdit(parent)
-    , localEchoEnabled(false), scrollToBottom(true)
+    , localEchoEnabled(false), scrollToBottom(false)
 {
     //Maximum Block Count
     document()->setMaximumBlockCount(2000);
@@ -126,8 +126,14 @@ void Console::showContextMenu(QPoint pt)
 
 void Console::showDataOnTextEdit(const QByteArray &data)
 {
+    if (!scrollToBottom) {
+        saveCurser();
+    }
     moveCurserToEnd();
     insertPlainText(QString(data));
+    if (!scrollToBottom) {
+        restoreCurser();
+    }
 
     if (scrollToBottom) {
         QScrollBar *bar = verticalScrollBar();
@@ -142,6 +148,11 @@ void Console::setLocalEchoEnabled(bool set)
 void Console::setScrollToBottom(bool set)
 {
     scrollToBottom = set;
+    qDebug() << "Console::setScrollToBottom: " <<set;
+}
+bool Console::getScrollToBottom()
+{
+    return scrollToBottom;
 }
 
 void Console::setTheme(QString sTheme)
@@ -159,16 +170,28 @@ void Console::setTheme(QString sTheme)
     setPalette(p);
 
 }
+
 void Console::moveCurserToEnd()
 {
-    QTextCursor newCursor = QTextCursor(this->document());
-    newCursor.movePosition(QTextCursor::End);
-    setTextCursor(newCursor);
+    moveCursor(QTextCursor::End);
+}
+void Console::saveCurser()
+{
+    prev_cursor = this->textCursor();
+}
+QTextCursor Console::getOldCurser()
+{
+    return prev_cursor;
+}
+void Console::restoreCurser()
+{
+    setTextCursor(prev_cursor);
 }
 
 void Console::keyPressEvent(QKeyEvent *e)
 {
     if(e->type() == QKeyEvent::KeyPress) {
+        //TODO: do we need to scroll to bottom?
         QByteArray test;
         QByteArray ba;
         /*
