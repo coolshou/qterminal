@@ -316,6 +316,7 @@ bool SettingsDialog::updateSettings()
     //font fontFamily setting
     currentSettings.fontFamily = ui->DemoPlainTextEdit->font().family();
     currentSettings.fontSize = ui->FontSizeSpinBox->value();
+    //qDebug() << "currentSettings.fontSize:" <<currentSettings.fontSize;
     currentSettings.scrollToBottom = ui->scrollToBottomCheckBox->isChecked();
     //Log
     currentSettings.bLogEnable = ui->LogEnableGroupBox->isChecked();
@@ -341,6 +342,7 @@ void SettingsDialog::setSettings(QString gname)
 void SettingsDialog::setSettings(QString gname, QSettings *settings)
 {
     settings->beginGroup(gname);
+    //qDebug() << "gname:" << gname;
     ui->serialPortInfoListBox->setCurrentText(settings->value("name").toString());
     ui->baudRateBox->setCurrentText(settings->value("baudRate").toString());
     ui->dataBitsBox->setCurrentText(settings->value("dataBits").toString());
@@ -349,12 +351,21 @@ void SettingsDialog::setSettings(QString gname, QSettings *settings)
     ui->flowControlBox->setCurrentText(settings->value("flowControl").toString());
     ui->localEchoCheckBox->setChecked(settings->value("localEchoEnabled").toBool());
     //console setting
-    ui->maxBlockCountSpinBox->setValue(settings->value("maxBlockCount").toInt());
+    int iMaxBlockCount=settings->value("maxBlockCount").toInt();
+    if (iMaxBlockCount==0) {
+        iMaxBlockCount=2000;
+    }
+    ui->maxBlockCountSpinBox->setValue(iMaxBlockCount);
     ui->BaseColorComboBox->setCurrentText(settings->value("baseColor").toString());
     ui->FontColorComboBox->setCurrentText(settings->value("fontColor").toString());
     //font family
     ui->fontComboBox->setCurrentText(settings->value("fontFamily").toString());
-    ui->FontSizeSpinBox->setValue(settings->value("fontSize").toInt());
+    //qDebug() << "fontSize: " <<settings->value("fontSize").toInt();
+    int iFontSize=settings->value("fontSize").toInt();
+    if (iFontSize==0) {
+        iFontSize=10;
+    }
+    ui->FontSizeSpinBox->setValue(iFontSize);
     ui->scrollToBottomCheckBox->setChecked(settings->value("scrollToBottom").toBool());
     //Log
     ui->LogEnableGroupBox->setChecked(settings->value("logEnable").toBool());
