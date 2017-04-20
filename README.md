@@ -9,6 +9,7 @@ qt base virtual terminal emulator for serial communications
 # build
 ```
   > git clone https://github.com/coolshou/qtvt
+  > cd qtvt
   > qmake
   > make
 ```
