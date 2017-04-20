@@ -148,7 +148,6 @@ void Console::setLocalEchoEnabled(bool set)
 void Console::setScrollToBottom(bool set)
 {
     scrollToBottom = set;
-    qDebug() << "Console::setScrollToBottom: " <<set;
 }
 bool Console::getScrollToBottom()
 {
