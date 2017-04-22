@@ -25,7 +25,9 @@ SOURCES += \
     src/settingsdialog.cpp \
     src/termsession.cpp \
     src/updatedialog.cpp \
-    src/optionsdialog.cpp
+    src/optionsdialog.cpp \
+    src/script/scriptEngine.cpp \
+    src/script/scriptThread.cpp
 
 HEADERS += \
     src/console.h \
@@ -34,7 +36,9 @@ HEADERS += \
     src/termsession.h \
     src/const.h \
     src/updatedialog.h \
-    src/optionsdialog.h
+    src/optionsdialog.h \
+    src/script/scriptEngine.h \
+    src/script/scriptThread.h
 
 FORMS += \
     src/mainwindow.ui \
