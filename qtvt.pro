@@ -10,6 +10,7 @@ greaterThan(QT_MAJOR_VERSION, 4) {
 } else {
     include($$QTSERIALPORT_PROJECT_ROOT/src/serialport/qt4support/serialport.prf)
 }
+QT += script
 
 CONFIG += c++11
 
