@@ -26,5 +26,6 @@
         <file>images/scrollbottom.png</file>
         <file>images/macroadd.png</file>
         <file>images/macrostart.png</file>
+        <file>images/macrostop.png</file>
     </qresource>
 </RCC>
