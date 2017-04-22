@@ -24,5 +24,6 @@
         <file>images/update.png</file>
         <file>images/Donate.png</file>
         <file>images/scrollbottom.png</file>
+        <file>images/macroadd.png</file>
     </qresource>
 </RCC>
