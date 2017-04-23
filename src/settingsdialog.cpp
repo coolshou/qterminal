@@ -114,7 +114,12 @@ void SettingsDialog::setDefaultSetting()
     //qDebug() << "setDefaultSetting: " <<defaultGroupName;
 
 }
-SettingsDialog::Settings SettingsDialog::get_settings()
+/**
+ * Returns the current settings.
+ * @return
+ *      The current settings.
+ */
+Settings SettingsDialog::get_settings()
 {
     return currentSettings;
 }
