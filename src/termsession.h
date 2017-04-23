@@ -13,7 +13,6 @@
 
 #include <QDebug>
 
-//class termsession : public QWidget
 class termsession : public Console
 {
     Q_OBJECT
