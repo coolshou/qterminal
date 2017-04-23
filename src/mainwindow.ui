@@ -7,8 +7,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>556</width>
-    <height>420</height>
+    <width>550</width>
+    <height>414</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -122,8 +122,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>556</width>
-     <height>23</height>
+     <width>550</width>
+     <height>28</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuCalls">
@@ -138,7 +138,15 @@
     <property name="title">
      <string>Tools</string>
     </property>
-    <addaction name="actionMacro"/>
+    <widget class="QMenu" name="menu_Macro">
+     <property name="title">
+      <string>&amp;Macro</string>
+     </property>
+     <addaction name="actionMacroSetup"/>
+     <addaction name="actionMacroStart"/>
+     <addaction name="actionMacroStop"/>
+    </widget>
+    <addaction name="menu_Macro"/>
     <addaction name="separator"/>
     <addaction name="actionOptions"/>
    </widget>
@@ -421,18 +429,6 @@
     <string>Lo&amp;g</string>
    </property>
   </action>
-  <action name="actionMacro">
-   <property name="icon">
-    <iconset resource="../qtvt.qrc">
-     <normaloff>:/images/macro.png</normaloff>:/images/macro.png</iconset>
-   </property>
-   <property name="text">
-    <string>&amp;Macro</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+M</string>
-   </property>
-  </action>
   <action name="actionFind">
    <property name="icon">
     <iconset resource="../qtvt.qrc">
@@ -490,7 +486,58 @@
      <normaloff>:/images/scrollbottom.png</normaloff>:/images/scrollbottom.png</iconset>
    </property>
    <property name="text">
-    <string>Scroll to Bottom</string>
+    <string>&amp;Scroll to Bottom</string>
+   </property>
+  </action>
+  <action name="actionMacroSetup">
+   <property name="icon">
+    <iconset resource="../qtvt.qrc">
+     <normaloff>:/images/macroadd.png</normaloff>:/images/macroadd.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Setup</string>
+   </property>
+   <property name="iconText">
+    <string>Setup Macro</string>
+   </property>
+   <property name="toolTip">
+    <string>Setup Macro</string>
+   </property>
+  </action>
+  <action name="actionMacroStart">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../qtvt.qrc">
+     <normaloff>:/images/macrostart.png</normaloff>:/images/macrostart.png</iconset>
+   </property>
+   <property name="text">
+    <string>S&amp;tart</string>
+   </property>
+   <property name="iconText">
+    <string>Start Macro</string>
+   </property>
+   <property name="toolTip">
+    <string>Start Macro</string>
+   </property>
+  </action>
+  <action name="actionMacroStop">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../qtvt.qrc">
+     <normaloff>:/images/macrostop.png</normaloff>:/images/macrostop.png</iconset>
+   </property>
+   <property name="text">
+    <string>St&amp;op</string>
+   </property>
+   <property name="iconText">
+    <string>Stop Macro</string>
+   </property>
+   <property name="toolTip">
+    <string>Stop Macro</string>
    </property>
   </action>
  </widget>

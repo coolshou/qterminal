@@ -23,10 +23,28 @@ termsession::termsession(QWidget *parent, QString name, QSettings *settings) :
     connect(serial, SIGNAL(baudRateChanged(qint32,QSerialPort::Directions)),
             this, SLOT(slot_baudRateChanged(qint32,QSerialPort::Directions)));
     apply_setting();
+
+    //TODO: script
+    engine = new ScriptEngine();
+    worker = new scriptThread();
+    connect(worker, SIGNAL(started()), this, SLOT(slot_scriptStarted()));
+    connect(worker, SIGNAL(finished()), this, SLOT(slot_scriptFinished()));
+    //engine->setProcessEventsInterval(500);
+    //engine->setAgent(); //TODO: for scriptengine debug?
+    //engine->globalObject().setProperty("qApp", engine->newQObject(qApp));
+    engine->moveToThread(worker);
+/*
+    QMetaObject::invokeMethod(&engine, "evaluate", Q_ARG(QString, "print('Hi!')"));
+    engine.safeEvaluate("print('And hello!')");
+    engine.safeEvaluate("qApp.quit()");
+*/
+
 }
 termsession::~termsession()
 {
     delete serial;
+    worker->deleteLater();
+    delete engine;
 }
 QString termsession::getLogFileName()
 {
@@ -237,6 +255,42 @@ void termsession::closeEvent(QCloseEvent *event)
 {
     event->ignore();
 }
+
+//macro relative functions
+void termsession::macroStart()
+{
+    if (!worker->isRunning()) {
+        worker->reset();
+        worker->start();
+    }
+}
+
+void termsession::macroStop()
+{
+    if (worker->isRunning()) {
+        worker->stop();
+    }
+}
+bool termsession::isMacroRunning()
+{
+    return worker->isRunning();
+}
+
+Qt::HANDLE termsession::getMacroThreadId()
+{
+    return worker->currentThreadId();
+}
+
+void termsession::slot_scriptStarted()
+{
+    emit scriptStarted(worker->currentThreadId());
+}
+
+void termsession::slot_scriptFinished()
+{
+    emit scriptFinished(worker->currentThreadId());
+}
+
 
 /*
 void termsession::slot_onTextChanged()

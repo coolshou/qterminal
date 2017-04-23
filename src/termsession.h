@@ -8,6 +8,8 @@
 //#include <QMutexLocker>
 
 #include "console.h"
+#include "script/scriptEngine.h"
+#include "script/scriptThread.h"
 
 #include <QDebug>
 
@@ -35,10 +37,17 @@ public:
     void openSerialPort();
     void closeSerialPort();
     void writeln(const QByteArray &data);
+    //macro
+    void macroStart();
+    void macroStop();
+    bool isMacroRunning();
+    Qt::HANDLE getMacroThreadId();
 
 signals:
     void sig_updateStatus(QString sMsg);
     void sig_updateActionBtnStatus(bool bStatus);
+    Q_SIGNAL void scriptStarted(Qt::HANDLE);
+    Q_SIGNAL void scriptFinished(Qt::HANDLE);
 
 protected:
     void closeEvent(QCloseEvent *event);
@@ -50,6 +59,10 @@ private slots:
     void slot_handleError(QSerialPort::SerialPortError error);
     void slot_baudRateChanged(qint32 baudRate,QSerialPort::Directions directions);
     //void slot_onTextChanged();
+    //macro
+    void slot_scriptStarted();
+    void slot_scriptFinished();
+
 private:
     QString getCurrentDateTimeString();
 
@@ -61,6 +74,9 @@ private:
     bool bLogEnable;
     QString sLogFilename;
     bool bLogDatetime;
+    //macro
+    ScriptEngine *engine;
+    scriptThread *worker;
 
 };
 

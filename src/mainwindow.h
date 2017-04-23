@@ -49,6 +49,9 @@
 #include "updatedialog.h"
 #include "optionsdialog.h"
 
+#include "script/scriptEngine.h"
+#include "script/scriptThread.h"
+
 QT_BEGIN_NAMESPACE
 
 namespace Ui {
@@ -108,6 +111,12 @@ private slots:
     bool del_termsession(termsession* item);
     bool del_termsessionByName(QString sName);
     void slot_subWindowChanged(QMdiSubWindow* window);
+    //macro: each session may have it's own macro thread!!
+    void macroSetup();
+    void macroStart();
+    void macroStop();
+    Q_SLOT void updateActionMacroBtnStatus(Qt::HANDLE id);
+    void updateActionMacroBtnStatus(bool bStatus);
     //option
     void slot_options();
     void slot_acceptOptionDlg(int result);
@@ -130,6 +139,7 @@ private:
     optionsDialog *optionDlg ;
     QList<termsession *> sessionlist;
     //updatedialog *updateDlg;
+
 };
 
 #endif // MAINWINDOW_H

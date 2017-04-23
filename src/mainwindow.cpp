@@ -76,7 +76,6 @@ MainWindow::~MainWindow()
     delete ui;
     delete settings;
     delete optionDlg;
-
 }
 void MainWindow::closeEvent(QCloseEvent *event)
 {
@@ -153,6 +152,8 @@ void MainWindow::slot_acceptSettingDlg(int result)
             sessionlist.append(termSession);
             connect(termSession, SIGNAL(sig_updateStatus(QString)), this, SLOT(updateStatus(QString)));
             connect(termSession, SIGNAL(sig_updateActionBtnStatus(bool)), this, SLOT(updateActionBtnStatus(bool)));
+            connect(termSession, SIGNAL(scriptStarted(Qt::HANDLE)), this, SLOT(updateActionMacroBtnStatus(Qt::HANDLE)));
+            connect(termSession, SIGNAL(scriptFinished(Qt::HANDLE)), this, SLOT(updateActionMacroBtnStatus(Qt::HANDLE)));
 
             QMdiSubWindow *subwin1 = new QMdiSubWindow();
             //still show close button
@@ -269,8 +270,12 @@ void MainWindow::initToolBar()
     ui->toolBar->addAction(ui->actionDisconnect);
     ui->toolBar->addSeparator();
     ui->toolBar->addAction(ui->actionScrollToBottom);
+    ui->toolBar->addSeparator();
+    ui->toolBar->addAction(ui->actionMacroSetup);
+    ui->toolBar->addAction(ui->actionMacroStart);
+    ui->toolBar->addAction(ui->actionMacroStop);
     //TODO: initToolBar
-    //scroll to bottom
+
 }
 
 void MainWindow::initActionsConnections()
@@ -295,6 +300,9 @@ void MainWindow::initActionsConnections()
     //connect(ui->actionFind, SIGNAL(triggered()), this, SLOT(consoleFind()));
     //TODO: macro
     //connect(ui->actionMacro, SIGNAL(triggered()), this, SLOT(macro()));
+    connect(ui->actionMacroSetup, SIGNAL(triggered()), this, SLOT(macroSetup()));
+    connect(ui->actionMacroStart, SIGNAL(triggered()), this, SLOT(macroStart()));
+    connect(ui->actionMacroStop, SIGNAL(triggered()), this, SLOT(macroStop()));
     //config
     connect(ui->actionOptions, SIGNAL(triggered()), this, SLOT(slot_options()));
 
@@ -540,3 +548,47 @@ void MainWindow::updateMenuSession(bool state)
     //ui->actionEdit_session->setEnabled(state);
     updateActionEditSessionBtnStatus(state);
 }
+
+void MainWindow::macroSetup()
+{
+    //TODO   macroSetup, script file setting....
+    ui->actionMacroStart->setEnabled(true);
+}
+
+void MainWindow::macroStart()
+{
+    QMdiSubWindow *sw = get_currentSubWindow();
+    if ((sw != 0)||(sw != NULL)) {
+        termsession *term = get_termsession(sw->windowTitle());
+        term->macroStart();
+    }
+}
+
+void MainWindow::macroStop()
+{
+    QMdiSubWindow *sw = get_currentSubWindow();
+    if ((sw != 0)||(sw != NULL)) {
+        termsession *term = get_termsession(sw->windowTitle());
+        term->macroStop();
+    }
+}
+void MainWindow::updateActionMacroBtnStatus(Qt::HANDLE id)
+{
+    QMdiSubWindow *sw = get_currentSubWindow();
+    if ((sw != 0)||(sw != NULL)) {
+        termsession *term = get_termsession(sw->windowTitle());
+        if (term->getMacroThreadId() == id) {
+            updateActionMacroBtnStatus(term->isMacroRunning());
+        }
+    }
+}
+/*
+ * when macro is running set bStatus = true
+*/
+void MainWindow::updateActionMacroBtnStatus(bool bStatus)
+{
+    ui->actionMacroSetup->setEnabled(!bStatus);
+    ui->actionMacroStart->setEnabled(!bStatus);
+    ui->actionMacroStop->setEnabled(bStatus);
+}
+
