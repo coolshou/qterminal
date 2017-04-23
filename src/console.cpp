@@ -346,7 +346,7 @@ void Console::wheelEvent(QWheelEvent *event)
         } else {
             zoomOut();
         }
-        qDebug() << "font pointsize: " << this->font().pointSize();
+        //qDebug() << "font pointsize: " << this->font().pointSize();
         emit fontSizeChanged(this->font().pointSize());
     }
 
