@@ -327,6 +327,32 @@ void Console::mouseDoubleClickEvent(QMouseEvent *e)
     }
 }
 
+/**
+ * Use Ctrl + mouse wheel to increase/decrease font size in consoles.
+ *
+ * @param event
+ *      The wheel event.
+ */
+void Console::wheelEvent(QWheelEvent *event)
+{
+    if (event->modifiers() == Qt::ControlModifier)
+    {
+        QWheelEvent *wheel = static_cast<QWheelEvent*>(event);
+        if(wheel->delta() > 0)
+        {
+            //TODO: font size
+            //this->font().pointSize()
+            zoomIn();
+        } else {
+            zoomOut();
+        }
+        qDebug() << "font pointsize: " << this->font().pointSize();
+        emit fontSizeChanged(this->font().pointSize());
+    }
+
+    //Forward event to parent for normal scrolling.
+    QPlainTextEdit::wheelEvent(event);
+}
 //replace by showContextMenu
 /*
 void Console::contextMenuEvent(QContextMenuEvent *e)

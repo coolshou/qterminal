@@ -59,6 +59,7 @@ public:
 
 signals:
     void sig_DataReady(const QByteArray &data);
+    Q_SIGNAL void fontSizeChanged(int size);
 
 protected:
     virtual void keyPressEvent(QKeyEvent *e);
@@ -66,6 +67,8 @@ protected:
     virtual void mouseReleaseEvent(QMouseEvent *e);
     virtual void mouseMoveEvent(QMouseEvent *e);
     virtual void mouseDoubleClickEvent(QMouseEvent *e);
+    ///The user scrolled within console.
+    void wheelEvent(QWheelEvent *event);
     //virtual void contextMenuEvent(QContextMenuEvent *e);
 
 private slots:
