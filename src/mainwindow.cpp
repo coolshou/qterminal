@@ -154,6 +154,7 @@ void MainWindow::slot_acceptSettingDlg(int result)
             connect(termSession, SIGNAL(sig_updateActionBtnStatus(bool)), this, SLOT(updateActionBtnStatus(bool)));
             connect(termSession, SIGNAL(scriptStarted(Qt::HANDLE)), this, SLOT(updateActionMacroBtnStatus(Qt::HANDLE)));
             connect(termSession, SIGNAL(scriptFinished(Qt::HANDLE)), this, SLOT(updateActionMacroBtnStatus(Qt::HANDLE)));
+            connect(termSession, SIGNAL(fontSizeChanged(int)), this, SLOT(updateFontSizeSetting(int)));
 
             QMdiSubWindow *subwin1 = new QMdiSubWindow();
             //still show close button
@@ -547,6 +548,17 @@ void MainWindow::updateMenuSession(bool state)
 {
     //ui->actionEdit_session->setEnabled(state);
     updateActionEditSessionBtnStatus(state);
+}
+void MainWindow::updateFontSizeSetting(int size)
+{
+    QMdiSubWindow *sw = get_currentSubWindow();
+    if ((sw != 0)||(sw != NULL)) {
+        termsession *term = get_termsession(sw->windowTitle());
+        //term->setScrollToBottom(!term->getScrollToBottom());
+        settings->beginGroup(term->get_name());
+        settings->setValue("fontSize", term->font().pointSize());
+        settings->endGroup();
+    }
 }
 
 void MainWindow::macroSetup()

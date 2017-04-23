@@ -71,15 +71,13 @@ public:
     ~MainWindow();
 
     QStringList getUsedSerial();
+    Q_SLOT void updateStatus(QString sMsg);
+    Q_SLOT void updateActionBtnStatus(bool bStatus);
+    Q_SLOT void updateActionEditSessionBtnStatus(bool bStatus);
+    Q_SLOT int get_session_num();
 
 protected:
     void closeEvent(QCloseEvent *event);
-
-public slots:
-    void updateStatus(QString sMsg);
-    void updateActionBtnStatus(bool bStatus);
-    void updateActionEditSessionBtnStatus(bool bStatus);
-    int get_session_num();
 
 private slots:
     void openSerialPort();
@@ -131,6 +129,7 @@ private:
     void updateMenuSession(bool state);
     //void updateActionStatus(bool state);
     void closeSession(QString sName);
+    Q_SLOT void updateFontSizeSetting(int size);
 
 private:
     Ui::MainWindow *ui;
