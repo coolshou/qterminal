@@ -1,15 +1,21 @@
 Issue:
 
-TODO:
-1. send ctrl+c (break?)
-2. close session problem?
-3. script (macro)
-4. filter to get/trigger event
-5. console left/right/up/down arrow
-6. line to send history
-7. mouse wheel to zoom in/out font size
 
+
+TODO:
+1. close session problem?
+2. script (macro)
+3. filter to get/trigger event
+4. console backspace/left/right/up/down arrow key
+5. line to send history
+
+
+20170424
+fix:
+    1. paste did not send text to serial
 
 finish:
 1. line to send
 2. log to file
+3. send ctrl+c (break)
+4. ctrl + mouse wheel to zoom in/out font size

@@ -1,4 +1,10 @@
-qtvt (2017.4.13.0-1) UNRELEASED; urgency=medium
+qtvt (2017.4.24.0-1) UNRELEASED; urgency=medium
+
+  * fix paste did not send text to serial
+
+ -- jimmy <jimmy@jimmy-alpha>  Mon, 24 Apr 2017 15:26:10 +0800
+
+qtvt (2017.4.13.0-1) unstable; urgency=medium
 
   * new release
 
