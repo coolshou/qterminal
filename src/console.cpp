@@ -38,6 +38,9 @@
 #include <QTextCursor>
 #include <QDebug>
 
+#include <QClipboard>
+#include <QGuiApplication>
+
 Console::Console(QWidget *parent)
     : QPlainTextEdit(parent)
     , localEchoEnabled(false), scrollToBottom(false)
@@ -67,7 +70,7 @@ void Console::createActions()
 
     pasteAct = new QAction(QIcon(":/images/paste.png"), tr("Paste"), this);
     //pasteAct->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_V));
-    connect(pasteAct, SIGNAL(triggered()), this, SLOT(doPaste()));
+    connect(pasteAct, SIGNAL(triggered()), this, SLOT(paste()));
 
     clearAct = new QAction(QIcon(":/images/clear.png"), tr("Clear"), this);
     //TODO: clearAct->setShortcut
@@ -79,10 +82,13 @@ void Console::createActions()
     //selectAllAct->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_A));
     connect(selectAllAct, SIGNAL(triggered()), this, SLOT(selectAll()));
 }
-void Console::doPaste()
+void Console::paste()
 {
     this->moveCurserToEnd();
-    this->paste();
+    QClipboard *p_Clipboard =  QGuiApplication::clipboard();
+    //qDebug() << "doPaste: " << p_Clipboard->text(QClipboard::Clipboard);
+    //this->paste(); //this will not send text to serial!!
+    emit sig_DataReady(p_Clipboard->text(QClipboard::Clipboard).toLocal8Bit());
 }
 
 void Console::updateCopyAction(bool yes)
@@ -130,6 +136,7 @@ void Console::showDataOnTextEdit(const QByteArray &data)
         saveCurser();
     }
     moveCurserToEnd();
+    //TODO: not show special key such as backspace...
     insertPlainText(QString(data));
     if (!scrollToBottom) {
         restoreCurser();
@@ -188,6 +195,7 @@ void Console::restoreCurser()
 
 void Console::keyPressEvent(QKeyEvent *e)
 {
+    //qDebug() << "keyPressEvent:" << e->type();
     if(e->type() == QKeyEvent::KeyPress) {
         //when we press any key do scroll to bottom
         this->moveCurserToEnd();
@@ -199,13 +207,26 @@ void Console::keyPressEvent(QKeyEvent *e)
             qDebug() << "CTRL-A Key pressed" << keyEvent->key();
             return true;
         }*/
+        //TODO: shift + insert = paste clipboard data
+        //(if selected text, will copy selected text and paste)
+        //
         if(e->matches(QKeySequence::Copy)) {
-            //qDebug()<< "TODO: CTRL+C press";
+            //send CTRL+C";
             QString test="\x03";
             emit sig_DataReady(test.toLocal8Bit());
         } else {
+            //qDebug() << "key:" << e->key();
             switch (e->key()) {
             //TODO: backspace, delete
+            /*
+            case Qt::Key_Return:
+                qDebug() << "key Return";
+                ba.resize(2);
+                ba[0] = 0x0d; //CR (Carriage Return) \r 13=0x0d
+                ba[1] = 0x0a; //LF (Line Feed, or new line). \n 10=0x0a
+                emit sig_DataReady(ba);
+                break;
+                */
             case Qt::Key_Backspace:
                 //test="\x08"; //Send an ASCII backspace character (0x08).
                 ba.resize(1);
@@ -283,7 +304,7 @@ void Console::mousePressEvent(QMouseEvent *e)
     if (e->buttons() & Qt::MiddleButton)
     {
         //TODO: when some text selected, copy first
-        doPaste();
+        paste();
     }
     QPlainTextEdit::mousePressEvent(e);
 }

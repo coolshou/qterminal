@@ -56,6 +56,7 @@ public:
     void setLogDatetime(bool set);
     void setTheme(QString sTheme);
     //void setMaximumBlockCount();
+    void paste();
 
 signals:
     void sig_DataReady(const QByteArray &data);
@@ -74,7 +75,7 @@ protected:
 private slots:
     void showContextMenu(QPoint pt);
     void updateCopyAction(bool yes);
-    void doPaste();
+
 
 private:
     void createRightMenu();
