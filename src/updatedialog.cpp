@@ -135,8 +135,10 @@ void updatedialog::httpFinished()
     //QString strJson(jsonDoc.toJson(QJsonDocument::Compact));
     //qDebug()<<strJson.toStdString().data();
     qDebug() << "TODO: getUpdate";
-    qDebug() << "CpuArch: " << QSysInfo::currentCpuArchitecture();
-    qDebug() << "productType:" << QSysInfo::productType();
+    QString cpuArch = QSysInfo::currentCpuArchitecture();
+    qDebug() << "CpuArch: " << cpuArch;
+    QString productType = QSysInfo::productType();
+    qDebug() << "productType:" << productType;
     qDebug() << "productVersion:" << QSysInfo::productVersion();
 
     QJsonObject json_obj=jsonDoc.object();
@@ -151,15 +153,30 @@ void updatedialog::httpFinished()
         QJsonArray assets_arr=json_obj["assets"].toArray();
         for(int i=0; i<assets_arr.size(); i++){
             QJsonObject assets_obj=assets_arr[i].toObject();
-            //TODO: check name-> platform file (deb, amd64 ...)
-            qDebug() <<"assets name:" << assets_obj["name"].toString();
-            qDebug() <<"assets browser_download_url:" << assets_obj["browser_download_url"].toString();
-            qDebug() <<"assets size:" << assets_obj["size"].toInt();
+
+            //qDebug() <<"assets name:" << assets_obj["name"].toString();
+            //qDebug() <<"assets browser_download_url:" << assets_obj["browser_download_url"].toString();
+            //qDebug() <<"assets size:" << assets_obj["size"].toInt();
 
             latestDLFilename = assets_obj["name"].toString();
             latestDLUrl = assets_obj["browser_download_url"].toString();
             latestDLSize = assets_obj["size"].toDouble();
-
+            //TODO: check name-> platform file (deb, amd64 ...)
+            if (productType == "ubuntu") {
+                //latestDLFilename
+                QFileInfo info(latestDLFilename);
+                if (info.suffix() == "deb") {
+                    if (cpuArch == "x86_64") {
+                        if (latestDLFilename.contains("amd64")) {
+                            break;
+                        }
+                    } else {
+                        if (latestDLFilename.contains("i386")) {
+                            break;
+                        }
+                    }
+                }
+            }
 
         }
         setStatus(tr("Found New version!"));
