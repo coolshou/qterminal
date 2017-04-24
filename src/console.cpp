@@ -133,11 +133,10 @@ void Console::showDataOnTextEdit(const QByteArray &data)
     insertPlainText(QString(data));
     if (!scrollToBottom) {
         restoreCurser();
-    }
-
-    if (scrollToBottom) {
+    } else {
         QScrollBar *bar = verticalScrollBar();
         bar->setValue(bar->maximum());
+        this->moveCurserToEnd();
     }
 }
 
@@ -190,7 +189,8 @@ void Console::restoreCurser()
 void Console::keyPressEvent(QKeyEvent *e)
 {
     if(e->type() == QKeyEvent::KeyPress) {
-        //TODO: do we need to scroll to bottom?
+        //when we press any key do scroll to bottom
+        this->moveCurserToEnd();
         QByteArray test;
         QByteArray ba;
         /*
