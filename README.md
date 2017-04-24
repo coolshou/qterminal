@@ -8,13 +8,19 @@ qt base virtual terminal emulator for serial communications
     libqt5serialport5-dev (>=5.5.1)
     qtchooser (/usr/lib/x86_64-linux-gnu/qtchooser/default.conf)
     gdebi (for update use, not finish)
+    devscripts (for debuild)
   
 # build
-    check qt5 as defaule
 ```    
-  > cat /usr/lib/x86_64-linux-gnu/qtchooser/default.conf
-    /usr/lib/x86_64-linux-gnu/qt5/bin
-    /usr/lib/x86_64-linux-gnu
+  # make sure using qt5 as default setting
+  > qtchooser -print-env
+  #if the result does not include qt5, change following setting
+  #on i386
+  > sudo ln -sf /usr/share/qtchooser/qt5-i386-linux-gnu.conf /usr/lib/i386-linux-gnu/qt-default/qtchooser/default.conf
+  #on x86_64 
+  > sudo ln -sf /usr/share/qtchooser/qt5-x86_64-linux-gnu.conf /usr/lib/x86_64-linux-gnu/qt-default/qtchooser/default.conf
+  > sudo ln -sf /usr/share/qtchooser/qt5-x86_64-linux-gnu.conf /usr/lib/x86_64-linux-gnu/qtchooser/default.conf
+
 ```    
 ```
   > git clone https://github.com/coolshou/qtvt
@@ -24,5 +30,5 @@ qt base virtual terminal emulator for serial communications
 ```
 # build deb
 ```
-  > dpkg-buildpackage -b
+  > debuild -b -uc -us
 ```  
