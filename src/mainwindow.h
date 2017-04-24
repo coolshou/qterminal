@@ -123,6 +123,7 @@ private slots:
     void execFile(QString Filename);
 
 private:
+    bool getCheckUpdateSetting();
     void initActionsConnections();
     void initToolBar();
     bool session_exist(QString sName);

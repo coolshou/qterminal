@@ -67,6 +67,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //get_session_num();
     //TODO: restore session/ start minial...
+    //TODO: check for update
 }
 
 
@@ -82,6 +83,14 @@ void MainWindow::closeEvent(QCloseEvent *event)
     //TODO: ask quit?
     savePosSetting();
     event->accept();
+}
+bool MainWindow::getCheckUpdateSetting()
+{
+    bool b;
+    settings->beginGroup("mainwindow");
+    b = settings->value("CheckUpdate").toBool();
+    settings->endGroup();
+    return b;
 }
 
 void MainWindow::savePosSetting()
