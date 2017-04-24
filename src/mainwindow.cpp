@@ -258,6 +258,8 @@ void MainWindow::execFile(QString Filename)
     if (QSysInfo::productType() == "ubuntu") {
         QString file = "gdebi-gtk %1";
         process->startDetached(file.arg(Filename));
+    } else if (QSysInfo::productType() == "windows") {
+        qDebug() << "TODO: support launch windows setup";
     } else {
         qDebug() << "TODO: support to exec file at platform: " << QSysInfo::productType();
     }
@@ -510,7 +512,6 @@ void  MainWindow::updateStatus(QString sMsg)
 
 void MainWindow::updateActionBtnStatus(bool bStatus)
 {
-    ui->actionClose_session->setEnabled(!bStatus);
     ui->actionConnect->setEnabled(bStatus);
     ui->actionDisconnect->setEnabled(!bStatus);
     ui->actionScrollToBottom->setEnabled(!bStatus);
@@ -519,6 +520,8 @@ void MainWindow::updateActionBtnStatus(bool bStatus)
 }
 void MainWindow::updateActionEditSessionBtnStatus(bool bStatus)
 {
+    //qDebug() << "updateActionEditSessionBtnStatus:" << bStatus;
+    ui->actionClose_session->setEnabled(bStatus);
     //current is connect
     ui->actionEdit_session->setEnabled(bStatus);
     ui->actionLogFile->setEnabled(bStatus);

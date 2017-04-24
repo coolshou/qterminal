@@ -145,10 +145,7 @@ void updatedialog::httpFinished()
     QString name=json_obj["name"].toString();
     ui->latestVersion->setText(name);
     if (isLatestVersionExist(name)) {
-        //TODO: record Latest file to be download and install
-        //Windows:
-        //ubuntu:
-        //fedora:...
+        //record Latest file to be download and install
         //assets/name, browser_download_url, size
         QJsonArray assets_arr=json_obj["assets"].toArray();
         for(int i=0; i<assets_arr.size(); i++){
@@ -161,7 +158,6 @@ void updatedialog::httpFinished()
             latestDLFilename = assets_obj["name"].toString();
             latestDLUrl = assets_obj["browser_download_url"].toString();
             latestDLSize = assets_obj["size"].toDouble();
-            //TODO: check name-> platform file (deb, amd64 ...)
             if (productType == "ubuntu") {
                 //latestDLFilename
                 QFileInfo info(latestDLFilename);
@@ -176,6 +172,15 @@ void updatedialog::httpFinished()
                         }
                     }
                 }
+            } else if (productType == "windows") {
+                QFileInfo info(latestDLFilename);
+                if (info.suffix() == "exe") {
+                    //TODO: Windows's setup.exe which content x86/x64 binary
+                    qDebug() << "TODO: support to get windows setup";
+                    break;
+                }
+            } else {
+                qDebug() << "TODO: support platform:" << productType;
             }
 
         }
