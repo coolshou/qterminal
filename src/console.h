@@ -56,7 +56,7 @@ public:
     void setLogDatetime(bool set);
     void setTheme(QString sTheme);
     //void setMaximumBlockCount();
-    void paste();
+    Q_SLOT void paste();
 
 signals:
     void sig_DataReady(const QByteArray &data);
