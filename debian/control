@@ -2,14 +2,14 @@ Source: qtvt
 Section: comm
 Priority: optional
 Maintainer: coolshou <coolshou2060@gmail.com>
-Build-Depends: debhelper (>=9), qt5-qmake (>=5.5.1), qtbase5-dev (>=5.5.1), libqt5serialport5-dev (>=5.5.1)
+Build-Depends: debhelper (>=9), qt5-qmake (>=5.5.1) , qtbase5-dev (>=5.5.1) , libqt5serialport5-dev (>=5.5.1), qtscript5-dev (>=5.5.1)
 Standards-Version: 3.9.6
 Homepage: https://github.com/coolshou/qtvt.git
 Vcs-Git: git://github.com/coolshou/qtvt.git
 Vcs-Browser: github.com/coolshou/qtvt.git
 
 Package: qtvt
-Architecture: any
+Architecture: i386 amd64
 Depends: ${shlibs:Depends}, ${misc:Depends}, gdebi
 Description: qt base virtual terminal emulator for serial communications
  qt base virtual terminal emulator for serial communications
