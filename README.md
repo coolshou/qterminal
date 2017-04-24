@@ -6,7 +6,7 @@ qt base virtual terminal emulator for serial communications
     qt5-qmake (>=5.5.1)
     qtbase5-dev (>=5.5.1)
     libqt5serialport5-dev (>=5.5.1)
-    qtchooser (/usr/lib/x86_64-linux-gnu/qtchooser/default.conf)
+    qtchooser 
     gdebi (for update use, not finish)
     devscripts (for debuild)
   
