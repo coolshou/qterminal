@@ -1,6 +1,10 @@
 # qtvt
 qt base virtual terminal emulator for serial communications
 
+# environment
+    Ubuntu 16.04.2
+    user account should be in dialout group to access /dev/ttyS*, /dev/ttyUSB*
+    
 # requirement
     debhelper (>=9)
     qt5-qmake (>=5.5.1)
