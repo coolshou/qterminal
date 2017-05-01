@@ -34,16 +34,36 @@
 
 #include <QApplication>
 #include <QCoreApplication>
+#include <singleapplication.h>
+#include <QObject>
 #include "mainwindow.h"
 #include "const.h"
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
-    a.setOrganizationName(APP_COMPANY);
-    a.setOrganizationDomain(MYORGDOMAIN);
-    a.setApplicationName(APP_PRODUCT);
+    //QApplication app(argc, argv);
+    SingleApplication app( argc, argv );
+
+    app.setOrganizationName(APP_COMPANY);
+    app.setOrganizationDomain(MYORGDOMAIN);
+    app.setApplicationName(APP_PRODUCT);
     MainWindow w;
+    if (app.isSecondary())
+    {
+        app.sendMessage(app.arguments().join(' ').toUtf8());
+        app.exit(0);
+    } else {
+        //primary instant
+        QObject::connect(&app, &SingleApplication::receivedMessage,
+                        &w,
+                        &MainWindow::receivedMessage );
+        //raise window
+        QObject::connect(&app, &SingleApplication::instanceStarted,
+                        [ &w ]() {
+                            w.raise();
+                            w.activateWindow();
+                        });
+    }
     w.show();
-    return a.exec();
+    return app.exec();
 }

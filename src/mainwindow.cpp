@@ -40,6 +40,9 @@
 #include <QtSerialPort/QSerialPort>
 #include <QDialog>
 #include <QProcess>
+#include <QDesktopServices>
+#include <QNetworkAccessManager>
+
 #include "const.h"
 
 #include <QDebug>
@@ -78,6 +81,13 @@ MainWindow::~MainWindow()
     delete settings;
     delete optionDlg;
 }
+
+void MainWindow::receivedMessage( int instanceId, QByteArray message )
+{
+    qDebug() << "Received message from instance: " << instanceId;
+    qDebug() << "Message Text: " << message;
+}
+
 void MainWindow::closeEvent(QCloseEvent *event)
 {
     //TODO: ask quit?
@@ -249,6 +259,31 @@ void MainWindow::about()
     about.append(QString(" <a href='%1'>Source</a> <br>").arg(MYSOURCEURL));
     QMessageBox::about(this,title,about);
 }
+void MainWindow::donate()
+{
+    //buy url
+    //QUrl myUrl("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=MC8BRK5TEV7UY");
+    //donate url
+    QUrl myUrl("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=JGSAZPUGJZKTC");
+    QDesktopServices::openUrl(myUrl);
+    /*
+    QNetworkAccessManager *manager = new QNetworkAccessManager(this);
+
+    QUrl url("https://www.paypal.com/cgi-bin/webscr");
+    QNetworkRequest request(url);
+
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
+
+    QUrl params;
+    params.addQueryItem("cmd", "_s-xclick");
+    params.addQueryItem("hosted_button_id", "MC8BRK5TEV7UY");
+    // etc
+
+    QObject::connect(manager, SIGNAL(finished(QNetworkReply *)), this, SLOT(donateReplyFinished(QNetworkReply *)));
+
+    manager->post(request, params.encodedQuery());
+    */
+}
 
 void MainWindow::update()
 {
@@ -326,7 +361,7 @@ void MainWindow::initActionsConnections()
     //connect(ui->actionHelp, SIGNAL(triggered()), this, SLOT(about()));
     connect(ui->actionUpdate, SIGNAL(triggered()), this, SLOT(update()));
     //TODO: actionDonate
-    //connect(ui->actionDonate, SIGNAL(triggered()), this, SLOT(update()));
+    connect(ui->actionDonate, SIGNAL(triggered()), this, SLOT(donate()));
     connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(about()));
     connect(ui->actionAboutQt, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
 

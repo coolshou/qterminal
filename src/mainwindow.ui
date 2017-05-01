@@ -123,7 +123,7 @@
      <x>0</x>
      <y>0</y>
      <width>550</width>
-     <height>28</height>
+     <height>29</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuCalls">
@@ -462,7 +462,7 @@
   <action name="actionDonate">
    <property name="icon">
     <iconset resource="../qtvt.qrc">
-     <normaloff>:/images/Donate.png</normaloff>:/images/Donate.png</iconset>
+     <normaloff>:/images/paypal.png</normaloff>:/images/paypal.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Donate</string>

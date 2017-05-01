@@ -70,6 +70,7 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+    Q_SLOT void receivedMessage( int instanceId, QByteArray message );
     QStringList getUsedSerial();
     Q_SLOT void updateStatus(QString sMsg);
     Q_SLOT void updateActionBtnStatus(bool bStatus);
@@ -80,47 +81,48 @@ protected:
     void closeEvent(QCloseEvent *event);
 
 private slots:
-    void openSerialPort();
-    void closeSerialPort();
-    void sendSerialText();
+    Q_SLOT void openSerialPort();
+    Q_SLOT void closeSerialPort();
+    Q_SLOT void sendSerialText();
 
-    void showInputHistory(QString sInput);
+    Q_SLOT void showInputHistory(QString sInput);
 
-    void about();
-    void update();
-    void savePosSetting();
-    void readPosSetting();
-    void slot_acceptSettingDlg(int result);
+    Q_SLOT void about();
+    Q_SLOT void update();
+    Q_SLOT void donate();
+    Q_SLOT void savePosSetting();
+    Q_SLOT void readPosSetting();
+    Q_SLOT void slot_acceptSettingDlg(int result);
 
     //actions
     //void on_action_Pop_Out_triggered();
     //file
-    void add_session();
-    void edit_session();
-    void slot_closeSession();
-    void slot_logToFile();
+    Q_SLOT void add_session();
+    Q_SLOT void edit_session();
+    Q_SLOT void slot_closeSession();
+    Q_SLOT void slot_logToFile();
     //edit
-    void consoleCopy();
-    void consolePaste();
-    void consoleClear();
-    void setScrollToBottom();
-    QMdiSubWindow* get_currentSubWindow();
-    termsession* get_termsession(QString sName);
-    bool del_termsession(termsession* item);
-    bool del_termsessionByName(QString sName);
-    void slot_subWindowChanged(QMdiSubWindow* window);
+    Q_SLOT void consoleCopy();
+    Q_SLOT void consolePaste();
+    Q_SLOT void consoleClear();
+    Q_SLOT void setScrollToBottom();
+    Q_SLOT QMdiSubWindow* get_currentSubWindow();
+    Q_SLOT termsession* get_termsession(QString sName);
+    Q_SLOT bool del_termsession(termsession* item);
+    Q_SLOT bool del_termsessionByName(QString sName);
+    Q_SLOT void slot_subWindowChanged(QMdiSubWindow* window);
     //macro: each session may have it's own macro thread!!
-    void macroSetup();
-    void macroStart();
-    void macroStop();
+    Q_SLOT void macroSetup();
+    Q_SLOT void macroStart();
+    Q_SLOT void macroStop();
     Q_SLOT void updateActionMacroBtnStatus(Qt::HANDLE id);
-    void updateActionMacroBtnStatus(bool bStatus);
+    Q_SLOT void updateActionMacroBtnStatus(bool bStatus);
     //option
-    void slot_options();
-    void slot_acceptOptionDlg(int result);
+    Q_SLOT void slot_options();
+    Q_SLOT void slot_acceptOptionDlg(int result);
 
     //
-    void execFile(QString Filename);
+    Q_SLOT void execFile(QString Filename);
 
 private:
     bool getCheckUpdateSetting();

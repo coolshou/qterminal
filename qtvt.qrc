@@ -27,5 +27,6 @@
         <file>images/macroadd.png</file>
         <file>images/macrostart.png</file>
         <file>images/macrostop.png</file>
+        <file>images/paypal.png</file>
     </qresource>
 </RCC>

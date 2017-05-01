@@ -13,6 +13,7 @@ qt base virtual terminal emulator for serial communications
     qtchooser 
     gdebi (for update use, not finish)
     devscripts (for debuild)
+    https://github.com/coolshou/SingleApplication.git
   
 # build
 ```    
@@ -29,6 +30,7 @@ qt base virtual terminal emulator for serial communications
 ```
   > git clone https://github.com/coolshou/qtvt
   > cd qtvt
+  > git submodules update
   > qmake
   > make
 ```
