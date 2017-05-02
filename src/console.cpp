@@ -45,6 +45,7 @@ Console::Console(QWidget *parent)
     : QPlainTextEdit(parent)
     , localEchoEnabled(false), scrollToBottom(false)
 {
+    this->setLineWrapMode(LineWrapMode::NoWrap);
     //Maximum Block Count
     document()->setMaximumBlockCount(2000);
     setTheme("default");
