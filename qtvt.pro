@@ -12,7 +12,7 @@ greaterThan(QT_MAJOR_VERSION, 4) {
 }
 QT += script
 
-include(singleapplication/singleapplication.pri)
+include(SingleApplication/singleapplication.pri)
 DEFINES += QAPPLICATION_CLASS=QApplication
 
 CONFIG += c++11
