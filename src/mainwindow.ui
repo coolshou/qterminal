@@ -123,7 +123,7 @@
      <x>0</x>
      <y>0</y>
      <width>550</width>
-     <height>29</height>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuCalls">
@@ -141,6 +141,10 @@
     <widget class="QMenu" name="menu_Macro">
      <property name="title">
       <string>&amp;Macro</string>
+     </property>
+     <property name="icon">
+      <iconset resource="../qtvt.qrc">
+       <normaloff>:/images/macro.png</normaloff>:/images/macro.png</iconset>
      </property>
      <addaction name="actionMacroSetup"/>
      <addaction name="actionMacroStart"/>
@@ -490,6 +494,9 @@
    </property>
   </action>
   <action name="actionMacroSetup">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="../qtvt.qrc">
      <normaloff>:/images/macroadd.png</normaloff>:/images/macroadd.png</iconset>
