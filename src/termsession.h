@@ -5,13 +5,15 @@
 #include <QWidget>
 #include <QtSerialPort/QSerialPort>
 #include <QSettings>
-//#include <QMutexLocker>
 
+#include "macro/macroWorker.h"
 #include "console.h"
 #include "script/scriptEngine.h"
 #include "script/scriptThread.h"
 
 #include <QDebug>
+
+#define SUPPORT_SCRIPT 0
 
 class termsession : public Console
 {
@@ -74,9 +76,20 @@ private:
     QString sLogFilename;
     bool bLogDatetime;
     //macro
+    /**
+     * @brief Thread object which will let us manipulate the running thread
+     */
+    QThread *macrothread;
+    /**
+     * @brief Object which contains methods that should be runned in another thread
+     */
+    macroWorker *macroworker;
+
+    //script
+#if SUPPORT_SCRIPT == 1
     ScriptEngine *engine;
     scriptThread *worker;
-
+#endif
 };
 
 #endif // TERMSESSION_H

@@ -8,6 +8,8 @@
 
 #include "const.h"
 
+
+
 termsession::termsession(QWidget *parent, QString name, QSettings *settings) :
     Console(parent)
 {
@@ -24,6 +26,17 @@ termsession::termsession(QWidget *parent, QString name, QSettings *settings) :
             this, SLOT(slot_baudRateChanged(qint32,QSerialPort::Directions)));
     apply_setting();
 
+    //macro:
+    macrothread = new QThread();
+    macroworker = new macroWorker();
+
+    macroworker->moveToThread(macrothread);
+    //connect(macroworker, SIGNAL(valueChanged(QString)), ui->label, SLOT(setText(QString)));
+    connect(macroworker, SIGNAL(workRequested()), macrothread, SLOT(start()));
+    connect(macrothread, SIGNAL(started()), macroworker, SLOT(doWork()));
+    connect(macroworker, SIGNAL(finished()), macrothread, SLOT(quit()), Qt::DirectConnection);
+
+#if SUPPORT_SCRIPT == 1
     //TODO: script
     engine = new ScriptEngine();
     worker = new scriptThread();
@@ -38,13 +51,24 @@ termsession::termsession(QWidget *parent, QString name, QSettings *settings) :
     engine.safeEvaluate("print('And hello!')");
     engine.safeEvaluate("qApp.quit()");
 */
-
+#endif
 }
 termsession::~termsession()
 {
+    //macro
+    macroworker->abort();
+    macrothread->wait();
+    qDebug()<<"Deleting thread and worker in Thread "<<this->QObject::thread()->currentThreadId();
+    //macrothread->deleteLater();
+    delete macrothread;
+    delete macroworker;
+
     delete serial;
+    //script
+#if SUPPORT_SCRIPT == 1
     worker->deleteLater();
     delete engine;
+#endif
 }
 QString termsession::getLogFileName()
 {
@@ -259,36 +283,46 @@ void termsession::closeEvent(QCloseEvent *event)
 //macro relative functions
 void termsession::macroStart()
 {
-    if (!worker->isRunning()) {
-        worker->reset();
-        worker->start();
+    macroStop();
+    macroworker->requestWork();
+/*
+    if (!macrothread->isRunning()) {
+        //macrothread->reset();
+        //macrothread->start();
     }
+    */
 }
 
 void termsession::macroStop()
 {
-    if (worker->isRunning()) {
-        worker->stop();
+    if (macroworker->isRunning()) {
+        // To avoid having two threads running simultaneously, the previous thread is aborted.
+        macroworker->abort();
+        macrothread->wait(); // If the thread is not running, this will immediately return.
     }
 }
 bool termsession::isMacroRunning()
 {
-    return worker->isRunning();
+    return macroworker->isRunning();
 }
 
 Qt::HANDLE termsession::getMacroThreadId()
 {
-    return worker->currentThreadId();
+    if (macroworker->isRunning()) {
+        return macrothread->currentThreadId();
+    } else {
+        return 0;
+    }
 }
 
 void termsession::slot_scriptStarted()
 {
-    emit scriptStarted(worker->currentThreadId());
+    emit scriptStarted(macrothread->currentThreadId());
 }
 
 void termsession::slot_scriptFinished()
 {
-    emit scriptFinished(worker->currentThreadId());
+    emit scriptFinished(macrothread->currentThreadId());
 }
 
 

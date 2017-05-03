@@ -31,7 +31,9 @@ SOURCES += \
     src/updatedialog.cpp \
     src/optionsdialog.cpp \
     src/script/scriptEngine.cpp \
-    src/script/scriptThread.cpp
+    src/script/scriptThread.cpp \
+    src/macro/macroThread.cpp \
+    src/macro/macroWorker.cpp
 
 HEADERS += \
     src/console.h \
@@ -42,7 +44,9 @@ HEADERS += \
     src/updatedialog.h \
     src/optionsdialog.h \
     src/script/scriptEngine.h \
-    src/script/scriptThread.h
+    src/script/scriptThread.h \
+    src/macro/macroThread.h \
+    src/macro/macroWorker.h
 
 FORMS += \
     src/mainwindow.ui \
