@@ -1,7 +1,8 @@
 Issue:
 
 
-
+BUG:
+1. SettingDialog change serial combobox should change all relative setting (console, log...)
 
 TODO:
 1. close session problem?

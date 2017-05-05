@@ -168,6 +168,7 @@ void SettingsDialog::checkCustomDevicePathPolicy(int idx)
     ui->serialPortInfoListBox->setEditable(isCustomPath);
     if (isCustomPath)
         ui->serialPortInfoListBox->clearEditText();
+    //TODO: other relative setting should change too!!
 }
 void SettingsDialog::slot_changeFontSize(int size)
 {
