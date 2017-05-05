@@ -33,7 +33,8 @@ SOURCES += \
     src/script/scriptEngine.cpp \
     src/script/scriptThread.cpp \
     src/macro/macroThread.cpp \
-    src/macro/macroWorker.cpp
+    src/macro/macroWorker.cpp \
+    src/consoletheme.cpp
 
 HEADERS += \
     src/console.h \
@@ -46,7 +47,8 @@ HEADERS += \
     src/script/scriptEngine.h \
     src/script/scriptThread.h \
     src/macro/macroThread.h \
-    src/macro/macroWorker.h
+    src/macro/macroWorker.h \
+    src/consoletheme.h
 
 FORMS += \
     src/mainwindow.ui \
