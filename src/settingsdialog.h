@@ -44,6 +44,8 @@
 #include <QFont>
 #include <QStringList>
 
+#include "consoletheme.h"
+
 QT_USE_NAMESPACE
 
 QT_BEGIN_NAMESPACE
@@ -108,22 +110,24 @@ public:
     void updateUsedSerials(QStringList serials);
 
     void setCurrentTab(int idx);
+    void setEditMode(bool edit);
+    bool isEditMode();
 
 protected:
     //void closeEvent(QCloseEvent event);
     void setDemo();
     void setDefaultSetting();
 
-private slots:
-    void showPortInfo(int idx);
-    void apply();
-    void cancel();
-    void checkCustomBaudRatePolicy(int idx);
-    void checkCustomDevicePathPolicy(int idx);
-    void selectLogFileName();
-    void slot_changeFontSize(int size);
-
 private:
+    Q_SLOT void showPortInfo(int idx);
+    Q_SLOT void apply();
+    Q_SLOT void cancel();
+    Q_SLOT void checkCustomBaudRatePolicy(int idx);
+    Q_SLOT void checkCustomDevicePathPolicy(int idx);
+    Q_SLOT void selectLogFileName();
+    Q_SLOT void slot_changeFontSize(int size);
+    Q_SLOT void changeTheme(QString text);
+
     void fillPortsParameters();
     void fillPortsInfo();
     bool updateSettings();
@@ -131,6 +135,7 @@ private:
 
 private:
     Ui::SettingsDialog *ui;
+    bool editMode;
     Settings currentSettings;
     QIntValidator *intValidator;
     QString defaultGroupName;

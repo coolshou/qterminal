@@ -35,7 +35,10 @@ public:
     QString getLogFileName();
     void logToFile(QByteArray log);
     void logToFile(QString lineToBelogged);
-    void openSerialPort();
+    /*
+     * try open serial port if successful return true else return false
+     */
+    bool openSerialPort();
     void closeSerialPort();
     void writeln(const QByteArray &data);
     //macro

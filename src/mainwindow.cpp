@@ -176,13 +176,16 @@ void MainWindow::slot_acceptSettingDlg(int result)
             connect(termSession, SIGNAL(fontSizeChanged(int)), this, SLOT(updateFontSizeSetting(int)));
 
             QMdiSubWindow *subwin1 = new QMdiSubWindow();
-            //still show close button
+            //still show close button in cascade/tile
+
             //subwin1->setWindowFlags(Qt::Window | Qt::WindowMinMaxButtonsHint);
             subwin1->setWidget(termSession);
             subwin1->setWindowIcon(QIcon(":/images/qtvt.png"));
             //subwin1->setAttribute(Qt::WA_DeleteOnClose, false);
             subwin1->resize(QSize(ui->mdiArea->width(),ui->mdiArea->height()));
             subwin1->setWindowTitle(sName);
+            subwin1->systemMenu()->clear(); //remove mouse right click menu (not support close session tab, TODO)
+            subwin1->systemMenu()->addAction(ui->actionClose_session); //QAction::eventFilter: Ambiguous shortcut overload: Ctrl+W
             ui->mdiArea->addSubWindow(subwin1);
             //still show close button
             //ui->mdiArea->addSubWindow(subwin1, Qt::Window | Qt::WindowMinMaxButtonsHint);
@@ -207,7 +210,7 @@ void MainWindow::openSerialPort()
     qDebug() << "openSerialPort:" << sw->windowTitle();
     termsession *term = get_termsession(sw->windowTitle());
     term->openSerialPort();
-    updateActionEditSessionBtnStatus(false);
+    //updateActionEditSessionBtnStatus(false);
 }
 
 void MainWindow::showInputHistory(QString sInput)
@@ -245,7 +248,7 @@ void MainWindow::closeSerialPort()
     termsession *term = get_termsession(sw->windowTitle());
     if (term->isOpen()) {
         term->closeSerialPort();
-        updateActionEditSessionBtnStatus(true);
+        updateActionEditSessionBtnStatus(false);
     }
 }
 
@@ -480,6 +483,7 @@ void MainWindow::edit_session()
     if ((sw != 0)||(sw != NULL)) {
         //qDebug() << "edit_session: " << sw->windowTitle();
         settingDlg->setSettings(sw->windowTitle(),settings);
+        settingDlg->setEditMode(true);
         add_session();
     }
 }
@@ -554,26 +558,33 @@ void  MainWindow::updateStatus(QString sMsg)
     ui->statusBar->showMessage(sMsg);
 }
 
-void MainWindow::updateActionBtnStatus(bool bStatus)
+/*
+ * bStatus: true : serial is connected/open
+ *          false: serial is not connected/open
+ */
+void MainWindow::updateActionBtnStatus(bool bSerialConnected)
 {
-    ui->actionConnect->setEnabled(bStatus);
-    ui->actionDisconnect->setEnabled(!bStatus);
-    ui->actionScrollToBottom->setEnabled(!bStatus);
+    //qDebug() << "updateActionBtnStatus: " <<bSerialConnected;
+    ui->actionConnect->setEnabled(!bSerialConnected);
+    ui->actionDisconnect->setEnabled(bSerialConnected);
+    ui->actionScrollToBottom->setEnabled(bSerialConnected);
     //ui->actionConfigure->setEnabled(bStatus);
     //updateActionConfigureBtnStatus(bStatus);
 }
 /*
- * bStatus = False : serial port is open
- * bStatus = True : serial port is closed
+ * bStatus = False : no term session
+ * bStatus = True : term session exist
  * */
-void MainWindow::updateActionEditSessionBtnStatus(bool bStatus)
+void MainWindow::updateActionEditSessionBtnStatus(bool bTermSessionExist)
 {
     //qDebug() << "updateActionEditSessionBtnStatus:" << bStatus;
-    ui->actionClose_session->setEnabled(bStatus);
     //current is connect
-    ui->actionEdit_session->setEnabled(bStatus);
-    ui->actionLogFile->setEnabled(bStatus);
-    ui->actionMacroSetup->setEnabled(!bStatus);
+    ui->actionEdit_session->setEnabled(bTermSessionExist);
+    ui->actionClose_session->setEnabled(bTermSessionExist);
+
+
+    ui->actionLogFile->setEnabled(bTermSessionExist);
+    ui->actionMacroSetup->setEnabled(!bTermSessionExist);
 }
 
 void MainWindow::slot_subWindowChanged(QMdiSubWindow* window)
@@ -587,12 +598,11 @@ void MainWindow::slot_subWindowChanged(QMdiSubWindow* window)
         updateStatus(term->get_status());
         //update menu button status
         updateMenuSession(true);
-        updateActionBtnStatus(!term->isOpen());
     }
     else
     {
         updateMenuSession(false);
-        updateActionBtnStatus(true);
+        updateActionBtnStatus(false);
     }
 }
 

@@ -46,11 +46,13 @@ QT_USE_NAMESPACE
 
 static const char blankString[] = QT_TRANSLATE_NOOP("SettingsDialog", "N/A");
 
+
 SettingsDialog::SettingsDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::SettingsDialog)
 {
     ui->setupUi(this);
+    editMode = false;
 
     intValidator = new QIntValidator(0, 4000000, this);
 
@@ -86,7 +88,17 @@ SettingsDialog::~SettingsDialog()
 {
     delete ui;
 }
+void SettingsDialog::setEditMode(bool edit)
+{
+    this->editMode = edit;
+    //if (ui->tabWidget)
+    setCurrentTab(0);
 
+}
+bool SettingsDialog::isEditMode()
+{
+    return this->editMode;
+}
 void SettingsDialog::setCurrentTab(int idx)
 {
     int i;
@@ -102,8 +114,10 @@ void SettingsDialog::setDemo()
 {
     QPalette p = palette();
     //TODO: color theme form settings
-    p.setColor(QPalette::Base, Qt::black);
-    p.setColor(QPalette::Text, Qt::green);
+    qDebug() << "setDemo baseColor: " << ui->BaseColorComboBox->currentText();
+    qDebug() << "setDemo fontColor: " << ui->FontColorComboBox->currentText();
+    p.setColor(QPalette::Base, QColor(ui->BaseColorComboBox->currentText()));
+    p.setColor(QPalette::Text, QColor(ui->FontColorComboBox->currentText()));
     ui->DemoPlainTextEdit->setPalette(p);
     slot_changeFontSize(currentSettings.fontSize);
 }
@@ -175,7 +189,7 @@ void SettingsDialog::slot_changeFontSize(int size)
     QFont f;
     //font family
     f.setFamily(ui->DemoPlainTextEdit->font().family());
-    if (size<=0) {
+    if ((size<=0) || (size >=48)) {
         size = currentSettings.fontSizeDefault;
     }
     if (f.pointSize() != size) {
@@ -207,14 +221,43 @@ void SettingsDialog::selectLogFileName()
 //console color parameters
 void SettingsDialog::fillConsoleParameters()
 {
+    QString c;
+    //colorToString(Qt::black);
     //TODO, theme
+    ui->ThemeComboBox->clear();
+    int i;
+    for (i=0;i< ConsoleTheme::NUM_ConsoleTheme; i++) {
+        qDebug() << i << ": " <<ConsoleThemeName[i];
+        ui->ThemeComboBox->addItem(ConsoleThemeName[i]);
+        qDebug() << "v0: " << QColor(ConsoleThemeValue[i][0]).name();
+        qDebug() << "v1: " << QColor(ConsoleThemeValue[i][1]).name();
+        //font color
+        c =ConsoleThemeValue[i][0];
+        ui->FontColorComboBox->addItem(c, QColor(c));
+        //backgroung color
+        c =ConsoleThemeValue[i][1];
+        ui->BaseColorComboBox->addItem(c, QColor(c));
+    }
+    connect(ui->ThemeComboBox, SIGNAL(currentTextChanged(QString)), this, SLOT(changeTheme(QString)));
+    /*
     //backgroung color
     QColor blackColor = Qt::black;
     ui->BaseColorComboBox->addItem(QStringLiteral("black"), blackColor);
     //font color
     QColor greenColor = Qt::green;
     ui->FontColorComboBox->addItem(QStringLiteral("green"), greenColor);
-
+*/
+}
+void SettingsDialog::changeTheme(QString text)
+{
+    qDebug() << "TODO: Theme:" << text ;
+    if (text.startsWith("Custom")) {
+        ui->BaseColorComboBox->setEnabled(true);
+        ui->FontColorComboBox->setEnabled(true);
+    } else {
+        ui->BaseColorComboBox->setEnabled(false);
+        ui->FontColorComboBox->setEnabled(false);
+    }
 }
 
 void SettingsDialog::fillPortsParameters()
@@ -359,6 +402,8 @@ void SettingsDialog::setSettings(QString gname, QSettings *settings)
     ui->maxBlockCountSpinBox->setValue(iMaxBlockCount);
     ui->BaseColorComboBox->setCurrentText(settings->value("baseColor").toString());
     ui->FontColorComboBox->setCurrentText(settings->value("fontColor").toString());
+    qDebug() << "BaseColorComboBox:" <<ui->BaseColorComboBox->currentText();
+    qDebug() << "FontColorComboBox:" <<ui->FontColorComboBox->currentText();
     //font family
     ui->fontComboBox->setCurrentText(settings->value("fontFamily").toString());
     //qDebug() << "fontSize: " <<settings->value("fontSize").toInt();

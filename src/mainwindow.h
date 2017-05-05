@@ -73,8 +73,8 @@ public:
     Q_SLOT void receivedMessage( int instanceId, QByteArray message );
     QStringList getUsedSerial();
     Q_SLOT void updateStatus(QString sMsg);
-    Q_SLOT void updateActionBtnStatus(bool bStatus);
-    Q_SLOT void updateActionEditSessionBtnStatus(bool bStatus);
+    Q_SLOT void updateActionBtnStatus(bool bSerialConnected);
+    Q_SLOT void updateActionEditSessionBtnStatus(bool bTermSessionExist);
     Q_SLOT int get_session_num();
 
 protected:

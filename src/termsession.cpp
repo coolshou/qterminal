@@ -163,16 +163,16 @@ void termsession::setLogFilename(QString filename)
     sLogFilename = filename;
 }
 
-void termsession::openSerialPort()
+bool termsession::openSerialPort()
 {
+
     apply_setting();
     if (serial->open(QIODevice::ReadWrite)) {
-            emit sig_updateActionBtnStatus(false);
+            emit sig_updateActionBtnStatus(true);
             emit sig_updateStatus(get_status());
+            return true;
     } else {
-        //QMessageBox::critical(this, tr("Error"), serial->errorString());
-        //emit sig_updateStatus(tr("Open error"));
-        emit sig_updateStatus(serial->errorString());
+        return false;
     }
 }
 
@@ -181,7 +181,7 @@ void termsession::closeSerialPort()
     if (isOpen())
         serial->close();
     this->setEnabled(false);
-    emit sig_updateActionBtnStatus(true);
+    emit sig_updateActionBtnStatus(false);
     emit sig_updateStatus(tr("Disconnected"));
 }
 
@@ -223,10 +223,10 @@ void termsession::writeln(const QByteArray &data)
 
 void termsession::slot_handleError(QSerialPort::SerialPortError error)
 {
-    if (error == QSerialPort::ResourceError) {
-        //QMessageBox::critical(this, tr("Critical Error"), serial->errorString());
+    if (error != QSerialPort::NoError) {
+        //qDebug() << "===== error :" << serial->errorString();
+        emit sig_updateActionBtnStatus(false);
         emit sig_updateStatus(serial->errorString());
-        closeSerialPort();
     }
 }
 

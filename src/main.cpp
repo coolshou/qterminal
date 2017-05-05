@@ -34,8 +34,9 @@
 
 #include <QApplication>
 #include <QCoreApplication>
-#include <singleapplication.h>
 #include <QObject>
+#include <SingleApplication/singleapplication.h>
+
 #include "mainwindow.h"
 #include "const.h"
 
