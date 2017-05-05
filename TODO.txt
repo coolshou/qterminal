@@ -2,6 +2,7 @@ Issue:
 
 
 
+
 TODO:
 1. close session problem?
 2. script (macro)
@@ -9,6 +10,10 @@ TODO:
 4. console backspace/left/right/up/down arrow key
 5. line to send history
 
+
+201705~~
+FIX:
+1. when logging, type text in console will log twice
 
 20170424
 fix:

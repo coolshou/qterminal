@@ -206,9 +206,9 @@ void termsession::readDataFromSerial()
 }
 void termsession::writeDataToSerial(const QByteArray &data)
 {
-    if (bLogEnable) {
-        logToFile(data);
-    }
+    //if (bLogEnable) {
+    //    logToFile(data);
+    //}
     if (isOpen()) {
         serial->write(data);
     } else {
