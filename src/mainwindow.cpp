@@ -562,6 +562,10 @@ void MainWindow::updateActionBtnStatus(bool bStatus)
     //ui->actionConfigure->setEnabled(bStatus);
     //updateActionConfigureBtnStatus(bStatus);
 }
+/*
+ * bStatus = False : serial port is open
+ * bStatus = True : serial port is closed
+ * */
 void MainWindow::updateActionEditSessionBtnStatus(bool bStatus)
 {
     //qDebug() << "updateActionEditSessionBtnStatus:" << bStatus;
@@ -569,6 +573,7 @@ void MainWindow::updateActionEditSessionBtnStatus(bool bStatus)
     //current is connect
     ui->actionEdit_session->setEnabled(bStatus);
     ui->actionLogFile->setEnabled(bStatus);
+    ui->actionMacroSetup->setEnabled(!bStatus);
 }
 
 void MainWindow::slot_subWindowChanged(QMdiSubWindow* window)
