@@ -75,6 +75,7 @@ struct Settings
     bool localEchoEnabled;
     //console setting
     int maxBlockCount;
+    QString theme;
     QColor fontColor;
     QString fontFamily;
     int fontSize;

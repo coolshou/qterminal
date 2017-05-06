@@ -147,6 +147,7 @@ void MainWindow::slot_acceptSettingDlg(int result)
         settings->setValue("localEchoEnabled", settingDlg->get_settings().localEchoEnabled);
         //console setting
         settings->setValue("maxBlockCount", settingDlg->get_settings().maxBlockCount);
+        settings->setValue("theme", settingDlg->get_settings().theme);
         settings->setValue("baseColor", settingDlg->get_settings().baseColor);
         settings->setValue("fontColor", settingDlg->get_settings().fontColor);
         settings->setValue("fontFamily", settingDlg->get_settings().fontFamily);

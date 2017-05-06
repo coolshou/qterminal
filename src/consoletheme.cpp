@@ -12,11 +12,11 @@ const QString ConsoleThemeName[] = {
 };
 //font color / base color
 const QString ConsoleThemeValue[][2] = {
-    {"green", "black"},
-    {"white", "black"},
-    {"Yellow", "gray"},
-    {"Navy", "white"},
-    {"white", "black"}
+    {"Green", "Black"},
+    {"White", "Black"},
+    {"Yellow", "Gray"},
+    {"Navy", "White"},
+    {"White", "Black"}
 };
 
 QString colorToString(QColor color) {

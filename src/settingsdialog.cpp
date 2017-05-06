@@ -175,11 +175,13 @@ void SettingsDialog::checkCustomBaudRatePolicy(int idx)
 
 void SettingsDialog::checkCustomDevicePathPolicy(int idx)
 {
+    //qDebug() << "change serial: " << idx;
     bool isCustomPath = !ui->serialPortInfoListBox->itemData(idx).isValid();
     ui->serialPortInfoListBox->setEditable(isCustomPath);
     if (isCustomPath)
         ui->serialPortInfoListBox->clearEditText();
-    //TODO: other relative setting should change too!!
+    //qDebug() << "checkCustomDevicePathPolicy: " << ui->serialPortInfoListBox->currentText();
+    setSettings(ui->serialPortInfoListBox->currentText());
 }
 void SettingsDialog::slot_changeFontSize(int size)
 {
@@ -245,6 +247,7 @@ void SettingsDialog::fillConsoleParameters()
 }
 void SettingsDialog::changeTheme(QString themeName)
 {
+    //qDebug() << "changeTheme:" << themeName;
     if (themeName.startsWith("Custom")) {
         ui->BaseColorComboBox->setEnabled(true);
         ui->FontColorComboBox->setEnabled(true);
@@ -368,8 +371,11 @@ bool SettingsDialog::updateSettings()
     currentSettings.localEchoEnabled = ui->localEchoCheckBox->isChecked();
     //console setting
     currentSettings.maxBlockCount = ui->maxBlockCountSpinBox->value();
-    currentSettings.baseColor = static_cast<QColor>(ui->BaseColorComboBox->currentText());
-    currentSettings.fontColor = static_cast<QColor>(ui->FontColorComboBox->currentText());
+    currentSettings.theme = ui->ThemeComboBox->currentText();
+    //currentSettings.baseColor = static_cast<QColor>(ui->BaseColorComboBox->currentText());
+    //currentSettings.fontColor = static_cast<QColor>(ui->FontColorComboBox->currentText());
+    currentSettings.baseColor = QColor(ui->BaseColorComboBox->currentText()).name();
+    currentSettings.fontColor = QColor(ui->FontColorComboBox->currentText()).name();
     //font fontFamily setting
     currentSettings.fontFamily = ui->DemoPlainTextEdit->font().family();
     currentSettings.fontSize = ui->FontSizeSpinBox->value();
@@ -398,8 +404,9 @@ void SettingsDialog::setSettings(QString gname)
 
 void SettingsDialog::setSettings(QString gname, QSettings *settings)
 {
+    int idx;
     settings->beginGroup(gname);
-    //qDebug() << "gname:" << gname;
+
     ui->serialPortInfoListBox->setCurrentText(settings->value("name").toString());
     ui->baudRateBox->setCurrentText(settings->value("baudRate").toString());
     ui->dataBitsBox->setCurrentText(settings->value("dataBits").toString());
@@ -414,10 +421,38 @@ void SettingsDialog::setSettings(QString gname, QSettings *settings)
         iMaxBlockCount=2000;
     }
     ui->maxBlockCountSpinBox->setValue(iMaxBlockCount);
-    ui->BaseColorComboBox->setCurrentText(settings->value("baseColor").toString());
-    ui->FontColorComboBox->setCurrentText(settings->value("fontColor").toString());
+    //qDebug() << "theme:" << settings->value("theme").toString();
+    idx = ui->ThemeComboBox->findText(settings->value("theme").toString());
+    if (idx==-1) {
+        ui->ThemeComboBox->setCurrentIndex(0);
+    } else {
+        ui->ThemeComboBox->setCurrentIndex(idx);
+    }
+
+    /*
+    qDebug() << "baseColor:" << settings->value("baseColor").toString();
+    idx = ui->BaseColorComboBox->findText(settings->value("baseColor").toString());
+    if (idx==-1) {
+        ui->BaseColorComboBox->setCurrentIndex(0);
+    } else {
+        ui->BaseColorComboBox->setCurrentIndex(idx);
+    }
+    qDebug() << "fontColor:" << settings->value("fontColor").toString();
+    idx = ui->FontColorComboBox->findText(settings->value("fontColor").toString());
+    if (idx==-1) {
+        ui->FontColorComboBox->setCurrentIndex(0);
+    } else {
+        ui->FontColorComboBox->setCurrentIndex(idx);
+    }
+*/
     //font family
-    ui->fontComboBox->setCurrentText(settings->value("fontFamily").toString());
+    idx = ui->fontComboBox->findText(settings->value("fontFamily").toString());
+    if (idx==-1) {
+        //TODO: default font?
+        ui->fontComboBox->setCurrentIndex(0);
+    } else {
+        ui->fontComboBox->setCurrentIndex(idx);
+    }
     //qDebug() << "fontSize: " <<settings->value("fontSize").toInt();
     int iFontSize=settings->value("fontSize").toInt();
     if (iFontSize==0) {
