@@ -9,6 +9,9 @@
 enum ConsoleTheme
 {
     Green,
+    White,
+    Yellow,
+    Navy,
     Custom,
     NUM_ConsoleTheme
 };

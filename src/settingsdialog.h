@@ -126,7 +126,9 @@ private:
     Q_SLOT void checkCustomDevicePathPolicy(int idx);
     Q_SLOT void selectLogFileName();
     Q_SLOT void slot_changeFontSize(int size);
-    Q_SLOT void changeTheme(QString text);
+    Q_SLOT void changeTheme(QString themeName);
+    Q_SLOT void changeBaseColor(QString color);
+    Q_SLOT void changeFontColor(QString color);
 
     void fillPortsParameters();
     void fillPortsInfo();

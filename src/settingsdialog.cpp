@@ -113,9 +113,6 @@ void SettingsDialog::setCurrentTab(int idx)
 void SettingsDialog::setDemo()
 {
     QPalette p = palette();
-    //TODO: color theme form settings
-    qDebug() << "setDemo baseColor: " << ui->BaseColorComboBox->currentText();
-    qDebug() << "setDemo fontColor: " << ui->FontColorComboBox->currentText();
     p.setColor(QPalette::Base, QColor(ui->BaseColorComboBox->currentText()));
     p.setColor(QPalette::Text, QColor(ui->FontColorComboBox->currentText()));
     ui->DemoPlainTextEdit->setPalette(p);
@@ -222,47 +219,63 @@ void SettingsDialog::selectLogFileName()
 void SettingsDialog::fillConsoleParameters()
 {
     QString c;
-    //colorToString(Qt::black);
-    //TODO, theme
     ui->ThemeComboBox->clear();
     int i;
     for (i=0;i< ConsoleTheme::NUM_ConsoleTheme; i++) {
-        qDebug() << i << ": " <<ConsoleThemeName[i];
+        //qDebug() << i << ": " <<ConsoleThemeName[i];
         ui->ThemeComboBox->addItem(ConsoleThemeName[i]);
-        qDebug() << "v0: " << QColor(ConsoleThemeValue[i][0]).name();
-        qDebug() << "v1: " << QColor(ConsoleThemeValue[i][1]).name();
+        //qDebug() << "v0: " << QColor(ConsoleThemeValue[i][0]).name();
+        //qDebug() << "v1: " << QColor(ConsoleThemeValue[i][1]).name();
         //font color
         c =ConsoleThemeValue[i][0];
-        ui->FontColorComboBox->addItem(c, QColor(c));
+        if (ui->FontColorComboBox->findText(c) == -1) {
+            ui->FontColorComboBox->addItem(c, QColor(c));
+        }
         //backgroung color
         c =ConsoleThemeValue[i][1];
-        ui->BaseColorComboBox->addItem(c, QColor(c));
+        if (ui->BaseColorComboBox->findText(c) == -1) {
+            ui->BaseColorComboBox->addItem(c, QColor(c));
+        }
     }
     connect(ui->ThemeComboBox, SIGNAL(currentTextChanged(QString)), this, SLOT(changeTheme(QString)));
-    /*
-    //backgroung color
-    QColor blackColor = Qt::black;
-    ui->BaseColorComboBox->addItem(QStringLiteral("black"), blackColor);
-    //font color
-    QColor greenColor = Qt::green;
-    ui->FontColorComboBox->addItem(QStringLiteral("green"), greenColor);
-*/
+    connect(ui->BaseColorComboBox, SIGNAL(currentTextChanged(QString)), this, SLOT(changeBaseColor(QString)));
+    connect(ui->FontColorComboBox, SIGNAL(currentTextChanged(QString)), this, SLOT(changeFontColor(QString)));
+
+    //connect(ui->fontComboBox, SIGNAL(currentFontChanged(QFont)), this, );
 }
-void SettingsDialog::changeTheme(QString text)
+void SettingsDialog::changeTheme(QString themeName)
 {
-    qDebug() << "TODO: Theme:" << text ;
-    if (text.startsWith("Custom")) {
+    if (themeName.startsWith("Custom")) {
         ui->BaseColorComboBox->setEnabled(true);
         ui->FontColorComboBox->setEnabled(true);
     } else {
         ui->BaseColorComboBox->setEnabled(false);
         ui->FontColorComboBox->setEnabled(false);
+        int idx = ui->ThemeComboBox->findText(themeName);
+        QString fColor = ConsoleThemeValue[idx][0];
+        QString bColor = ConsoleThemeValue[idx][1];
+        ui->FontColorComboBox->setCurrentIndex(ui->FontColorComboBox->findText(fColor));
+        ui->BaseColorComboBox->setCurrentIndex(ui->BaseColorComboBox->findText(bColor));
     }
+}
+void SettingsDialog::changeBaseColor(QString color)
+{
+    QPalette p = palette();
+    p.setColor(QPalette::Base, QColor(color));
+    p.setColor(QPalette::Text, QColor(ui->FontColorComboBox->currentText()));
+    ui->DemoPlainTextEdit->setPalette(p);
+}
+void SettingsDialog::changeFontColor(QString color)
+{
+    QPalette p = palette();
+    p.setColor(QPalette::Base, QColor(ui->BaseColorComboBox->currentText()));
+    p.setColor(QPalette::Text, QColor(color));
+    ui->DemoPlainTextEdit->setPalette(p);
 }
 
 void SettingsDialog::fillPortsParameters()
 {
-    //TODO: all supported baudrate?
+    //TODO: show all supported baudrate?
     ui->baudRateBox->addItem(QStringLiteral("9600"), QSerialPort::Baud4800);
     ui->baudRateBox->addItem(QStringLiteral("9600"), QSerialPort::Baud9600);
     ui->baudRateBox->addItem(QStringLiteral("19200"), QSerialPort::Baud19200);
@@ -394,6 +407,7 @@ void SettingsDialog::setSettings(QString gname, QSettings *settings)
     ui->stopBitsBox->setCurrentText(settings->value("stopBits").toString());
     ui->flowControlBox->setCurrentText(settings->value("flowControl").toString());
     ui->localEchoCheckBox->setChecked(settings->value("localEchoEnabled").toBool());
+
     //console setting
     int iMaxBlockCount=settings->value("maxBlockCount").toInt();
     if (iMaxBlockCount==0) {
@@ -402,8 +416,6 @@ void SettingsDialog::setSettings(QString gname, QSettings *settings)
     ui->maxBlockCountSpinBox->setValue(iMaxBlockCount);
     ui->BaseColorComboBox->setCurrentText(settings->value("baseColor").toString());
     ui->FontColorComboBox->setCurrentText(settings->value("fontColor").toString());
-    qDebug() << "BaseColorComboBox:" <<ui->BaseColorComboBox->currentText();
-    qDebug() << "FontColorComboBox:" <<ui->FontColorComboBox->currentText();
     //font family
     ui->fontComboBox->setCurrentText(settings->value("fontFamily").toString());
     //qDebug() << "fontSize: " <<settings->value("fontSize").toInt();
@@ -413,6 +425,7 @@ void SettingsDialog::setSettings(QString gname, QSettings *settings)
     }
     ui->FontSizeSpinBox->setValue(iFontSize);
     ui->scrollToBottomCheckBox->setChecked(settings->value("scrollToBottom").toBool());
+
     //Log
     ui->LogEnableGroupBox->setChecked(settings->value("logEnable").toBool());
     ui->logFilenameLineEdit->setText(settings->value("logFilename").toString());
