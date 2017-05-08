@@ -304,7 +304,11 @@ void Console::mousePressEvent(QMouseEvent *e)
     }
     if (e->buttons() & Qt::MiddleButton)
     {
-        //TODO: when some text selected, copy first
+        //when some text selected, copy first
+        QString sel = this->textCursor().selectedText();
+        if (!sel.isEmpty()) {
+            QGuiApplication::clipboard()->setText(sel);
+        }
         paste();
     }
     QPlainTextEdit::mousePressEvent(e);
