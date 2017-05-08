@@ -2,7 +2,7 @@ Issue:
 
 
 BUG:
-1. SettingDialog change serial combobox should change all relative setting (console, log...)
+
 
 TODO:
 1. close session problem?
@@ -15,6 +15,10 @@ TODO:
 201705~~
 FIX:
 1. when logging, type text in console will log twice
+2. SettingDialog change serial combobox should change all relative setting (console, log...)
+Add:
+1. theme for console text and backgroung
+
 
 20170424
 fix:
