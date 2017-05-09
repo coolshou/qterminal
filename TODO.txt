@@ -6,7 +6,7 @@ BUG:
 
 TODO:
 1. close session problem?
-2. script (macro)
+2. script (macro) => ttl like script?
 3. filter to get/trigger event
 4. console backspace/left/right/up/down arrow key
 5. line to send history
@@ -16,6 +16,7 @@ TODO:
 FIX:
 1. when logging, type text in console will log twice
 2. SettingDialog change serial combobox should change all relative setting (console, log...)
+3. console color theme
 Add:
 1. theme for console text and backgroung
 
