@@ -10,7 +10,7 @@ TODO:
 3. filter to get/trigger event
 4. console backspace/left/right/up/down arrow key
 5. line to send history
-
+6. start on system start (add ~/.config/autostart/qtvt.desktop)
 
 201705~~
 FIX:
