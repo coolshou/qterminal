@@ -43,6 +43,7 @@
 #include <QSettings>
 #include <QCloseEvent>
 #include <QStringList>
+#include <QProcess>
 
 #include "termsession.h"
 #include "settingsdialog.h"
@@ -60,6 +61,7 @@ class MainWindow;
 
 QT_END_NAMESPACE
 
+
 class SettingsDialog;
 
 class MainWindow : public QMainWindow
@@ -76,11 +78,13 @@ public:
     Q_SLOT void updateActionBtnStatus(bool bSerialConnected);
     Q_SLOT void updateActionEditSessionBtnStatus(bool bTermSessionExist);
     Q_SLOT int get_session_num();
+    void detectSystem();
+    void getAccountName();
 
 protected:
     void closeEvent(QCloseEvent *event);
 
-private slots:
+private:
     Q_SLOT void openSerialPort();
     Q_SLOT void closeSerialPort();
     Q_SLOT void sendSerialText();
@@ -124,7 +128,7 @@ private slots:
     //
     Q_SLOT void execFile(QString Filename);
 
-private:
+
     bool getCheckUpdateSetting();
     void initActionsConnections();
     void initToolBar();
@@ -133,6 +137,7 @@ private:
     //void updateActionStatus(bool state);
     void closeSession(QString sName);
     Q_SLOT void updateFontSizeSetting(int size);
+    Q_SLOT void setAccountName(int code);
 
 private:
     Ui::MainWindow *ui;
@@ -141,7 +146,8 @@ private:
     optionsDialog *optionDlg ;
     QList<termsession *> sessionlist;
     //updatedialog *updateDlg;
-
+    OSInfo m_OSInof;
+    QProcess *process;
 };
 
 #endif // MAINWINDOW_H

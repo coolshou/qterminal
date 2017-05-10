@@ -12,6 +12,8 @@
 #include <QJsonObject>
 #include <QJsonArray>
 
+#include "const.h"
+
 namespace Ui {
 class updatedialog;
 }
@@ -21,7 +23,8 @@ class updatedialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit updatedialog(QWidget *parent = 0);
+    explicit updatedialog(QWidget *parent ,
+                          OSInfo osinfo );
     ~updatedialog();
 signals:
     void doExit();
@@ -49,6 +52,8 @@ private:
 
 private:
     Ui::updatedialog *ui;
+    QString cpuArch;
+    QString productType;
     QUrl url;
     QString downloadDirectory;
     QNetworkAccessManager qnam;

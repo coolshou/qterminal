@@ -39,7 +39,7 @@
 #include <QMessageBox>
 #include <QtSerialPort/QSerialPort>
 #include <QDialog>
-#include <QProcess>
+#include <QDateTime>
 #include <QDesktopServices>
 #include <QNetworkAccessManager>
 
@@ -53,6 +53,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    detectSystem();
+    //qDebug()<< QDateTime::currentDateTime()  << " account:" << m_OSInof.account;
     //setting
     settings = new QSettings();
     readPosSetting();
@@ -71,6 +73,7 @@ MainWindow::MainWindow(QWidget *parent) :
     //get_session_num();
     //TODO: restore session/ start minial...
     //TODO: check for update
+
 }
 
 
@@ -265,33 +268,14 @@ void MainWindow::about()
 }
 void MainWindow::donate()
 {
-    //buy url
-    //QUrl myUrl("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=MC8BRK5TEV7UY");
     //donate url
     QUrl myUrl("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=JGSAZPUGJZKTC");
     QDesktopServices::openUrl(myUrl);
-    /*
-    QNetworkAccessManager *manager = new QNetworkAccessManager(this);
-
-    QUrl url("https://www.paypal.com/cgi-bin/webscr");
-    QNetworkRequest request(url);
-
-    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
-
-    QUrl params;
-    params.addQueryItem("cmd", "_s-xclick");
-    params.addQueryItem("hosted_button_id", "MC8BRK5TEV7UY");
-    // etc
-
-    QObject::connect(manager, SIGNAL(finished(QNetworkReply *)), this, SLOT(donateReplyFinished(QNetworkReply *)));
-
-    manager->post(request, params.encodedQuery());
-    */
 }
 
 void MainWindow::update()
 {
-    updatedialog *updateDlg = new updatedialog(this);
+    updatedialog *updateDlg = new updatedialog(this, m_OSInof);
     connect(updateDlg, SIGNAL(doExit()), this, SLOT(close()));
     connect(updateDlg, SIGNAL(doExec(QString)), this, SLOT(execFile(QString)));
     updateDlg->exec();//.exec();
@@ -619,7 +603,8 @@ void MainWindow::updateFontSizeSetting(int size)
         termsession *term = get_termsession(sw->windowTitle());
         //term->setScrollToBottom(!term->getScrollToBottom());
         settings->beginGroup(term->get_name());
-        settings->setValue("fontSize", term->font().pointSize());
+        //settings->setValue("fontSize", term->font().pointSize());
+        settings->setValue("fontSize", size);
         settings->endGroup();
     }
 }
@@ -666,4 +651,37 @@ void MainWindow::updateActionMacroBtnStatus(bool bStatus)
     ui->actionMacroStart->setEnabled(!bStatus);
     ui->actionMacroStop->setEnabled(bStatus);
 }
-
+/*
+ * detectSystem
+ *  get current OS info/account
+ */
+void MainWindow::detectSystem()
+{
+    m_OSInof.cpuArch = QSysInfo::currentCpuArchitecture();
+    m_OSInof.productType = QSysInfo::productType();
+    m_OSInof.productVersion = QSysInfo::productVersion();
+    getAccountName();
+}
+void MainWindow::getAccountName()
+{
+    #if defined(Q_OS_WIN)
+        char acUserName[MAX_USERNAME];
+        DWORD nUserName = sizeof(acUserName);
+        if (GetUserName(acUserName, &nUserName))
+            qDebug << acUserName;
+        m_OSInof.account = acUserName;
+    #elif defined(Q_OS_LINUX)
+        //This will require some time (120ms?) to finish!!
+        process=new QProcess();
+        connect(process, SIGNAL(finished(int)), this, SLOT(setAccountName(int)));
+        process->start("whoami");
+    #else
+        #warn("Not supported SYSTEM")
+    #endif
+}
+void  MainWindow::setAccountName(int code)
+{
+    m_OSInof.account =  process->readAllStandardOutput().replace("\n", "");
+    //qDebug() << QDateTime::currentDateTime() <<" setAccountName:" << m_OSInof.account << "  size:"<< m_OSInof.account.length();
+    Q_UNUSED(code);
+}

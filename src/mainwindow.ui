@@ -152,6 +152,8 @@
     </widget>
     <addaction name="menu_Macro"/>
     <addaction name="separator"/>
+    <addaction name="actionPing"/>
+    <addaction name="separator"/>
     <addaction name="actionOptions"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
@@ -545,6 +547,11 @@
    </property>
    <property name="toolTip">
     <string>Stop Macro</string>
+   </property>
+  </action>
+  <action name="actionPing">
+   <property name="text">
+    <string>Ping</string>
    </property>
   </action>
  </widget>

@@ -6,17 +6,19 @@
 #include <QDir>
 #include <QFileInfo>
 
-#include "const.h"
 
 #include <QDebug>
 
 static const char defaultFileName[] = "qtvt_release.html";
 
-updatedialog::updatedialog(QWidget *parent) :
+updatedialog::updatedialog(QWidget *parent, OSInfo osinfo):
     QDialog(parent),
     ui(new Ui::updatedialog)
 {
     ui->setupUi(this);
+    cpuArch = osinfo.cpuArch;
+    productType = osinfo.productType;
+
     ui->currentVersion->setText(APP_VERSION);
     ui->latestVersion->setText("checking");
     connect(ui->updateButton, SIGNAL(pressed()), this, SLOT(getUpdate()));
@@ -132,14 +134,12 @@ void updatedialog::httpFinished()
 
     //parser JSON file
     QJsonDocument jsonDoc = loadJson(fi.absoluteFilePath());
-    //QString strJson(jsonDoc.toJson(QJsonDocument::Compact));
-    //qDebug()<<strJson.toStdString().data();
-    qDebug() << "TODO: getUpdate";
-    QString cpuArch = QSysInfo::currentCpuArchitecture();
+
+    //QString cpuArch = QSysInfo::currentCpuArchitecture();
     qDebug() << "CpuArch: " << cpuArch;
-    QString productType = QSysInfo::productType();
+    //QString productType = QSysInfo::productType();
     qDebug() << "productType:" << productType;
-    qDebug() << "productVersion:" << QSysInfo::productVersion();
+    //qDebug() << "productVersion:" << QSysInfo::productVersion();
 
     QJsonObject json_obj=jsonDoc.object();
     QString name=json_obj["name"].toString();
@@ -159,7 +159,6 @@ void updatedialog::httpFinished()
             latestDLUrl = assets_obj["browser_download_url"].toString();
             latestDLSize = assets_obj["size"].toDouble();
             if (productType == "ubuntu") {
-                //latestDLFilename
                 QFileInfo info(latestDLFilename);
                 if (info.suffix() == "deb") {
                     if (cpuArch == "x86_64") {
