@@ -48,18 +48,6 @@ void updatedialog::downloadFile()
     QString fileName = newUrl.fileName();
     if (fileName.isEmpty())
         fileName = defaultFileName;
-//    QString downloadDirectory = QDir::cleanPath(downloadDirectoryLineEdit->text().trimmed());
-//    if (!downloadDirectory.isEmpty() && QFileInfo(downloadDirectory).isDir())
-//        fileName.prepend(downloadDirectory + '/');
-//    if (QFile::exists(fileName)) {
-//        if (QMessageBox::question(this, tr("Overwrite Existing File"),
-//                                  tr("There already exists a file called %1 in "
-//                                     "the current directory. Overwrite?").arg(fileName),
-//                                  QMessageBox::Yes|QMessageBox::No, QMessageBox::No)
-//            == QMessageBox::No)
-//            return;
-//        QFile::remove(fileName);
-//    }
 
     file = openFileForWrite(fileName);
     if (!file)
