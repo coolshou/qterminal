@@ -1,6 +1,3 @@
-Issue:
-
-
 BUG:
 
 
@@ -10,7 +7,16 @@ TODO:
 3. filter to get/trigger event
 4. console backspace/left/right/up/down arrow key
 5. line to send history
-6. start on system start (add ~/.config/autostart/qtvt.desktop)
+6. start on system start (Windows)
+7. start session from command line
+8. start with last opened session
+9. Tool: Ping (use raw socket or command? thread?)
+10.check update on start
+11.updatedialog support Win32
+12.accept serial command from command line (specify to each session)
+13.support telent/ssh session
+14.python binding (selenium test)
+
 
 201705~~
 FIX:
@@ -19,6 +25,7 @@ FIX:
 3. console color theme
 Add:
 1. theme for console text and backgroung
+2. add system trayicon
 
 
 20170424
