@@ -31,6 +31,7 @@ updatedialog::updatedialog(QWidget *parent, OSInfo osinfo, bool autoclose):
 
     ui->AutoCloseCheckBox->setChecked(m_autoclose);
     connect(ui->AutoCloseCheckBox,SIGNAL(stateChanged(int)), this, SLOT(setAutoCloseTimer(int)));
+    ui->AutoCloseLabel->setVisible(false);
 
     autoclosecount = 10;
     autoclosetimer= new QTimer(this);
