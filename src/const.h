@@ -10,6 +10,7 @@
 #define MYSOURCEURL "https://github.com/coolshou/qtvt.git"
 #define MYRELEASEURL "https://api.github.com/repos/coolshou/qtvt/releases/latest"
 
+#define MYPAYPAL "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=JGSAZPUGJZKTC"
 
 #if defined(Q_OS_WIN)
     //Win32

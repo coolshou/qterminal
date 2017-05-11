@@ -73,9 +73,18 @@ MainWindow::MainWindow(QWidget *parent) :
     initActionsConnections();
     initToolBar();
 
+#ifndef QT_NO_SYSTEMTRAYICON
+    createTrayActions();
+    createTrayIcon();
+    trayIcon->show();
+#endif
     //get_session_num();
     //TODO: restore session/ start minial...
-    //TODO: check for update
+
+    if (CheckUpdate) {
+        //TODO: should do it in background?, if there is update then show it!
+        this->update(true);
+    }
 
 }
 
@@ -96,9 +105,19 @@ void MainWindow::receivedMessage( int instanceId, QByteArray message )
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-    //TODO: ask quit?
-    savePosSetting();
-    event->accept();
+    if (trayIcon->isVisible()) {
+        QMessageBox::information(this, tr("Systray"),
+                                 tr("The program will keep running in the "
+                                    "system tray. To terminate the program, "
+                                    "choose <b>Quit</b> in the context menu "
+                                    "of the system tray entry."));
+        hide();
+        event->ignore();
+    } else {
+        //TODO: ask quit?
+        savePosSetting();
+        event->accept();
+    }
 }
 bool MainWindow::getCheckUpdateSetting()
 {
@@ -272,17 +291,21 @@ void MainWindow::about()
 void MainWindow::donate()
 {
     //donate url
-    QUrl myUrl("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=JGSAZPUGJZKTC");
+    QUrl myUrl(MYPAYPAL);
     QDesktopServices::openUrl(myUrl);
 }
 
-void MainWindow::update()
+void MainWindow::update(bool showmode)
 {
     updatedialog *updateDlg = new updatedialog(this, m_OSInof);
     connect(updateDlg, SIGNAL(doExit()), this, SLOT(close()));
     connect(updateDlg, SIGNAL(doExec(QString)), this, SLOT(execFile(QString)));
-    updateDlg->exec();//.exec();
-    delete updateDlg;
+    if (showmode) {
+        updateDlg->show();
+    } else {
+        updateDlg->exec();
+        delete updateDlg;
+    }
 
 }
 void MainWindow::execFile(QString Filename)
@@ -753,4 +776,33 @@ void MainWindow::setAutoStart(bool start)
 #endif
         }
     }
+}
+
+//systray
+void MainWindow::createTrayIcon()
+{
+    trayIconMenu = new QMenu(this);
+    trayIconMenu->addAction(minimizeAction);
+    trayIconMenu->addAction(maximizeAction);
+    trayIconMenu->addAction(restoreAction);
+    trayIconMenu->addSeparator();
+    trayIconMenu->addAction(quitAction);
+
+    trayIcon = new QSystemTrayIcon(this);
+    trayIcon->setIcon(QIcon(":/images/qtvt.png"));
+    trayIcon->setContextMenu(trayIconMenu);
+}
+void MainWindow::createTrayActions()
+{
+    minimizeAction = new QAction(tr("Mi&nimize"), this);
+    connect(minimizeAction, SIGNAL(triggered()), this, SLOT(hide()));
+
+    maximizeAction = new QAction(tr("Ma&ximize"), this);
+    connect(maximizeAction, SIGNAL(triggered()), this, SLOT(showMaximized()));
+
+    restoreAction = new QAction(tr("&Restore"), this);
+    connect(restoreAction, SIGNAL(triggered()), this, SLOT(showNormal()));
+
+    quitAction = new QAction(tr("&Quit"), this);
+    connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
 }

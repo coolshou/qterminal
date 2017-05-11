@@ -44,6 +44,7 @@
 #include <QCloseEvent>
 #include <QStringList>
 #include <QProcess>
+#include <QSystemTrayIcon>
 
 #include "termsession.h"
 #include "settingsdialog.h"
@@ -92,7 +93,7 @@ private:
     Q_SLOT void showInputHistory(QString sInput);
 
     Q_SLOT void about();
-    Q_SLOT void update();
+    Q_SLOT void update(bool showmode=false);
     Q_SLOT void donate();
     Q_SLOT void savePosSetting();
     Q_SLOT void readPosSetting();
@@ -141,8 +142,10 @@ private:
 
     void setAutoStart(bool start);
     void loadOptions();
+    //systray
+    void createTrayIcon();
+    void createTrayActions();
 
-private:
     Ui::MainWindow *ui;
     QSettings *settings;
     SettingsDialog *settingDlg;
@@ -151,6 +154,13 @@ private:
     //updatedialog *updateDlg;
     OSInfo m_OSInof;
     QProcess *process;
+    //systray
+    QSystemTrayIcon *trayIcon;
+    QMenu *trayIconMenu;
+    QAction *minimizeAction;
+    QAction *maximizeAction;
+    QAction *restoreAction;
+    QAction *quitAction;
     //options
     bool StartOnBoot;
     bool StartMinimal;
