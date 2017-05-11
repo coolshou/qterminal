@@ -2,6 +2,7 @@
 #define CONST
 
 #include <QtGlobal>
+#include <QDir>
 
 #define MYORGDOMAIN "coolshou.idv"
 
@@ -9,16 +10,19 @@
 #define MYSOURCEURL "https://github.com/coolshou/qtvt.git"
 #define MYRELEASEURL "https://api.github.com/repos/coolshou/qtvt/releases/latest"
 
+
 #if defined(Q_OS_WIN)
     //Win32
     //#define AUTOSTARTFOLDER "/.config/autostart"
     //#define INSTALLDESKTOPFILE "/usr/share/applications/qtvt.desktop"
+    #error("TODO: setting windows's file of INSTALLDESKTOPFILE...")
 #elif defined(Q_OS_LINUX)
     //Linux
-    #define AUTOSTARTFOLDER "/.config/autostart"
-    #define INSTALLDESKTOPFILE "/usr/share/applications/qtvt.desktop"
+    #define DESKTOPFILE "qtvt.desktop"
+    #define AUTOSTARTFOLDER ".config" + QDir::separator() + "autostart"
+    #define INSTALLDESKTOPFILE  "/usr/share/applications/qtvt.desktop"
 #else
-    #warn("Not supported SYSTEM")
+    #error("Not supported SYSTEM")
 #endif
 
 #include <QSerialPort>

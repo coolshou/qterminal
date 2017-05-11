@@ -139,6 +139,9 @@ private:
     Q_SLOT void updateFontSizeSetting(int size);
     Q_SLOT void setAccountName(int code);
 
+    void setAutoStart(bool start);
+    void loadOptions();
+
 private:
     Ui::MainWindow *ui;
     QSettings *settings;
@@ -148,6 +151,11 @@ private:
     //updatedialog *updateDlg;
     OSInfo m_OSInof;
     QProcess *process;
+    //options
+    bool StartOnBoot;
+    bool StartMinimal;
+    bool RestortSession;
+    bool CheckUpdate;
 };
 
 #endif // MAINWINDOW_H

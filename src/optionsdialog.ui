@@ -24,7 +24,7 @@
       <item>
        <widget class="QCheckBox" name="StartOnBootCheckBox">
         <property name="text">
-         <string>Start On System start (TODO)</string>
+         <string>Start On System start (TODO:windows)</string>
         </property>
        </widget>
       </item>

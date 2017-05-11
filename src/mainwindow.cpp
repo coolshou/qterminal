@@ -42,6 +42,8 @@
 #include <QDateTime>
 #include <QDesktopServices>
 #include <QNetworkAccessManager>
+#include <QStandardPaths>
+#include <QDir>
 
 #include "const.h"
 
@@ -58,6 +60,7 @@ MainWindow::MainWindow(QWidget *parent) :
     //setting
     settings = new QSettings();
     readPosSetting();
+    loadOptions();
     settingDlg = new SettingsDialog();
     connect(settingDlg, SIGNAL(finished(int)), this, SLOT(slot_acceptSettingDlg(int)));
     optionDlg = new optionsDialog();
@@ -360,6 +363,19 @@ void MainWindow::initActionsConnections()
     connect(ui->SendBtn, SIGNAL(pressed()), this, SLOT(sendSerialText()));
 }
 
+//load options from setting file to variable
+void MainWindow::loadOptions()
+{
+    QSettings set;
+    set.beginGroup("Main");
+    StartOnBoot =set.value("StartOnBoot", true).toBool();
+    StartMinimal =set.value("StartMinimal", false).toBool();
+    RestortSession =set.value("RestortSession", true).toBool();
+    CheckUpdate =set.value("CheckUpdate", true).toBool();
+    set.endGroup();
+
+}
+
 //show options Dialog
 void MainWindow::slot_options()
 {
@@ -373,6 +389,9 @@ void MainWindow::slot_acceptOptionDlg(int result)
     if (result == QDialog::Accepted) {
         if (optionDlg) {
             optionDlg->applySettings();
+            loadOptions();
+            //TODO
+            setAutoStart(StartOnBoot);
         }
     }
 }
@@ -679,9 +698,59 @@ void MainWindow::getAccountName()
         #warn("Not supported SYSTEM")
     #endif
 }
-void  MainWindow::setAccountName(int code)
+void MainWindow::setAccountName(int code)
 {
     m_OSInof.account =  process->readAllStandardOutput().replace("\n", "");
     //qDebug() << QDateTime::currentDateTime() <<" setAccountName:" << m_OSInof.account << "  size:"<< m_OSInof.account.length();
     Q_UNUSED(code);
+}
+
+void MainWindow::setAutoStart(bool start)
+{
+
+#if defined(Q_OS_WIN)
+        #warn("TODO supported Windows")
+#elif defined(Q_OS_LINUX)
+    QString autodir = QStandardPaths::writableLocation(QStandardPaths::HomeLocation);
+    autodir = autodir+ QDir::separator() +AUTOSTARTFOLDER;
+    QString target = autodir + QDir::separator() + DESKTOPFILE;
+#else
+        #warn("Not supported SYSTEM")
+#endif
+    qDebug() << "StartOnBoot:" << StartOnBoot << "target:"<< target;
+    if (start) {
+        //setup auto start
+        if (! QFile::exists(target))
+        {
+#if defined(Q_OS_WIN)
+        #error("TODO supported Windows")
+#elif defined(Q_OS_LINUX)
+            qDebug() << "target" << target;
+            if (!QFile::copy(INSTALLDESKTOPFILE, target))
+            {
+                QMessageBox::warning(this,tr("info"),
+                                     tr("copy file from %s to %s fail").arg(INSTALLDESKTOPFILE).arg(target),
+                                     QMessageBox::Ok);
+            }
+#else
+        #error("Not supported SYSTEM")
+#endif
+        }
+    } else {
+        //remove auto start
+        if (QFile::exists(target))
+        {
+#if defined(Q_OS_WIN)
+        #warn("TODO supported Windows")
+#elif defined(Q_OS_LINUX)
+            if (! QFile::remove(target)) {
+                QMessageBox::warning(this,tr("info"),
+                                     tr("Delete file %s fail").arg(target),
+                                     QMessageBox::Ok);
+            }
+#else
+    #error("Not supported SYSTEM")
+#endif
+        }
+    }
 }
