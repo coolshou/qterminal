@@ -297,12 +297,13 @@ void MainWindow::donate()
 
 void MainWindow::update(bool showmode)
 {
-    updatedialog *updateDlg = new updatedialog(this, m_OSInof);
+    updatedialog *updateDlg = new updatedialog(this, m_OSInof, AutoCloseUpdate);
     connect(updateDlg, SIGNAL(doExit()), this, SLOT(close()));
     connect(updateDlg, SIGNAL(doExec(QString)), this, SLOT(execFile(QString)));
     if (showmode) {
         updateDlg->show();
     } else {
+        updateDlg->setAutoClose(false);
         updateDlg->exec();
         delete updateDlg;
     }
@@ -395,6 +396,7 @@ void MainWindow::loadOptions()
     StartMinimal =set.value("StartMinimal", false).toBool();
     RestortSession =set.value("RestortSession", true).toBool();
     CheckUpdate =set.value("CheckUpdate", true).toBool();
+    AutoCloseUpdate = set.value("AutoCloseUpdate", false).toBool();
     set.endGroup();
 
 }

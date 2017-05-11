@@ -5,19 +5,20 @@
 #include <QStandardPaths>
 #include <QDir>
 #include <QFileInfo>
-
+#include <QSettings>
 
 #include <QDebug>
 
 static const char defaultFileName[] = "qtvt_release.html";
 
-updatedialog::updatedialog(QWidget *parent, OSInfo osinfo):
+updatedialog::updatedialog(QWidget *parent, OSInfo osinfo, bool autoclose):
     QDialog(parent),
     ui(new Ui::updatedialog)
 {
     ui->setupUi(this);
     cpuArch = osinfo.cpuArch;
     productType = osinfo.productType;
+    m_autoclose = autoclose;
 
     ui->currentVersion->setText(APP_VERSION);
     ui->latestVersion->setText("checking");
@@ -28,12 +29,61 @@ updatedialog::updatedialog(QWidget *parent, OSInfo osinfo):
     if (downloadDirectory.isEmpty() || !QFileInfo(downloadDirectory).isDir())
         downloadDirectory = QDir::currentPath();
 
+    ui->AutoCloseCheckBox->setChecked(m_autoclose);
+    connect(ui->AutoCloseCheckBox,SIGNAL(stateChanged(int)), this, SLOT(setAutoCloseTimer(int)));
+
+    autoclosecount = 10;
+    autoclosetimer= new QTimer(this);
+    autoclosetimer->setInterval(1000);//1 sec
+    connect(autoclosetimer, SIGNAL(timeout()), this, SLOT(timerHandler()));
+    //autoclosetimer.setSingleShot(true);
+
     downloadFile();
 }
 
 updatedialog::~updatedialog()
 {
     delete ui;
+}
+void updatedialog::timerHandler()
+{
+    autoclosecount--;
+    if (!ui->AutoCloseLabel->isVisible()) {
+        ui->AutoCloseLabel->setVisible(true);
+    }
+    ui->AutoCloseLabel->setText(QString::number(autoclosecount));
+    if (autoclosecount<=0) {
+        autoclosecount=10;
+        autoclosetimer->stop();
+        ui->AutoCloseLabel->setVisible(false);
+        close();
+    }
+}
+void updatedialog::setAutoClose(bool close)
+{
+    m_autoclose = close;
+}
+void updatedialog::setAutoCloseTimer(int state)
+{
+    bool checked;
+    if (state==0) {
+        //no check
+        if (autoclosetimer->isActive()) {
+            autoclosetimer->stop();
+        }
+        checked = false;
+    } else {
+        if (!autoclosetimer->isActive()) {
+            autoclosetimer->start();
+        }
+        checked = true;
+    }
+    ui->AutoCloseLabel->setVisible(checked);
+    autoclosecount = 10;
+    QSettings set;
+    set.beginGroup("Main");
+    set.setValue("AutoCloseUpdate", checked);
+    set.endGroup();
 }
 
 void updatedialog::downloadFile()
@@ -175,8 +225,10 @@ void updatedialog::httpFinished()
         ui->updateButton->setEnabled(true);
     } else {
         setStatus(tr("No new version founded!"));
+        if (m_autoclose) {
+            autoclosetimer->start();
+        }
     }
-
 }
 void updatedialog::httpReadyRead()
 {

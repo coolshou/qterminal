@@ -11,6 +11,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
+#include <QTimer>
 
 #include "const.h"
 
@@ -24,25 +25,28 @@ class updatedialog : public QDialog
 
 public:
     explicit updatedialog(QWidget *parent ,
-                          OSInfo osinfo );
+                          OSInfo osinfo, bool autoclose=false );
     ~updatedialog();
+    void setAutoClose(bool close);
+
 signals:
     void doExit();
     void doExec(QString filename);
 
-private slots:
-    void downloadFile();
-    void httpFinished();
-    void httpReadyRead();
-    void networkReplyProgress(qint64 bytesRead, qint64 totalBytes);
-
-    void getUpdate();
-    void dlError(QNetworkReply::NetworkError err);
-    void dlProgress(qint64 read, qint64 total);
-    void dlFinished();
-    void dlReadyRead();
-
 private:
+    Q_SLOT void downloadFile();
+    Q_SLOT void httpFinished();
+    Q_SLOT void httpReadyRead();
+    Q_SLOT void networkReplyProgress(qint64 bytesRead, qint64 totalBytes);
+
+    Q_SLOT void getUpdate();
+    Q_SLOT void dlError(QNetworkReply::NetworkError err);
+    Q_SLOT void dlProgress(qint64 read, qint64 total);
+    Q_SLOT void dlFinished();
+    Q_SLOT void dlReadyRead();
+    Q_SLOT void timerHandler();
+    Q_SLOT void setAutoCloseTimer(int state);
+
     void startRequest(const QUrl &requestedUrl);
     QFile *openFileForWrite(const QString &fileName);
     bool fileExists(QString path);
@@ -50,7 +54,7 @@ private:
     bool isLatestVersionExist(QString latestVersion);
     void setStatus(QString msg);
 
-private:
+
     Ui::updatedialog *ui;
     QString cpuArch;
     QString productType;
@@ -65,6 +69,9 @@ private:
     qint64 latestDLSize;
     QFile *dlfile;
 
+    bool m_autoclose;
+    QTimer *autoclosetimer;
+    int autoclosecount;
 };
 
 #endif // UPDATEDIALOG_H

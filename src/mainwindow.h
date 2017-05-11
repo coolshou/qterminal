@@ -145,7 +145,7 @@ private:
     //systray
     void createTrayIcon();
     void createTrayActions();
-    void iconActivated(QSystemTrayIcon::ActivationReason reason);
+    Q_SLOT void iconActivated(QSystemTrayIcon::ActivationReason reason);
 
     Ui::MainWindow *ui;
     QSettings *settings;
@@ -167,6 +167,7 @@ private:
     bool StartMinimal;
     bool RestortSession;
     bool CheckUpdate;
+    bool AutoCloseUpdate;
 };
 
 #endif // MAINWINDOW_H
