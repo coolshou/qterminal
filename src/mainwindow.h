@@ -145,6 +145,7 @@ private:
     //systray
     void createTrayIcon();
     void createTrayActions();
+    void iconActivated(QSystemTrayIcon::ActivationReason reason);
 
     Ui::MainWindow *ui;
     QSettings *settings;

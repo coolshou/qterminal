@@ -791,6 +791,9 @@ void MainWindow::createTrayIcon()
     trayIcon = new QSystemTrayIcon(this);
     trayIcon->setIcon(QIcon(":/images/qtvt.png"));
     trayIcon->setContextMenu(trayIconMenu);
+    connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
+            this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
+
 }
 void MainWindow::createTrayActions()
 {
@@ -805,4 +808,20 @@ void MainWindow::createTrayActions()
 
     quitAction = new QAction(tr("&Quit"), this);
     connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
+}
+void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
+{
+    switch (reason) {
+    case QSystemTrayIcon::Trigger:
+        qDebug() << "TODO: QSystemTrayIcon::MiddleClick";
+        break;
+    case QSystemTrayIcon::DoubleClick:
+        qDebug() << "TODO: QSystemTrayIcon::DoubleClick";
+        break;
+    case QSystemTrayIcon::MiddleClick:
+        qDebug() << "TODO: QSystemTrayIcon::MiddleClick";
+        break;
+    default:
+        ;
+    }
 }
