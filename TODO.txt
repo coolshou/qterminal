@@ -11,11 +11,10 @@ TODO:
 7. start session from command line
 8. start with last opened session
 9. Tool: Ping (use raw socket or command? thread?)
-10.check update on start
-11.updatedialog support Win32
-12.accept serial command from command line (specify to each session)
-13.support telent/ssh session
-14.python binding (selenium test)
+11. updatedialog support Win32
+12. accept serial command from command line (specify to each session)
+13. support telnet/ssh session
+14. python binding (selenium test?)
 
 
 201705~~
@@ -26,6 +25,7 @@ FIX:
 Add:
 1. theme for console text and backgroung
 2. add system trayicon
+3. check update on start
 
 
 20170424

@@ -1,34 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Denis Shienkov <denis.shienkov@gmail.com>
-** Copyright (C) 2012 Laszlo Papp <lpapp@kde.org>
-** Contact: http://www.qt-project.org/legal
-**
-** This file is part of the QtSerialPort module of the Qt Toolkit.
-**
-** $QT_BEGIN_LICENSE:LGPL21$
-** Commercial License Usage
-** Licensees holding valid commercial Qt licenses may use this file in
-** accordance with the commercial license agreement provided with the
-** Software or, alternatively, in accordance with the terms contained in
-** a written agreement between you and Digia. For licensing terms and
-** conditions see http://qt.digia.com/licensing. For further information
-** use the contact form at http://qt.digia.com/contact-us.
-**
-** GNU Lesser General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU Lesser
-** General Public License version 2.1 or version 3 as published by the Free
-** Software Foundation and appearing in the file LICENSE.LGPLv21 and
-** LICENSE.LGPLv3 included in the packaging of this file. Please review the
-** following information to ensure the GNU Lesser General Public License
-** requirements will be met: https://www.gnu.org/licenses/lgpl.html and
-** http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html.
-**
-** In addition, as a special exception, Digia gives you certain additional
-** rights. These rights are described in the Digia Qt LGPL Exception
-** version 1.1, included in the file LGPL_EXCEPTION.txt in this package.
-**
-** $QT_END_LICENSE$
+** Copyright (C) 2017 jimmy
 **
 ****************************************************************************/
 
@@ -137,8 +109,47 @@ void Console::showDataOnTextEdit(const QByteArray &data)
         saveCurser();
     }
     moveCurserToEnd();
+    QByteArray d = data;
     //TODO: not show special key such as backspace...
-    insertPlainText(QString(data));
+    qDebug() << "showDataOnTextEdit: " << d;
+    //TODO: remove or format the special keycode like backspace...
+    QByteArray ba;
+    ba.resize(1);
+    ba[0]= 0x08;
+    if (data.contains(ba)) {
+        int idx = data.indexOf(ba);
+        qDebug() << "before:" << data;
+        qDebug() << "showDataOnTextEdit ===== we found 0x08 at: " << idx;
+        d = d.remove(idx,ba.length());
+        qDebug() << "after:" << d;
+    }
+    ba[0]= 0x1b;
+    if (data.contains(ba)) {
+        int idx = data.indexOf(ba);
+        qDebug() << "before:" << data ;
+        int len = data.length() - idx;
+        qDebug() << "len: " << len ;
+        if (len > 1) {
+            /*TODO
+            Erase Down [J
+            Erases the screen from the current line down to the bottom of the screen.
+            */
+            d = d.remove(idx, len);
+            /*
+            Erase Up [1J
+            Erases the screen from the current line up to the top of the screen.
+
+            Erase Screen [2J
+            Erases the screen with the background colour and moves the cursor to home.
+            */
+
+        } else if (len == 1) {
+            qDebug() << "showDataOnTextEdit ===== we found 0x1b (<ESC>) at: " << idx;
+            d = d.remove(idx, len);
+        }
+        qDebug() << "after:" << d;
+    }
+    insertPlainText(QString(d));
     if (!scrollToBottom) {
         restoreCurser();
     } else {
