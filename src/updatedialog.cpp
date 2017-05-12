@@ -31,7 +31,7 @@ updatedialog::updatedialog(QWidget *parent, OSInfo osinfo, bool autoclose):
 
     ui->AutoCloseCheckBox->setChecked(m_autoclose);
     connect(ui->AutoCloseCheckBox,SIGNAL(stateChanged(int)), this, SLOT(setAutoCloseTimer(int)));
-    ui->AutoCloseLabel->setVisible(false);
+    //ui->AutoCloseLabel->setVisible(false);
 
     autoclosecount = 10;
     autoclosetimer= new QTimer(this);
@@ -49,17 +49,20 @@ updatedialog::~updatedialog()
 void updatedialog::timerHandler()
 {
     autoclosecount--;
-    if (!ui->AutoCloseLabel->isVisible()) {
-        ui->AutoCloseLabel->setVisible(true);
-    }
-    ui->AutoCloseLabel->setText(QString::number(autoclosecount));
+    QString s = QString("Close (%1)").arg(QString::number(autoclosecount));
+    setCloseCaption(s);
     if (autoclosecount<=0) {
         autoclosecount=10;
         autoclosetimer->stop();
-        ui->AutoCloseLabel->setVisible(false);
+        setCloseCaption("Close");
         close();
     }
 }
+void updatedialog::setCloseCaption(QString title)
+{
+    ui->buttonBox->button(QDialogButtonBox::Close)->setText(title);
+}
+
 void updatedialog::setAutoClose(bool close)
 {
     m_autoclose = close;
@@ -73,13 +76,13 @@ void updatedialog::setAutoCloseTimer(int state)
             autoclosetimer->stop();
         }
         checked = false;
+        setCloseCaption("Close");
     } else {
         if (!autoclosetimer->isActive()) {
             autoclosetimer->start();
         }
         checked = true;
     }
-    ui->AutoCloseLabel->setVisible(checked);
     autoclosecount = 10;
     QSettings set;
     set.beginGroup("Main");

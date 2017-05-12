@@ -303,7 +303,7 @@ void MainWindow::update(bool showmode)
     if (showmode) {
         updateDlg->show();
     } else {
-        updateDlg->setAutoClose(false);
+        //updateDlg->setAutoClose(false);
         updateDlg->exec();
         delete updateDlg;
     }

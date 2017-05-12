@@ -152,23 +152,7 @@
       <item>
        <widget class="QCheckBox" name="AutoCloseCheckBox">
         <property name="text">
-         <string>Auto close when no new update</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="AutoCloseLabel">
-        <property name="enabled">
-         <bool>true</bool>
-        </property>
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="text">
-         <string>10</string>
+         <string>Auto close when no new update found</string>
         </property>
        </widget>
       </item>

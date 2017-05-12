@@ -53,6 +53,7 @@ private:
     QJsonDocument loadJson(QString fileName);
     bool isLatestVersionExist(QString latestVersion);
     void setStatus(QString msg);
+    void setCloseCaption(QString title);
 
 
     Ui::updatedialog *ui;
