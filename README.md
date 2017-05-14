@@ -11,10 +11,10 @@ qt base virtual terminal emulator for serial communications
     qtbase5-dev (>=5.5.1)
     libqt5serialport5-dev (>=5.5.1)
     qtchooser 
-    gdebi (for update use, not finish)
+    gdebi (for deb update use)
     devscripts (for debuild)
-    https://github.com/coolshou/SingleApplication.git
-  
+    openssl (windows)
+
 # build
 ```    
   # make sure using qt5 as default setting

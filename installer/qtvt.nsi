@@ -2,7 +2,7 @@
 
 ; HM NIS Edit Wizard helper defines
 !define PRODUCT_NAME "qtvt"
-!define PRODUCT_VERSION "2017.5.14.0"
+!define PRODUCT_VERSION "2017.5.14.1"
 !define PRODUCT_PUBLISHER "coolshou"
 !define PRODUCT_WEB_SITE "https://github.com/coolshou/qtvt.git"
 !define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\${PRODUCT_NAME}.exe"
@@ -49,7 +49,7 @@ SetCompressor lzma
 ; MUI end ------
 BrandingText "${PRODUCT_NAME} installer"
 Name "${PRODUCT_NAME} ${PRODUCT_VERSION}"
-OutFile "${PRODUCT_NAME}-Setup.exe"
+OutFile "${PRODUCT_NAME}_${PRODUCT_VERSION}-Setup.exe"
 InstallDir "$PROGRAMFILES\qtvt"
 InstallDirRegKey HKLM "${PRODUCT_DIR_REGKEY}" ""
 ShowInstDetails show
@@ -66,6 +66,7 @@ VIAddVersionKey /LANG=${LANG_ENGLISH} "FileDescription" "${PRODUCT_NAME}"
 VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "${PRODUCT_VERSION}"
 
 !define QTPATH "C:\Qt\5.8\mingw53_32\bin"
+!define QTSSLPATH "C:\Qt\Tools\QtCreator\bin"
 
 Function .onInit
   !insertmacro MUI_LANGDLL_DISPLAY
@@ -91,12 +92,14 @@ Section "MainSection" SEC01
   File "${QTPATH}\Qt5Script.dll"
   File "${QTPATH}\Qt5SerialPort.dll"
   File "${QTPATH}\Qt5Widgets.dll"
+  File "${QTSSLPATH}\libeay32.dll"
+  File "${QTSSLPATH}\ssleay32.dll"
   
 SectionEnd
 
 Section -AdditionalIcons
-  WriteIniStr "$INSTDIR\${PRODUCT_NAME}.url" "InternetShortcut" "URL" "${PRODUCT_WEB_SITE}"
-  CreateShortCut "$SMPROGRAMS\qtvt\Website.lnk" "$INSTDIR\${PRODUCT_NAME}.url"
+  ;WriteIniStr "$INSTDIR\${PRODUCT_NAME}.url" "InternetShortcut" "URL" "${PRODUCT_WEB_SITE}"
+  ;CreateShortCut "$SMPROGRAMS\qtvt\Website.lnk" "$INSTDIR\${PRODUCT_NAME}.url"
   CreateShortCut "$SMPROGRAMS\qtvt\Uninstall.lnk" "$INSTDIR\uninst.exe"
 SectionEnd
 
@@ -114,12 +117,12 @@ SectionEnd
 
 Function un.onUninstSuccess
   HideWindow
-  MessageBox MB_ICONINFORMATION|MB_OK "$(^Name) ¤w¦¨¥\¦a±q§Aªº¹q¸£²¾°£¡C"
+  MessageBox MB_ICONINFORMATION|MB_OK "$(^Name) had successful remove from your computer."
 FunctionEnd
 
 Function un.onInit
 !insertmacro MUI_UNGETLANGUAGE
-  MessageBox MB_ICONQUESTION|MB_YESNO|MB_DEFBUTTON2 "§A½T©w­n§¹¥þ²¾°£ $(^Name) ¡A¨ä¤Î©Ò¦³ªº¤¸¥ó¡H" IDYES +2
+  MessageBox MB_ICONQUESTION|MB_YESNO|MB_DEFBUTTON2 "Are you sure to remove $(^Name) ï¼Œand all it's component?" IDYES +2
   Abort
 FunctionEnd
 
@@ -136,9 +139,11 @@ Section Uninstall
   Delete "$INSTDIR\Qt5SerialPort.dll"
   Delete "$INSTDIR\Qt5Widgets.dll"
   Delete "$INSTDIR\qtvt.exe"
+  Delete "$INSTDIR\libeay32.dll"
+  Delete "$INSTDIR\ssleay32.dll"
 
   Delete "$SMPROGRAMS\qtvt\Uninstall.lnk"
-  Delete "$SMPROGRAMS\qtvt\Website.lnk"
+  ;Delete "$SMPROGRAMS\qtvt\Website.lnk"
   Delete "$DESKTOP\qtvt.lnk"
   Delete "$SMPROGRAMS\qtvt\qtvt.lnk"
 
