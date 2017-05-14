@@ -68,7 +68,13 @@ DISTFILES += \
     debian/copyright \
     debian/rules \
     debian/source/format \
-    TODO.txt
+    TODO.txt \
+    qtvt.rc
+
+win32: {
+RC_FILE+= \
+    qtvt.rc
+}
 
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 DEFINES += APP_COMPANY=\\\"$$QMAKE_TARGET_COMPANY\\\"
