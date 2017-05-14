@@ -14,9 +14,8 @@
 
 #if defined(Q_OS_WIN)
     //Win32
-    //#define AUTOSTARTFOLDER "/.config/autostart"
-    //#define INSTALLDESKTOPFILE "/usr/share/applications/qtvt.desktop"
-    #error("TODO: setting windows's file of INSTALLDESKTOPFILE...")
+    #define MAX_USERNAME 256
+    #define AUTOSTARTFOLDER "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run"
 #elif defined(Q_OS_LINUX)
     //Linux
     #define DESKTOPFILE "qtvt.desktop"

@@ -7,7 +7,6 @@ TODO:
 3. filter to get/trigger event
 4. console backspace/left/right/up/down arrow key
 5. line to send history
-6. start on system start (Windows)
 7. start session from command line
 8. start with last opened session
 9. Tool: Ping (use raw socket or command? thread?)
@@ -26,7 +25,7 @@ Add:
 1. theme for console text and backgroung
 2. add system trayicon
 3. check update on start
-
+4. start on system start
 
 20170424
 fix:
