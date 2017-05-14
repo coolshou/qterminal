@@ -69,7 +69,8 @@ DISTFILES += \
     debian/rules \
     debian/source/format \
     TODO.txt \
-    qtvt.rc
+    qtvt.rc \
+    installer/qtvt.nsi
 
 win32: {
 RC_FILE+= \

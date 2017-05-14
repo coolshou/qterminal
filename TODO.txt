@@ -16,7 +16,7 @@ TODO:
 14. python binding (selenium test?)
 
 
-201705~~
+20170514
 FIX:
 1. when logging, type text in console will log twice
 2. SettingDialog change serial combobox should change all relative setting (console, log...)
