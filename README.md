@@ -30,7 +30,6 @@ qt base virtual terminal emulator for serial communications
 ```
   > git clone --recursive https://github.com/coolshou/qtvt
   > cd qtvt
-  > git submodules update
   > qmake
   > make
 ```
