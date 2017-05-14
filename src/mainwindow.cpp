@@ -16,7 +16,10 @@
 #include <QNetworkAccessManager>
 #include <QStandardPaths>
 #include <QDir>
-
+#if defined(Q_OS_WIN)
+    #include <windef.h>
+    #include <windows.h>
+#endif
 #include "const.h"
 
 #include <QDebug>
@@ -681,11 +684,12 @@ void MainWindow::detectSystem()
 void MainWindow::getAccountName()
 {
     #if defined(Q_OS_WIN)
-        char acUserName[MAX_USERNAME];
+        wchar_t acUserName[MAX_USERNAME];
+        QString username="";
         DWORD nUserName = sizeof(acUserName);
-        if (GetUserName(acUserName, &nUserName))
-            qDebug << acUserName;
-        m_OSInof.account = acUserName;
+        if (GetUserName(acUserName, &nUserName)) {
+            m_OSInof.account = username.fromWCharArray(acUserName);
+        }
     #elif defined(Q_OS_LINUX)
         //This will require some time (120ms?) to finish!!
         process=new QProcess();
@@ -706,7 +710,7 @@ void MainWindow::setAutoStart(bool start)
 {
 
 #if defined(Q_OS_WIN)
-        #warn("TODO supported Windows")
+    QSettings regSettings(AUTOSTARTFOLDER, QSettings::NativeFormat);
 #elif defined(Q_OS_LINUX)
     QString autodir = QStandardPaths::writableLocation(QStandardPaths::HomeLocation);
     autodir = autodir+ QDir::separator() +AUTOSTARTFOLDER;
@@ -714,14 +718,16 @@ void MainWindow::setAutoStart(bool start)
 #else
         #warn("Not supported SYSTEM")
 #endif
-    qDebug() << "StartOnBoot:" << StartOnBoot << "target:"<< target;
+    qDebug() << "StartOnBoot:" << StartOnBoot;
     if (start) {
         //setup auto start
+#if defined(Q_OS_WIN)
+        regSettings.setValue(APP_PRODUCT,
+                           QCoreApplication::applicationFilePath().replace('/', '\\'));
+#elif defined(Q_OS_LINUX)
+        qDebug() << "target:"<< target;
         if (! QFile::exists(target))
         {
-#if defined(Q_OS_WIN)
-        #error("TODO supported Windows")
-#elif defined(Q_OS_LINUX)
             qDebug() << "target" << target;
             if (!QFile::copy(INSTALLDESKTOPFILE, target))
             {
@@ -729,26 +735,27 @@ void MainWindow::setAutoStart(bool start)
                                      tr("copy file from %s to %s fail").arg(INSTALLDESKTOPFILE).arg(target),
                                      QMessageBox::Ok);
             }
+        }
 #else
         #error("Not supported SYSTEM")
 #endif
-        }
+
     } else {
         //remove auto start
+#if defined(Q_OS_WIN)
+        regSettings.remove(APP_PRODUCT);
+#elif defined(Q_OS_LINUX)
         if (QFile::exists(target))
         {
-#if defined(Q_OS_WIN)
-        #warn("TODO supported Windows")
-#elif defined(Q_OS_LINUX)
             if (! QFile::remove(target)) {
-                QMessageBox::warning(this,tr("info"),
-                                     tr("Delete file %s fail").arg(target),
-                                     QMessageBox::Ok);
-            }
+                    QMessageBox::warning(this,tr("info"),
+                                         tr("Delete file %s fail").arg(target),
+                                         QMessageBox::Ok);
+                }
+        }
 #else
     #error("Not supported SYSTEM")
 #endif
-        }
     }
 }
 
