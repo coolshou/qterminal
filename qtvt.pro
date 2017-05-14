@@ -76,6 +76,14 @@ RC_FILE+= \
     qtvt.rc
 }
 
+release: DESTDIR = build/release
+debug:   DESTDIR = build/debug
+
+OBJECTS_DIR = $$DESTDIR/.obj
+MOC_DIR = $$DESTDIR/.moc
+RCC_DIR = $$DESTDIR/.qrc
+UI_DIR = $$DESTDIR/.ui
+
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 DEFINES += APP_COMPANY=\\\"$$QMAKE_TARGET_COMPANY\\\"
 DEFINES += APP_PRODUCT=\\\"$$QMAKE_TARGET_PRODUCT\\\"
