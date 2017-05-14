@@ -216,8 +216,7 @@ void updatedialog::httpFinished()
             } else if (productType == "windows") {
                 QFileInfo info(latestDLFilename);
                 if (info.suffix() == "exe") {
-                    //TODO: Windows's setup.exe which content x86/x64 binary
-                    qDebug() << "TODO: support to get windows setup";
+                    //Windows's setup.exe which content x86/x64 binary
                     break;
                 }
             } else {

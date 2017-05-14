@@ -293,7 +293,7 @@ void MainWindow::execFile(QString Filename)
         QString file = "gdebi-gtk %1";
         process->startDetached(file.arg(Filename));
     } else if (QSysInfo::productType() == "windows") {
-        qDebug() << "TODO: support launch windows setup";
+        process->startDetached(Filename);
     } else {
         qDebug() << "TODO: support to exec file at platform: " << QSysInfo::productType();
     }
