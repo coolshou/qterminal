@@ -65,7 +65,7 @@ VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalCopyright" "c ${PRODUCT_PUBLISHER}"
 VIAddVersionKey /LANG=${LANG_ENGLISH} "FileDescription" "${PRODUCT_NAME}"
 VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "${PRODUCT_VERSION}"
 
-!define QTPATH "C:\Qt\5.8\mingw53_32\bin"
+!define QTPATH "C:\Qt\5.8\mingw53_32"
 !define QTSSLPATH "C:\Qt\Tools\QtCreator\bin"
 
 Function .onInit
@@ -83,17 +83,20 @@ Section "MainSection" SEC01
   #  Var /GLOBAL QTPATH
   #StrCpy $QTPATH "C:\Qt\5.8\mingw53_32\bin"
 
-  File "${QTPATH}\libgcc_s_dw2-1.dll"
-  File "${QTPATH}\libstdc++-6.dll"
-  File "${QTPATH}\libwinpthread-1.dll"
-  File "${QTPATH}\Qt5Core.dll"
-  File "${QTPATH}\Qt5Gui.dll"
-  File "${QTPATH}\Qt5Network.dll"
-  File "${QTPATH}\Qt5Script.dll"
-  File "${QTPATH}\Qt5SerialPort.dll"
-  File "${QTPATH}\Qt5Widgets.dll"
+  File "${QTPATH}\bin\libgcc_s_dw2-1.dll"
+  File "${QTPATH}\bin\libstdc++-6.dll"
+  File "${QTPATH}\bin\libwinpthread-1.dll"
+  File "${QTPATH}\bin\Qt5Core.dll"
+  File "${QTPATH}\bin\Qt5Gui.dll"
+  File "${QTPATH}\bin\Qt5Network.dll"
+  File "${QTPATH}\bin\Qt5Script.dll"
+  File "${QTPATH}\bin\Qt5SerialPort.dll"
+  File "${QTPATH}\bin\Qt5Widgets.dll"
   File "${QTSSLPATH}\libeay32.dll"
   File "${QTSSLPATH}\ssleay32.dll"
+  ;plugins
+  SetOutPath "$INSTDIR\platforms\"
+  File "${QTPATH}\plugins\platforms\qwindows.dll"
   
 SectionEnd
 
@@ -141,6 +144,8 @@ Section Uninstall
   Delete "$INSTDIR\qtvt.exe"
   Delete "$INSTDIR\libeay32.dll"
   Delete "$INSTDIR\ssleay32.dll"
+  ;plugins
+  Delete "$INSTDIR\platforms\qwindows.dll"
 
   Delete "$SMPROGRAMS\qtvt\Uninstall.lnk"
   ;Delete "$SMPROGRAMS\qtvt\Website.lnk"
