@@ -1,0 +1,31 @@
+
+1. install msys64
+msys2-x86_64-20161025.exe
+
+2. Update the package database and core system packages with:
+pacman -Syu
+
+3. If needed, close MSYS2, run it again from Start menu. Update the rest with:
+pacman -Su
+
+4. Use Pacman to install packages
+pacman -S <package>
+
+
+#QT
+pacman -S base-devel git
+
+pacman -Su mingw-w64-i686-make
+pacman -Su mingw-w64-i686-qt5
+
+pacman -Su mingw-w64-x86_64-make
+pacman -Su mingw-w64-x86_64-qt5
+
+pacman -Su mingw-w64-x86_64-qt-creator
+# In virtualbox, the qtcreator will crash because 3D acceleration enabled
+# run qtcreator.exe with -noload Welcome -noload QmlDesigner -noload QmlProfiler
+
+
+#QT static (options)
+pacman -S mingw-w64-i686-qt5-static
+pacman -S mingw-w64-x86_64-qt5-static
