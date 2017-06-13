@@ -69,15 +69,29 @@ DISTFILES += \
     debian/rules \
     debian/source/format \
     TODO.txt \
-    qtvt.rc \
     installer/qtvt.nsi
 
 win32: {
-RC_FILE+= \
-    qtvt.rc
+#win32-msvc* {
+#    MSVC_VER = $$(VisualStudioVersion)
+#    equals(MSVC_VER, 14.0){
+#        message("msvc 2015")
+#    }
+#}
+#equals(QMAKE_TARGET.arch, x86) {
+#    message("x86")
+#}
 
-release: DESTDIR = build/release
-debug:   DESTDIR = build/debug
+QMAKE_CFLAGS+="-source-charset:utf-8"
+
+RC_ICONS += images/qtvt.ico
+
+#*-64 {
+#    message( "Building for 64 bit")
+#}
+
+release: DESTDIR = build/$$QMAKE_TARGET.arch/release
+debug:   DESTDIR = build/$$QMAKE_TARGET.arch/debug
 
 OBJECTS_DIR = $$DESTDIR/.obj
 MOC_DIR = $$DESTDIR/.moc
