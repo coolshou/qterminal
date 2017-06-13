@@ -2,7 +2,7 @@
 
 ; HM NIS Edit Wizard helper defines
 !define PRODUCT_NAME "qtvt"
-!define PRODUCT_VERSION "2017.5.14.1"
+!define PRODUCT_VERSION "2017.6.13.0"
 !define PRODUCT_PUBLISHER "coolshou"
 !define PRODUCT_WEB_SITE "https://github.com/coolshou/qtvt.git"
 !define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\${PRODUCT_NAME}.exe"
@@ -13,6 +13,7 @@ SetCompressor lzma
 
 ; MUI 1.67 compatible ------
 !include "MUI.nsh"
+!include "x64.nsh"
 
 ; MUI Settings
 !define MUI_ABORTWARNING
@@ -65,38 +66,103 @@ VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalCopyright" "c ${PRODUCT_PUBLISHER}"
 VIAddVersionKey /LANG=${LANG_ENGLISH} "FileDescription" "${PRODUCT_NAME}"
 VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "${PRODUCT_VERSION}"
 
-!define QTPATH "C:\Qt\5.8\mingw53_32"
-!define QTSSLPATH "C:\Qt\Tools\QtCreator\bin"
+# QT mingw 
+#!define QTPATH "C:\Qt\5.8\mingw53_32"
+#!define QTSSLPATH "C:\Qt\Tools\QtCreator\bin"
+#mingw64 x86
+!define QTPATH "C:\msys64\mingw32"
+!define QTSSLPATH "C:\msys64\mingw32\bin"
+#mingw64 x64
+!define QTPATH64 "C:\msys64\mingw64"
+!define QTSSLPATH64 "C:\msys64\mingw64\bin"
 
 Function .onInit
   !insertmacro MUI_LANGDLL_DISPLAY
+;${If} $INSTDIR == "" ; Don't override setup.exe /D=c:\custom\dir
+    ${If} ${RunningX64}
+        StrCpy $INSTDIR "$ProgramFiles64\${PRODUCT_NAME}"
+    ${Else}
+        StrCpy $INSTDIR "$ProgramFiles32\${PRODUCT_NAME}"
+    ${EndIf}
+;${EndIf}
 FunctionEnd
 
 Section "MainSection" SEC01
   SetOutPath "$INSTDIR"
   SetOverwrite ifnewer
-  File "..\build\release\qtvt.exe"
+${If} ${RunningX64}
+    ;DetailPrint "64-bit Windows"
+    File "..\build\x86_64\release\qtvt.exe"
+    
+    File "${QTPATH64}\bin\libgcc_s_seh-1.dll"
+    
+    File "${QTPATH64}\bin\libbz2-1.dll"
+    File "${QTPATH64}\bin\libfreetype-6.dll"
+    File "${QTPATH64}\bin\libglib-2.0-0.dll"
+    File "${QTPATH64}\bin\libgraphite2.dll"
+    File "${QTPATH64}\bin\libharfbuzz-0.dll"
+    File "${QTPATH64}\bin\libintl-8.dll"
+    File "${QTPATH64}\bin\libiconv-2.dll"
+    File "${QTPATH64}\bin\libicudt58.dll"
+    File "${QTPATH64}\bin\libicuin58.dll"
+    File "${QTPATH64}\bin\libicuuc58.dll"
+    File "${QTPATH64}\bin\libpcre-1.dll"
+    File "${QTPATH64}\bin\libpng16-16.dll"
+    File "${QTPATH64}\bin\libstdc++-6.dll"
+    File "${QTPATH64}\bin\libwinpthread-1.dll"
+    File "${QTPATH64}\bin\libeay32.dll"
+    File "${QTPATH64}\bin\ssleay32.dll"
+
+    File "${QTPATH64}\bin\zlib1.dll"
+    
+    File "${QTPATH64}\bin\Qt5Core.dll"
+    File "${QTPATH64}\bin\Qt5Gui.dll"
+    File "${QTPATH64}\bin\Qt5Network.dll"
+    File "${QTPATH64}\bin\Qt5Script.dll"
+    File "${QTPATH64}\bin\Qt5SerialPort.dll"
+    File "${QTPATH64}\bin\Qt5Widgets.dll"
+    ;plugins
+    SetOutPath "$INSTDIR\platforms\"
+    File "${QTPATH64}\share\qt5\plugins\platforms\qwindows.dll"    
+${Else}
+    ;DetailPrint "32-bit Windows"
+    File "..\build\i386\release\qtvt.exe"
+
+    File "${QTPATH}\bin\libgcc_s_dw2-1.dll"
+
+    File "${QTPATH}\bin\libbz2-1.dll"
+    File "${QTPATH}\bin\libfreetype-6.dll"
+    File "${QTPATH}\bin\libglib-2.0-0.dll"
+    File "${QTPATH}\bin\libgraphite2.dll"
+    File "${QTPATH}\bin\libharfbuzz-0.dll"
+    File "${QTPATH}\bin\libintl-8.dll"
+    File "${QTPATH}\bin\libiconv-2.dll"
+    File "${QTPATH}\bin\libicudt58.dll"
+    File "${QTPATH}\bin\libicuin58.dll"
+    File "${QTPATH}\bin\libicuuc58.dll"
+    File "${QTPATH}\bin\libpcre-1.dll"
+    File "${QTPATH}\bin\libpng16-16.dll"
+    File "${QTPATH}\bin\libstdc++-6.dll"
+    File "${QTPATH}\bin\libwinpthread-1.dll"
+    File "${QTPATH}\bin\libeay32.dll"
+    File "${QTPATH}\bin\ssleay32.dll"
+    
+    File "${QTPATH}\bin\Qt5Core.dll"
+    File "${QTPATH}\bin\Qt5Gui.dll"
+    File "${QTPATH}\bin\Qt5Network.dll"
+    File "${QTPATH}\bin\Qt5Script.dll"
+    File "${QTPATH}\bin\Qt5SerialPort.dll"
+    File "${QTPATH}\bin\Qt5Widgets.dll"
+    ;plugins
+    SetOutPath "$INSTDIR\platforms\"
+    File "${QTPATH}\share\qt5\plugins\platforms\qwindows.dll"
+    
+${EndIf}  
+
   CreateDirectory "$SMPROGRAMS\${PRODUCT_NAME}"
   CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME}.lnk" "$INSTDIR\${PRODUCT_NAME}.exe"
   CreateShortCut "$DESKTOP\${PRODUCT_NAME}.lnk" "$INSTDIR\${PRODUCT_NAME}.exe"
-  #get QT install path
-  #  Var /GLOBAL QTPATH
-  #StrCpy $QTPATH "C:\Qt\5.8\mingw53_32\bin"
 
-  File "${QTPATH}\bin\libgcc_s_dw2-1.dll"
-  File "${QTPATH}\bin\libstdc++-6.dll"
-  File "${QTPATH}\bin\libwinpthread-1.dll"
-  File "${QTPATH}\bin\Qt5Core.dll"
-  File "${QTPATH}\bin\Qt5Gui.dll"
-  File "${QTPATH}\bin\Qt5Network.dll"
-  File "${QTPATH}\bin\Qt5Script.dll"
-  File "${QTPATH}\bin\Qt5SerialPort.dll"
-  File "${QTPATH}\bin\Qt5Widgets.dll"
-  File "${QTSSLPATH}\libeay32.dll"
-  File "${QTSSLPATH}\ssleay32.dll"
-  ;plugins
-  SetOutPath "$INSTDIR\platforms\"
-  File "${QTPATH}\plugins\platforms\qwindows.dll"
   
 SectionEnd
 
@@ -132,7 +198,26 @@ FunctionEnd
 Section Uninstall
   Delete "$INSTDIR\${PRODUCT_NAME}.url"
   Delete "$INSTDIR\uninst.exe"
+  
+  Delete "$INSTDIR\libbz2-1.dll"
+  Delete "$INSTDIR\libfreetype-6.dll"
+  Delete "$INSTDIR\libglib-2.0-0.dll"
+  Delete "$INSTDIR\libgraphite2.dll"
+  Delete "$INSTDIR\libharfbuzz-0.dll"
+  Delete "$INSTDIR\libpng16-16.dll"
+  Delete "$INSTDIR\libpcre-1.dll"
+  Delete "$INSTDIR\libintl-8.dll"
+  Delete "$INSTDIR\libiconv-2.dll"
+  Delete "$INSTDIR\libicudt58.dll"
+  Delete "$INSTDIR\libicuin58.dll"
+  Delete "$INSTDIR\libicuuc58.dll"
+  Delete "$INSTDIR\zlib1.dll"
+
+${If} ${RunningX64}
+  Delete "$INSTDIR\libgcc_s_seh-1.dll"
+${Else}
   Delete "$INSTDIR\libgcc_s_dw2-1.dll"
+${EndIf}  
   Delete "$INSTDIR\libstdc++-6.dll"
   Delete "$INSTDIR\libwinpthread-1.dll"
   Delete "$INSTDIR\Qt5Core.dll"
@@ -146,7 +231,8 @@ Section Uninstall
   Delete "$INSTDIR\ssleay32.dll"
   ;plugins
   Delete "$INSTDIR\platforms\qwindows.dll"
-
+  RMDir "$INSTDIR\platforms"
+  
   Delete "$SMPROGRAMS\qtvt\Uninstall.lnk"
   ;Delete "$SMPROGRAMS\qtvt\Website.lnk"
   Delete "$DESKTOP\qtvt.lnk"

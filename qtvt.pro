@@ -1,4 +1,4 @@
-VERSION = 2017.5.14.1
+VERSION = 2017.6.13.0
 QMAKE_TARGET_COMPANY = coolshou
 QMAKE_TARGET_PRODUCT = qtvt
 QMAKE_TARGET_DESCRIPTION = qt base serial virtual console
@@ -72,36 +72,27 @@ DISTFILES += \
     installer/qtvt.nsi
 
 win32: {
-#win32-msvc* {
-#    MSVC_VER = $$(VisualStudioVersion)
-#    equals(MSVC_VER, 14.0){
-#        message("msvc 2015")
-#    }
-#}
-#equals(QMAKE_TARGET.arch, x86) {
-#    message("x86")
-#}
-
 QMAKE_CFLAGS+="-source-charset:utf-8"
 
 RC_ICONS += images/qtvt.ico
 
-#*-64 {
-#    message( "Building for 64 bit")
-#}
-
-release: DESTDIR = build/$$QMAKE_TARGET.arch/release
-debug:   DESTDIR = build/$$QMAKE_TARGET.arch/debug
+release: DESTDIR = build/$$QT_ARCH/release
+debug:   DESTDIR = build/$$QT_ARCH/debug
 
 OBJECTS_DIR = $$DESTDIR/.obj
 MOC_DIR = $$DESTDIR/.moc
 RCC_DIR = $$DESTDIR/.qrc
 UI_DIR = $$DESTDIR/.ui
 
+#NEED add git path to system PATH
+#"c:\msys64\usr\bin"
+GIT=git.exe
+} else {
+GIT=git
 }
 
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 DEFINES += APP_COMPANY=\\\"$$QMAKE_TARGET_COMPANY\\\"
 DEFINES += APP_PRODUCT=\\\"$$QMAKE_TARGET_PRODUCT\\\"
-GIT_VERSION = $$system(git --git-dir $$PWD/.git --work-tree $$PWD describe --always)
+GIT_VERSION = $$system($$GIT --git-dir ./.git --work-tree . describe --always)
 DEFINES += GIT_VERSION=\\\"$$GIT_VERSION\\\"
