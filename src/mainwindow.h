@@ -118,6 +118,9 @@ private:
     void createTrayIcon();
     void createTrayActions();
     Q_SLOT void iconActivated(QSystemTrayIcon::ActivationReason reason);
+    void showTrayMessage(QString title, QString msg,
+                         QSystemTrayIcon::MessageIcon icon = QSystemTrayIcon::Information,
+                         int msecs = 10000);
 
     Ui::MainWindow *ui;
     QSettings *settings;

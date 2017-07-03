@@ -81,11 +81,10 @@ void MainWindow::receivedMessage( int instanceId, QByteArray message )
 void MainWindow::closeEvent(QCloseEvent *event)
 {
     if (trayIcon->isVisible()) {
-        QMessageBox::information(this, tr("Systray"),
-                                 tr("The program will keep running in the "
-                                    "system tray. To terminate the program, "
-                                    "choose <b>Quit</b> in the context menu "
-                                    "of the system tray entry."));
+        showTrayMessage("Notice", tr("The program will keep running in the "
+                          "system tray. To terminate the program, "
+                          "choose \"Quit\" in the context menu "
+                          "of the system tray entry.") );
         hide();
         event->ignore();
     } else {
@@ -794,10 +793,12 @@ void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
 {
     switch (reason) {
     case QSystemTrayIcon::Trigger:
-        qDebug() << "TODO: QSystemTrayIcon::MiddleClick";
+        qDebug() << "TODO: QSystemTrayIcon::Trigger";
         break;
     case QSystemTrayIcon::DoubleClick:
-        qDebug() << "TODO: QSystemTrayIcon::DoubleClick";
+        if (this->isHidden()){
+            restoreAction->trigger();
+        }
         break;
     case QSystemTrayIcon::MiddleClick:
         qDebug() << "TODO: QSystemTrayIcon::MiddleClick";
@@ -805,4 +806,10 @@ void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
     default:
         ;
     }
+}
+void MainWindow::showTrayMessage(QString title, QString msg,
+                                 QSystemTrayIcon::MessageIcon icon,
+                                 int msecs)
+{
+    trayIcon->showMessage(title, msg, icon, msecs);
 }
