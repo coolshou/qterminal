@@ -69,7 +69,8 @@ DISTFILES += \
     debian/rules \
     debian/source/format \
     TODO.txt \
-    installer/qtvt.nsi
+    installer/qtvt.nsi \
+    build.sh
 
 win32: {
 QMAKE_CFLAGS+="-source-charset:utf-8"
