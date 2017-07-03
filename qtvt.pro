@@ -1,4 +1,4 @@
-VERSION = 2017.6.13.0
+VERSION = 2017.7.3.0
 QMAKE_TARGET_COMPANY = coolshou
 QMAKE_TARGET_PRODUCT = qtvt
 QMAKE_TARGET_DESCRIPTION = qt base serial virtual console
