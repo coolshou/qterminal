@@ -2,3 +2,7 @@ build
 debug
 release
 /*.o
+/moc_*.cpp
+/ui_*.h
+/debian/qtvt/*
+/debian/qtvt/*
