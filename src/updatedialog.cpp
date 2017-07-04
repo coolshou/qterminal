@@ -280,15 +280,38 @@ QJsonDocument updatedialog::loadJson(QString fileName)
 
 bool updatedialog::isLatestVersionExist(QString latestVersion)
 {
-    int iLatest = latestVersion.replace("v","").replace(".", "").toInt();
     QString ver = APP_VERSION;
-    int iVer = ver.replace(".","").toInt();
-    if (iLatest > iVer) {
+    if (cmpVersion(latestVersion.replace("v","").toLocal8Bit().data(),
+                   ver.toLocal8Bit().data()) >0) {
         return true;
     } else {
         return false;
     }
 }
+
+/*
+ * return 1 if v1 > v2
+ * return 0 if v1 = v2
+ * return -1 if v1 < v2
+ */
+
+int updatedialog::cmpVersion(const char *v1, const char *v2)
+{
+    int i;
+    int oct_v1[4], oct_v2[4];
+    sscanf(v1, "%d.%d.%d.%d", &oct_v1[0], &oct_v1[1], &oct_v1[2], &oct_v1[3]);
+    sscanf(v2, "%d.%d.%d.%d", &oct_v2[0], &oct_v2[1], &oct_v2[2], &oct_v2[3]);
+
+    for (i = 0; i < 4; i++) {
+        if (oct_v1[i] > oct_v2[i])
+            return 1;
+        else if (oct_v1[i] < oct_v2[i])
+            return -1;
+    }
+
+    return 0;
+}
+
 void updatedialog::setStatus(QString msg)
 {
     ui->statusLabel->setText(msg);

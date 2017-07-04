@@ -52,6 +52,7 @@ private:
     bool fileExists(QString path);
     QJsonDocument loadJson(QString fileName);
     bool isLatestVersionExist(QString latestVersion);
+    int cmpVersion(const char *v1, const char *v2);
     void setStatus(QString msg);
     void setCloseCaption(QString title);
 

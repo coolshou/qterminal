@@ -2,7 +2,7 @@
 
 ; HM NIS Edit Wizard helper defines
 !define PRODUCT_NAME "qtvt"
-!define PRODUCT_VERSION "2017.7.3.0"
+!define PRODUCT_VERSION "2017.7.4.0"
 !define PRODUCT_PUBLISHER "coolshou"
 !define PRODUCT_WEB_SITE "https://github.com/coolshou/qtvt.git"
 !define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\${PRODUCT_NAME}.exe"
