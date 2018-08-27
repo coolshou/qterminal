@@ -353,12 +353,12 @@ void MainWindow::initActionsConnections()
     //window
     connect(ui->actionCascade, SIGNAL(triggered()), ui->mdiArea, SLOT(cascadeSubWindows()));
     connect(ui->actionTile, SIGNAL(triggered()), ui->mdiArea, SLOT(tileSubWindows()));
-    //About
     //TODO: actionHelp
     //connect(ui->actionHelp, SIGNAL(triggered()), this, SLOT(about()));
     connect(ui->actionUpdate, SIGNAL(triggered()), this, SLOT(update()));
-    //TODO: actionDonate
+    //Donate
     connect(ui->actionDonate, SIGNAL(triggered()), this, SLOT(donate()));
+    //About
     connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(about()));
     connect(ui->actionAboutQt, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
 
@@ -397,7 +397,6 @@ void MainWindow::slot_acceptOptionDlg(int result)
         if (optionDlg) {
             optionDlg->applySettings();
             loadOptions();
-            //TODO
             setAutoStart(StartOnBoot);
         }
     }

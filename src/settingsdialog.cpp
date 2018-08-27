@@ -371,7 +371,6 @@ void SettingsDialog::setSettings(QString gname, QSettings *settings)
     //font family
     idx = ui->fontComboBox->findText(settings->value("fontFamily").toString());
     if (idx==-1) {
-        //TODO: default font?
         ui->fontComboBox->setCurrentIndex(0);
     } else {
         ui->fontComboBox->setCurrentIndex(idx);
