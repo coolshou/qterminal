@@ -11,6 +11,7 @@
 #include <QIntValidator>
 #include <QLineEdit>
 #include <QFileDialog>
+#include <qtermwidget5/qtermwidget.h>
 
 #include <QDebug>
 
@@ -24,6 +25,11 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
     ui(new Ui::SettingsDialog)
 {
     ui->setupUi(this);
+    mDemoTerm = new QTermWidget(0,ui->ThemeGroupBox);
+    mDemoTerm->sendText("Demo \rText");
+    ui->gridLayoutThemeGroup->addWidget(mDemoTerm,0,1);
+
+
     editMode = false;
 
     intValidator = new QIntValidator(0, 4000000, this);
@@ -82,12 +88,21 @@ void SettingsDialog::setCurrentTab(int idx)
     ui->tabWidget->setCurrentIndex(i);
 }
 
+void SettingsDialog::setDemo(QString sColorScheme)
+{
+    //ui->DemoPlainTextEdit->setPalette(p);
+    //slot_changeFontSize(currentSettings.fontSize);
+    mDemoTerm->setColorScheme(sColorScheme);
+}
 void SettingsDialog::setDemo()
 {
+    this->setDemo(ui->cbColorScheme->currentText());
+    /*
     QPalette p = palette();
     p.setColor(QPalette::Base, QColor(ui->BaseColorComboBox->currentText()));
     p.setColor(QPalette::Text, QColor(ui->FontColorComboBox->currentText()));
-    ui->DemoPlainTextEdit->setPalette(p);
+    //ui->DemoPlainTextEdit->setPalette(p);
+    */
     slot_changeFontSize(currentSettings.fontSize);
 }
 void SettingsDialog::setDefaultSetting()
@@ -159,14 +174,14 @@ void SettingsDialog::slot_changeFontSize(int size)
 {
     QFont f;
     //font family
-    f.setFamily(ui->DemoPlainTextEdit->font().family());
+//    f.setFamily(ui->DemoPlainTextEdit->font().family());
     if ((size<=0) || (size >=48)) {
         size = currentSettings.fontSizeDefault;
     }
     if (f.pointSize() != size) {
         f.setPointSize(size);
     }
-    ui->DemoPlainTextEdit->setFont(f);
+//    ui->DemoPlainTextEdit->setFont(f);
 }
 
 void SettingsDialog::selectLogFileName()
@@ -193,59 +208,15 @@ void SettingsDialog::selectLogFileName()
 void SettingsDialog::fillConsoleParameters()
 {
     QString c;
-    ui->ThemeComboBox->clear();
-    int i;
-    for (i=0;i< ConsoleTheme::NUM_ConsoleTheme; i++) {
-        //qDebug() << i << ": " <<ConsoleThemeName[i];
-        ui->ThemeComboBox->addItem(ConsoleThemeName[i]);
-        //qDebug() << "v0: " << QColor(ConsoleThemeValue[i][0]).name();
-        //qDebug() << "v1: " << QColor(ConsoleThemeValue[i][1]).name();
-        //font color
-        c =ConsoleThemeValue[i][0];
-        if (ui->FontColorComboBox->findText(c) == -1) {
-            ui->FontColorComboBox->addItem(c, QColor(c));
-        }
-        //backgroung color
-        c =ConsoleThemeValue[i][1];
-        if (ui->BaseColorComboBox->findText(c) == -1) {
-            ui->BaseColorComboBox->addItem(c, QColor(c));
-        }
-    }
-    connect(ui->ThemeComboBox, SIGNAL(currentTextChanged(QString)), this, SLOT(changeTheme(QString)));
-    connect(ui->BaseColorComboBox, SIGNAL(currentTextChanged(QString)), this, SLOT(changeBaseColor(QString)));
-    connect(ui->FontColorComboBox, SIGNAL(currentTextChanged(QString)), this, SLOT(changeFontColor(QString)));
+    ui->cbColorScheme->clear();
+    ui->cbColorScheme->addItems(QTermWidget::availableColorSchemes());
+    connect(ui->cbColorScheme, SIGNAL(currentTextChanged(QString)), this, SLOT(changeTheme(QString)));
 
     //connect(ui->fontComboBox, SIGNAL(currentFontChanged(QFont)), this, );
 }
 void SettingsDialog::changeTheme(QString themeName)
 {
-    //qDebug() << "changeTheme:" << themeName;
-    if (themeName.startsWith("Custom")) {
-        ui->BaseColorComboBox->setEnabled(true);
-        ui->FontColorComboBox->setEnabled(true);
-    } else {
-        ui->BaseColorComboBox->setEnabled(false);
-        ui->FontColorComboBox->setEnabled(false);
-        int idx = ui->ThemeComboBox->findText(themeName);
-        QString fColor = ConsoleThemeValue[idx][0];
-        QString bColor = ConsoleThemeValue[idx][1];
-        ui->FontColorComboBox->setCurrentIndex(ui->FontColorComboBox->findText(fColor));
-        ui->BaseColorComboBox->setCurrentIndex(ui->BaseColorComboBox->findText(bColor));
-    }
-}
-void SettingsDialog::changeBaseColor(QString color)
-{
-    QPalette p = palette();
-    p.setColor(QPalette::Base, QColor(color));
-    p.setColor(QPalette::Text, QColor(ui->FontColorComboBox->currentText()));
-    ui->DemoPlainTextEdit->setPalette(p);
-}
-void SettingsDialog::changeFontColor(QString color)
-{
-    QPalette p = palette();
-    p.setColor(QPalette::Base, QColor(ui->BaseColorComboBox->currentText()));
-    p.setColor(QPalette::Text, QColor(color));
-    ui->DemoPlainTextEdit->setPalette(p);
+    mDemoTerm->setColorScheme(themeName);
 }
 
 void SettingsDialog::fillPortsParameters()
@@ -343,13 +314,9 @@ bool SettingsDialog::updateSettings()
     currentSettings.localEchoEnabled = ui->localEchoCheckBox->isChecked();
     //console setting
     currentSettings.maxBlockCount = ui->maxBlockCountSpinBox->value();
-    currentSettings.theme = ui->ThemeComboBox->currentText();
-    //currentSettings.baseColor = static_cast<QColor>(ui->BaseColorComboBox->currentText());
-    //currentSettings.fontColor = static_cast<QColor>(ui->FontColorComboBox->currentText());
-    currentSettings.baseColor = QColor(ui->BaseColorComboBox->currentText()).name();
-    currentSettings.fontColor = QColor(ui->FontColorComboBox->currentText()).name();
+    currentSettings.colorScheme = ui->cbColorScheme->currentText();
     //font fontFamily setting
-    currentSettings.fontFamily = ui->DemoPlainTextEdit->font().family();
+    //currentSettings.fontFamily = ui->DemoPlainTextEdit->font().family();
     currentSettings.fontSize = ui->FontSizeSpinBox->value();
     //qDebug() << "currentSettings.fontSize:" <<currentSettings.fontSize;
     currentSettings.scrollToBottom = ui->scrollToBottomCheckBox->isChecked();
@@ -394,29 +361,13 @@ void SettingsDialog::setSettings(QString gname, QSettings *settings)
     }
     ui->maxBlockCountSpinBox->setValue(iMaxBlockCount);
     //qDebug() << "theme:" << settings->value("theme").toString();
-    idx = ui->ThemeComboBox->findText(settings->value("theme").toString());
+    idx = ui->cbColorScheme->findText(settings->value("colorScheme").toString());
     if (idx==-1) {
-        ui->ThemeComboBox->setCurrentIndex(0);
+        ui->cbColorScheme->setCurrentIndex(0);
     } else {
-        ui->ThemeComboBox->setCurrentIndex(idx);
+        ui->cbColorScheme->setCurrentIndex(idx);
     }
 
-    /*
-    qDebug() << "baseColor:" << settings->value("baseColor").toString();
-    idx = ui->BaseColorComboBox->findText(settings->value("baseColor").toString());
-    if (idx==-1) {
-        ui->BaseColorComboBox->setCurrentIndex(0);
-    } else {
-        ui->BaseColorComboBox->setCurrentIndex(idx);
-    }
-    qDebug() << "fontColor:" << settings->value("fontColor").toString();
-    idx = ui->FontColorComboBox->findText(settings->value("fontColor").toString());
-    if (idx==-1) {
-        ui->FontColorComboBox->setCurrentIndex(0);
-    } else {
-        ui->FontColorComboBox->setCurrentIndex(idx);
-    }
-*/
     //font family
     idx = ui->fontComboBox->findText(settings->value("fontFamily").toString());
     if (idx==-1) {

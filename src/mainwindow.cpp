@@ -146,6 +146,7 @@ void MainWindow::slot_acceptSettingDlg(int result)
         settings->setValue("localEchoEnabled", settingDlg->get_settings().localEchoEnabled);
         //console setting
         settings->setValue("maxBlockCount", settingDlg->get_settings().maxBlockCount);
+        settings->setValue("colorScheme", settingDlg->get_settings().colorScheme);
         settings->setValue("theme", settingDlg->get_settings().theme);
         settings->setValue("baseColor", settingDlg->get_settings().baseColor);
         settings->setValue("fontColor", settingDlg->get_settings().fontColor);
@@ -161,19 +162,24 @@ void MainWindow::slot_acceptSettingDlg(int result)
         //check if serial is alweady exist
         if (session_exist(sName)){
             //qDebug() << "TODO:slot_acceptSettingDlg session_exist: " << sName;
-            termsession *termSession = get_termsession(sName);
+            //termsession *termSession = get_termsession(sName);
+            SerialTerm *termSession = get_termsession(sName);
             //update setting in termSession
             termSession->apply_setting();
+
+
             return;
         } else {
             //setup new termsession for new SubWindow
-            termsession *termSession = new termsession(this, sName, settings);
+            //termsession *termSession = new termsession(this, sName, settings);
+            SerialTerm *termSession = new SerialTerm(this, sName, settings);
             sessionlist.append(termSession);
             connect(termSession, SIGNAL(sig_updateStatus(QString)), this, SLOT(updateStatus(QString)));
             connect(termSession, SIGNAL(sig_updateActionBtnStatus(bool)), this, SLOT(updateActionBtnStatus(bool)));
-            connect(termSession, SIGNAL(scriptStarted(Qt::HANDLE)), this, SLOT(updateActionMacroBtnStatus(Qt::HANDLE)));
-            connect(termSession, SIGNAL(scriptFinished(Qt::HANDLE)), this, SLOT(updateActionMacroBtnStatus(Qt::HANDLE)));
-            connect(termSession, SIGNAL(fontSizeChanged(int)), this, SLOT(updateFontSizeSetting(int)));
+            //connect(termSession, SIGNAL(receivedData(QString)), this, SLOT(on_receivedData(QString)));
+            //connect(termSession, SIGNAL(scriptStarted(Qt::HANDLE)), this, SLOT(updateActionMacroBtnStatus(Qt::HANDLE)));
+            //connect(termSession, SIGNAL(scriptFinished(Qt::HANDLE)), this, SLOT(updateActionMacroBtnStatus(Qt::HANDLE)));
+            //connect(termSession, SIGNAL(fontSizeChanged(int)), this, SLOT(updateFontSizeSetting(int)));
 
             QMdiSubWindow *subwin1 = new QMdiSubWindow();
             //still show close button in cascade/tile
@@ -208,7 +214,8 @@ void MainWindow::openSerialPort()
         return;
     }
     qDebug() << "openSerialPort:" << sw->windowTitle();
-    termsession *term = get_termsession(sw->windowTitle());
+    //termsession *term = get_termsession(sw->windowTitle());
+    SerialTerm *term = get_termsession(sw->windowTitle());
     term->openSerialPort();
     //updateActionEditSessionBtnStatus(false);
 }
@@ -225,10 +232,11 @@ void MainWindow::sendSerialText()
         qDebug() << "sendSerialText not found subwindow";
         return;
     }
-    termsession *term = get_termsession(sw->windowTitle());
+    //termsession *term = get_termsession(sw->windowTitle());
+    SerialTerm *term = get_termsession(sw->windowTitle());
     if (term->isOpen()) {
         if (! ui->HistoryEdit->text().isEmpty()) {
-            term->writeln(ui->HistoryEdit->text().toLatin1());
+            term->writeln(ui->HistoryEdit->text().toLocal8Bit());
         }
     }
 }
@@ -244,8 +252,8 @@ void MainWindow::closeSerialPort()
         qDebug() << "closeSerialPort not found subwindow";
         return;
     }
-
-    termsession *term = get_termsession(sw->windowTitle());
+    //termsession *term = get_termsession(sw->windowTitle());
+    SerialTerm *term = get_termsession(sw->windowTitle());
     if (term->isOpen()) {
         term->closeSerialPort();
         updateActionEditSessionBtnStatus(false);
@@ -332,8 +340,8 @@ void MainWindow::initActionsConnections()
     connect(ui->actionPaste, SIGNAL(triggered()), this, SLOT(consolePaste()));
     connect(ui->actionClear, SIGNAL(triggered()), this, SLOT(consoleClear()));
     connect(ui->actionScrollToBottom, SIGNAL(triggered()), this, SLOT(setScrollToBottom()));
-    //TODO: actionFind
-    //connect(ui->actionFind, SIGNAL(triggered()), this, SLOT(consoleFind()));
+    //actionFind
+    connect(ui->actionFind, SIGNAL(triggered()), this, SLOT(consoleFind()));
     //TODO: macro
     //connect(ui->actionMacro, SIGNAL(triggered()), this, SLOT(macro()));
     connect(ui->actionMacroSetup, SIGNAL(triggered()), this, SLOT(macroSetup()));
@@ -413,7 +421,8 @@ bool MainWindow::session_exist(QString sName)
 {
     QString tmp;
     //found if session name alweady exist
-    foreach( termsession *item, sessionlist )
+    //foreach( termsession *item, sessionlist )
+    foreach( SerialTerm *item, sessionlist )
     {
         tmp = item->get_name();
         if (QString::compare(sName, tmp, Qt::CaseInsensitive) == 0  ) {
@@ -430,7 +439,8 @@ QMdiSubWindow* MainWindow::get_currentSubWindow()
 QStringList MainWindow::getUsedSerial()
 {
     QStringList ls;
-    foreach( termsession *item, sessionlist )
+    //foreach( termsession *item, sessionlist )
+    foreach( SerialTerm *item, sessionlist )
     {
         qDebug() << "getUsedSerial: " << item->get_name();
         ls.append(item->get_name());
@@ -439,11 +449,13 @@ QStringList MainWindow::getUsedSerial()
 }
 
 //get_termsession by name
-termsession* MainWindow::get_termsession(QString sName)
+//termsession* MainWindow::get_termsession(QString sName)
+SerialTerm* MainWindow::get_termsession(QString sName)
 {
     QString tmp;
     //found if session name alweady exist
-    foreach( termsession *item, sessionlist )
+    //foreach( termsession *item, sessionlist )
+    foreach( SerialTerm *item, sessionlist )
     {
         tmp = item->get_name();
         if (QString::compare(sName, tmp, Qt::CaseInsensitive) == 0  ) {
@@ -457,7 +469,8 @@ bool MainWindow::del_termsessionByName(QString sName)
     return del_termsession(get_termsession(sName));
 }
 
-bool MainWindow::del_termsession(termsession* item)
+//bool MainWindow::del_termsession(termsession* item)
+bool MainWindow::del_termsession(SerialTerm* item)
 {
     return sessionlist.removeOne(item);
 }
@@ -493,7 +506,8 @@ void MainWindow::edit_session()
 //close session
 void  MainWindow::closeSession(QString sName)
 {
-    termsession *term = get_termsession(sName);
+    //termsession *term = get_termsession(sName);
+    SerialTerm *term = get_termsession(sName);
     term->closeSerialPort();
     term->close();
     del_termsession(term);
@@ -523,16 +537,18 @@ void MainWindow::consoleCopy()
 {
     QMdiSubWindow *sw = get_currentSubWindow();
     if ((sw != 0)||(sw != NULL)) {
-        termsession *term = get_termsession(sw->windowTitle());
-        term->copy();
+        SerialTerm *term = get_termsession(sw->windowTitle());
+        //term->copy();
+        term->copyClipboard();
     }
 }
 void MainWindow::consolePaste()
 {
     QMdiSubWindow *sw = get_currentSubWindow();
     if ((sw != 0)||(sw != NULL)) {
-        termsession *term = get_termsession(sw->windowTitle());
-        term->paste();
+        SerialTerm *term = get_termsession(sw->windowTitle());
+        //term->paste();
+        term->pasteClipboard();
     }
 }
 
@@ -540,15 +556,23 @@ void MainWindow::consoleClear()
 {
     QMdiSubWindow *sw = get_currentSubWindow();
     if ((sw != 0)||(sw != NULL)) {
-        termsession *term = get_termsession(sw->windowTitle());
+        SerialTerm *term = get_termsession(sw->windowTitle());
         term->clear();
+    }
+}
+void MainWindow::consoleFind()
+{
+    QMdiSubWindow *sw = get_currentSubWindow();
+    if ((sw != 0)||(sw != NULL)) {
+        SerialTerm *term = get_termsession(sw->windowTitle());
+        term->toggleShowSearchBar();
     }
 }
 void MainWindow::setScrollToBottom()
 {
     QMdiSubWindow *sw = get_currentSubWindow();
     if ((sw != 0)||(sw != NULL)) {
-        termsession *term = get_termsession(sw->windowTitle());
+        SerialTerm *term = get_termsession(sw->windowTitle());
         term->setScrollToBottom(!term->getScrollToBottom());
         settings->beginGroup(term->get_name());
         settings->setValue("scrollToBottom", term->getScrollToBottom());
@@ -575,6 +599,11 @@ void MainWindow::updateActionBtnStatus(bool bSerialConnected)
     //updateActionConfigureBtnStatus(bStatus);
 }
 /*
+void MainWindow::on_receivedData(QString data)
+{
+    qDebug() << "on_receivedData:" << data;
+}*/
+/*
  * bStatus = False : no term session
  * bStatus = True : term session exist
  * */
@@ -596,7 +625,7 @@ void MainWindow::slot_subWindowChanged(QMdiSubWindow* window)
     //So, Check nullity here;otherwise application will crash
     if(window != NULL)
     {
-        termsession *term = get_termsession(window->windowTitle());
+        SerialTerm *term = get_termsession(window->windowTitle());
         //update status bar message by tab
         updateStatus(term->get_status());
         //update menu button status
@@ -618,7 +647,7 @@ void MainWindow::updateFontSizeSetting(int size)
 {
     QMdiSubWindow *sw = get_currentSubWindow();
     if ((sw != 0)||(sw != NULL)) {
-        termsession *term = get_termsession(sw->windowTitle());
+        SerialTerm *term = get_termsession(sw->windowTitle());
         //term->setScrollToBottom(!term->getScrollToBottom());
         settings->beginGroup(term->get_name());
         //settings->setValue("fontSize", term->font().pointSize());
@@ -637,7 +666,7 @@ void MainWindow::macroStart()
 {
     QMdiSubWindow *sw = get_currentSubWindow();
     if ((sw != 0)||(sw != NULL)) {
-        termsession *term = get_termsession(sw->windowTitle());
+        SerialTerm *term = get_termsession(sw->windowTitle());
         term->macroStart();
     }
 }
@@ -646,7 +675,7 @@ void MainWindow::macroStop()
 {
     QMdiSubWindow *sw = get_currentSubWindow();
     if ((sw != 0)||(sw != NULL)) {
-        termsession *term = get_termsession(sw->windowTitle());
+        SerialTerm *term = get_termsession(sw->windowTitle());
         term->macroStop();
     }
 }
@@ -654,7 +683,7 @@ void MainWindow::updateActionMacroBtnStatus(Qt::HANDLE id)
 {
     QMdiSubWindow *sw = get_currentSubWindow();
     if ((sw != 0)||(sw != NULL)) {
-        termsession *term = get_termsession(sw->windowTitle());
+        SerialTerm *term = get_termsession(sw->windowTitle());
         if (term->getMacroThreadId() == id) {
             updateActionMacroBtnStatus(term->isMacroRunning());
         }

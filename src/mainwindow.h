@@ -18,7 +18,8 @@
 #include <QProcess>
 #include <QSystemTrayIcon>
 
-#include "termsession.h"
+#include "serialterm.h"
+//#include "termsession.h"
 #include "settingsdialog.h"
 #include "updatedialog.h"
 #include "optionsdialog.h"
@@ -49,6 +50,7 @@ public:
     QStringList getUsedSerial();
     Q_SLOT void updateStatus(QString sMsg);
     Q_SLOT void updateActionBtnStatus(bool bSerialConnected);
+
     Q_SLOT void updateActionEditSessionBtnStatus(bool bTermSessionExist);
     Q_SLOT int get_session_num();
     void detectSystem();
@@ -82,10 +84,13 @@ private:
     Q_SLOT void consoleCopy();
     Q_SLOT void consolePaste();
     Q_SLOT void consoleClear();
+    Q_SLOT void consoleFind();
     Q_SLOT void setScrollToBottom();
     Q_SLOT QMdiSubWindow* get_currentSubWindow();
-    Q_SLOT termsession* get_termsession(QString sName);
-    Q_SLOT bool del_termsession(termsession* item);
+    //Q_SLOT termsession* get_termsession(QString sName);
+    Q_SLOT SerialTerm* get_termsession(QString sName);
+    //Q_SLOT bool del_termsession(termsession* item);
+    Q_SLOT bool del_termsession(SerialTerm* item);
     Q_SLOT bool del_termsessionByName(QString sName);
     Q_SLOT void slot_subWindowChanged(QMdiSubWindow* window);
     //macro: each session may have it's own macro thread!!
@@ -126,7 +131,8 @@ private:
     QSettings *settings;
     SettingsDialog *settingDlg;
     optionsDialog *optionDlg ;
-    QList<termsession *> sessionlist;
+    //QList<termsession *> sessionlist;
+    QList<SerialTerm *> sessionlist;
     //updatedialog *updateDlg;
     OSInfo m_OSInof;
     QProcess *process;

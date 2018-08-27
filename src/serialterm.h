@@ -1,83 +1,81 @@
-#ifndef TERMSESSION_H
-#define TERMSESSION_H
+#ifndef SERIALTERM_H
+#define SERIALTERM_H
 
 #include <QObject>
 #include <QWidget>
-#include <QtSerialPort/QSerialPort>
+#include <QSerialPort>
+#include <qtermwidget5/qtermwidget.h>
 #include <QSettings>
-
-#include "macro/macroWorker.h"
-#include "console.h"
-#include "script/scriptEngine.h"
-#include "script/scriptThread.h"
+#include <QThread>
 
 #include <QDebug>
 
-#define SUPPORT_SCRIPT 0
+#include "macro/macroWorker.h"
 
-class termsession : public Console
+class SerialTerm : public QTermWidget
 {
     Q_OBJECT
 public:
-    explicit termsession(QWidget *parent = 0, QString name = "term", QSettings *settings = NULL);
-    ~termsession();
-
+    explicit SerialTerm(QWidget *parent = 0, QString comName = "/dev/ttyS0", QSettings *settings = NULL);
+    ~SerialTerm();
     QString get_name();
     QString get_status();
+    void apply_setting();
     //return serial is open or not
     bool isOpen();
-    void setConsole();
-    void apply_setting();
-    QVariant get_settingValue(QString key);
-    void setLogDatetime(bool set);
-    void setLogEnable(bool set);
+
+    //log
+    void setLogDatetime(bool bLogDatetime);
+    void setLogEnable(bool bLogEnable);
     void setLogFilename(QString filename);
     QString getLogFileName();
     void logToFile(QByteArray log);
     void logToFile(QString lineToBelogged);
+
     /*
      * try open serial port if successful return true else return false
      */
     bool openSerialPort();
     void closeSerialPort();
     void writeln(const QByteArray &data);
+
+    void setScrollToBottom(bool bScrollToBottom);
+    bool getScrollToBottom();
     //macro
     void macroStart();
     void macroStop();
     bool isMacroRunning();
     Qt::HANDLE getMacroThreadId();
 
+
 signals:
     void sig_updateStatus(QString sMsg);
     void sig_updateActionBtnStatus(bool bStatus);
-    Q_SIGNAL void scriptStarted(Qt::HANDLE);
-    Q_SIGNAL void scriptFinished(Qt::HANDLE);
-
-protected:
-    void closeEvent(QCloseEvent *event);
+    void sig_DataReady(const QByteArray &data);
 
 private slots:
     void readDataFromSerial();
     void writeDataToSerial(const QByteArray &data);
-
+    void activateUrl(const QUrl &url, bool fromContextMenu);
     void slot_handleError(QSerialPort::SerialPortError error);
     void slot_baudRateChanged(qint32 baudRate,QSerialPort::Directions directions);
-    //void slot_onTextChanged();
-    //macro
-    void slot_scriptStarted();
-    void slot_scriptFinished();
+    void on_keyPressed(QKeyEvent *keyEvent);
+    Q_SLOT void on_receivedData(QString data);
+    Q_SLOT void on_sendData(const char* data,int len);
 
 private:
     QString getCurrentDateTimeString();
-
 private:
     QSerialPort *serial;
-    QString mGroupName;
-    QSettings *mSetting;
+    QString mComName;
+    QSettings *mSettings;
+    QByteArray lastSend;
     //log
-    bool bLogEnable;
-    QString sLogFilename;
-    bool bLogDatetime;
+    bool _bLogEnable;
+    bool _bLogDatetime;
+    QString _sLogFilename;
+
+    bool _bScrollToBottom;
     //macro
     /**
      * @brief Thread object which will let us manipulate the running thread
@@ -87,12 +85,6 @@ private:
      * @brief Object which contains methods that should be runned in another thread
      */
     macroWorker *macroworker;
-
-    //script
-#if SUPPORT_SCRIPT == 1
-    ScriptEngine *engine;
-    scriptThread *worker;
-#endif
 };
 
-#endif // TERMSESSION_H
+#endif // SERIALTERM_H

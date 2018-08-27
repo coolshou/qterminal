@@ -15,8 +15,9 @@
 #include <QStandardPaths>
 #include <QFont>
 #include <QStringList>
+#include <qtermwidget5/qtermwidget.h>
 
-#include "consoletheme.h"
+//#include "consoletheme.h"
 
 QT_USE_NAMESPACE
 
@@ -47,6 +48,7 @@ struct Settings
     bool localEchoEnabled;
     //console setting
     int maxBlockCount;
+    QString colorScheme;
     QString theme;
     QColor fontColor;
     QString fontFamily;
@@ -88,6 +90,7 @@ public:
 
 protected:
     //void closeEvent(QCloseEvent event);
+    void setDemo(QString sColorScheme);
     void setDemo();
     void setDefaultSetting();
 
@@ -100,8 +103,6 @@ private:
     Q_SLOT void selectLogFileName();
     Q_SLOT void slot_changeFontSize(int size);
     Q_SLOT void changeTheme(QString themeName);
-    Q_SLOT void changeBaseColor(QString color);
-    Q_SLOT void changeFontColor(QString color);
 
     void fillPortsParameters();
     void fillPortsInfo();
@@ -115,6 +116,7 @@ private:
     QIntValidator *intValidator;
     QString defaultGroupName;
     QStringList usedSerials; //record used serial port.
+    QTermWidget *mDemoTerm;
 };
 
 #endif // SETTINGSDIALOG_H

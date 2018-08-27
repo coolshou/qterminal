@@ -1,4 +1,4 @@
-VERSION = 2017.7.4.0
+VERSION = 2018.8.28.0
 QMAKE_TARGET_COMPANY = coolshou
 QMAKE_TARGET_PRODUCT = qtvt
 QMAKE_TARGET_DESCRIPTION = qt base serial virtual console
@@ -16,6 +16,7 @@ include(SingleApplication/singleapplication.pri)
 DEFINES += QAPPLICATION_CLASS=QApplication
 
 CONFIG += c++11
+unix:!macx: LIBS += -lqtermwidget5
 
 CFLAG+=-fPIC
 
@@ -23,24 +24,20 @@ TARGET = qtvt
 TEMPLATE = app
 
 SOURCES += \
-    src/console.cpp \
     src/main.cpp \
     src/mainwindow.cpp \
     src/settingsdialog.cpp \
-    src/termsession.cpp \
     src/updatedialog.cpp \
     src/optionsdialog.cpp \
     src/script/scriptEngine.cpp \
     src/script/scriptThread.cpp \
     src/macro/macroThread.cpp \
     src/macro/macroWorker.cpp \
-    src/consoletheme.cpp
+    src/serialterm.cpp
 
 HEADERS += \
-    src/console.h \
     src/mainwindow.h \
     src/settingsdialog.h \
-    src/termsession.h \
     src/const.h \
     src/updatedialog.h \
     src/optionsdialog.h \
@@ -48,7 +45,7 @@ HEADERS += \
     src/script/scriptThread.h \
     src/macro/macroThread.h \
     src/macro/macroWorker.h \
-    src/consoletheme.h
+    src/serialterm.h
 
 FORMS += \
     src/mainwindow.ui \
@@ -73,23 +70,23 @@ DISTFILES += \
     build.sh
 
 win32: {
-QMAKE_CFLAGS+="-source-charset:utf-8"
+    QMAKE_CFLAGS+="-source-charset:utf-8"
 
-RC_ICONS += images/qtvt.ico
+    RC_ICONS += images/qtvt.ico
 
-release: DESTDIR = build/$$QT_ARCH/release
-debug:   DESTDIR = build/$$QT_ARCH/debug
+    release: DESTDIR = build/$$QT_ARCH/release
+    debug:   DESTDIR = build/$$QT_ARCH/debug
 
-OBJECTS_DIR = $$DESTDIR/.obj
-MOC_DIR = $$DESTDIR/.moc
-RCC_DIR = $$DESTDIR/.qrc
-UI_DIR = $$DESTDIR/.ui
+    OBJECTS_DIR = $$DESTDIR/.obj
+    MOC_DIR = $$DESTDIR/.moc
+    RCC_DIR = $$DESTDIR/.qrc
+    UI_DIR = $$DESTDIR/.ui
 
-#NEED add git path to system PATH
-#"c:\msys64\usr\bin"
-GIT=git.exe
+    #NEED add git path to system PATH
+    #"c:\msys64\usr\bin"
+    GIT=git.exe
 } else {
-GIT=git
+    GIT=git
 }
 
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"

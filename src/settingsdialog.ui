@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>560</width>
-    <height>400</height>
+    <width>578</width>
+    <height>405</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -32,8 +32,14 @@
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
     <widget class="QTabWidget" name="tabWidget">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>300</height>
+      </size>
+     </property>
      <property name="currentIndex">
-      <number>2</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tab_Serial">
       <attribute name="title">
@@ -75,12 +81,25 @@
           </property>
           <item>
            <widget class="QGroupBox" name="selectBox">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>235</height>
+             </size>
+            </property>
             <property name="title">
              <string>Select Serial Port</string>
             </property>
             <layout class="QGridLayout" name="gridLayout">
              <item row="0" column="0">
-              <widget class="QComboBox" name="serialPortInfoListBox"/>
+              <widget class="QComboBox" name="serialPortInfoListBox">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>26</height>
+                </size>
+               </property>
+              </widget>
              </item>
              <item row="1" column="0">
               <widget class="QLabel" name="descriptionLabel">
@@ -229,6 +248,19 @@
          </layout>
         </widget>
        </item>
+       <item>
+        <spacer name="verticalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
       </layout>
      </widget>
      <widget class="QWidget" name="tab_Log">
@@ -327,7 +359,7 @@
       <attribute name="title">
        <string>Console</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_3" stretch="0,1">
+      <layout class="QVBoxLayout" name="verticalLayout_3" stretch="0,1,0">
        <item>
         <widget class="QWidget" name="widget" native="true">
          <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -412,6 +444,12 @@
        </item>
        <item>
         <widget class="QGroupBox" name="ThemeGroupBox">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>170</height>
+          </size>
+         </property>
          <property name="title">
           <string>The&amp;me:</string>
          </property>
@@ -421,69 +459,28 @@
          <property name="checkable">
           <bool>false</bool>
          </property>
-         <layout class="QGridLayout" name="gridLayout_3" columnstretch="0,1">
-          <item row="0" column="1" rowspan="3">
-           <widget class="QPlainTextEdit" name="DemoPlainTextEdit">
-            <property name="font">
-             <font>
-              <pointsize>10</pointsize>
-              <weight>50</weight>
-              <bold>false</bold>
-             </font>
-            </property>
-            <property name="plainText">
-             <string>Demo
-Text</string>
-            </property>
-            <property name="textInteractionFlags">
-             <set>Qt::TextEditorInteraction</set>
-            </property>
-            <property name="backgroundVisible">
-             <bool>false</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0" rowspan="3">
+         <layout class="QGridLayout" name="gridLayoutThemeGroup" columnstretch="0">
+          <item row="0" column="0" rowspan="2">
            <widget class="QWidget" name="widget_2" native="true">
             <layout class="QFormLayout" name="formLayout">
-             <item row="0" column="0" colspan="2">
-              <widget class="QComboBox" name="ThemeComboBox">
-               <item>
-                <property name="text">
-                 <string>Green</string>
-                </property>
-               </item>
+             <item row="0" column="0">
+              <widget class="QLabel" name="lbColorScheme">
+               <property name="text">
+                <string>ColorScheme:</string>
+               </property>
               </widget>
              </item>
+             <item row="0" column="1">
+              <widget class="QComboBox" name="cbColorScheme"/>
+             </item>
              <item row="2" column="0">
-              <widget class="QLabel" name="FontColorLabel">
+              <widget class="QLabel" name="FontSizeLabel">
                <property name="text">
-                <string>Font Color:</string>
+                <string>Font Size:</string>
                </property>
               </widget>
              </item>
              <item row="2" column="1">
-              <widget class="QComboBox" name="FontColorComboBox">
-               <property name="enabled">
-                <bool>false</bool>
-               </property>
-              </widget>
-             </item>
-             <item row="3" column="1">
-              <widget class="QComboBox" name="BaseColorComboBox">
-               <property name="enabled">
-                <bool>false</bool>
-               </property>
-              </widget>
-             </item>
-             <item row="3" column="0">
-              <widget class="QLabel" name="BaseColorLabel">
-               <property name="text">
-                <string>Back Color:</string>
-               </property>
-              </widget>
-             </item>
-             <item row="4" column="1">
               <widget class="QSpinBox" name="FontSizeSpinBox">
                <property name="maximum">
                 <number>64</number>
@@ -493,28 +490,34 @@ Text</string>
                </property>
               </widget>
              </item>
-             <item row="4" column="0">
-              <widget class="QLabel" name="FontSizeLabel">
-               <property name="text">
-                <string>Font Size:</string>
-               </property>
-              </widget>
-             </item>
-             <item row="5" column="1">
-              <widget class="QFontComboBox" name="fontComboBox"/>
-             </item>
-             <item row="5" column="0">
+             <item row="3" column="0">
               <widget class="QLabel" name="fontLabel">
                <property name="text">
                 <string>Font Family:</string>
                </property>
               </widget>
              </item>
+             <item row="3" column="1">
+              <widget class="QFontComboBox" name="fontComboBox"/>
+             </item>
             </layout>
            </widget>
           </item>
          </layout>
         </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_3">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
        </item>
       </layout>
      </widget>

@@ -2,7 +2,7 @@
 qt base virtual terminal emulator for serial communications
 
 # environment
-    Ubuntu 16.04.2
+    Ubuntu 18.04.1
     user account should be in dialout group to access /dev/ttyS*, /dev/ttyUSB*
     
 # requirement
@@ -10,6 +10,7 @@ qt base virtual terminal emulator for serial communications
     qt5-qmake (>=5.5.1)
     qtbase5-dev (>=5.5.1)
     libqt5serialport5-dev (>=5.5.1)
+    libqtermwidget5-0-dev (0.9.0)
     qtchooser 
     gdebi (for deb update use)
     devscripts (for debuild)
@@ -30,6 +31,8 @@ qt base virtual terminal emulator for serial communications
 ```
   > git clone --recursive https://github.com/coolshou/qtvt
   > cd qtvt
+  > git submodule init
+  > git submodule update
   > qmake
   > make
 ```
