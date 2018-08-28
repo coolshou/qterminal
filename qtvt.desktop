@@ -2,9 +2,10 @@
 Encoding=UTF-8
 Version=1.0
 Name=qtvt
-GenericName=serial vitrual terminal
+Name[zh_TW]=qtvt 串列虛擬終端機
+GenericName=qt serial vitrual terminal
+GenericName[zh_TW]=qt 串列虛擬終端機
 Comment=qt vitrual terminal for serial communications
-GenericName[zh_TW]=串列虛擬終端機
 Comment[zh_TW]=qt 串列通訊虛擬終端機
 Type=Application
 Terminal=false
