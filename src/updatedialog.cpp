@@ -184,7 +184,7 @@ void updatedialog::httpFinished()
     //qDebug() << "productVersion:" << QSysInfo::productVersion();
 
     QJsonObject json_obj=jsonDoc.object();
-    QString name=json_obj["name"].toString();
+    QString name=json_obj["tag_name"].toString();
     ui->latestVersion->setText(name);
     if (isLatestVersionExist(name)) {
         //record Latest file to be download and install
