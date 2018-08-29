@@ -1,6 +1,7 @@
-qtvt (2018.8.28.1-1) unstable; urgency=medium
+qtvt (2018.8.28.2-1) unstable; urgency=medium
 
   * change to use QTermWidget
+  * fix miss include QKeyEvent
 
  -- coolshou <coolshou@coolshou-desktop>  Tue, 28 Aug 2018 00:30:08 +0800
 

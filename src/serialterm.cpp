@@ -5,7 +5,7 @@
 #include <QClipboard>
 #include <unistd.h>
 #include <QDesktopServices>
-#include <QEvent>
+#include <QKeyEvent>
 
 #include "const.h"
 
